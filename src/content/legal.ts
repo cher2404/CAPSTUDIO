@@ -65,7 +65,7 @@ Deze algemene voorwaarden gelden voor alle offertes, opdrachten en overeenkomste
 
 ## 2. Uitvoering
 1. De fotograaf voert de opdracht naar beste kunnen en met vakmanschap uit, in haar eigen herkenbare, filmische stijl.
-2. De fotograaf bepaalt de selectie en de bewerking van de beelden. Het aantal bewerkingsrondes staat in de overeenkomst.
+2. De fotograaf bepaalt de selectie en de bewerking van de beelden, in haar eigen stijl. Standaard is 1 bewerkingsronde inbegrepen; het aantal staat in de overeenkomst.
 3. De opdrachtgever zorgt dat de fotograaf toegang heeft tot de afgesproken locatie en dat eventuele toestemming (bijvoorbeeld van een gym) geregeld is.
 
 ## 3. Verzetten en annuleren
@@ -86,7 +86,7 @@ Deze algemene voorwaarden gelden voor alle offertes, opdrachten en overeenkomste
 
 ## 6. Auteursrecht en gebruik
 1. Het auteursrecht op alle beelden blijft bij de fotograaf.
-2. De opdrachtgever krijgt een gebruikslicentie zoals vastgelegd in de overeenkomst. Zonder afspraak is dat gebruik voor persoonlijke doeleinden en eigen social media.
+2. De opdrachtgever krijgt een gebruikslicentie zoals vastgelegd in de overeenkomst. Zonder aanvullende afspraak is dat gebruik voor de eigen social media en website van de opdrachtgever. Gebruik in betaalde advertenties vereist een aparte afspraak.
 3. Beelden mogen niet worden bewerkt, bijgesneden op een manier die het beeld wezenlijk verandert, of voorzien van filters, zonder toestemming.
 4. Bij publicatie wordt, waar redelijkerwijs mogelijk, de naam ${site.name} of @${site.instagram} vermeld.
 5. De fotograaf gebruikt beelden alleen voor haar portfolio en promotie als de opdrachtgever daar per project toestemming voor geeft.

@@ -1,6 +1,6 @@
-# CAP Studio – plan van aanpak
+# CAP Media Studio – plan van aanpak
 
-Website + klantportal voor **CAP Studio** (Cheryl Aldessa Prijs), foto en video voor sport en lifestyle.
+Website + klantportal voor **CAP Media Studio** (Cheryl Aldessa Prijs), foto en video voor sport en lifestyle. Domein: capmediastudio.nl (capmediastudio.com verwijst door).
 
 ## Stack
 
@@ -31,6 +31,12 @@ src/app
     ├── pdf/agreement/[id]       overeenkomst als pdf
     └── files/[id]/download      signed download-url voor hoge resolutie
 ```
+
+## Content en prijzen
+
+* Websiteteksten: standaard in `src/content/texts.ts`, aanpassingen in `site_texts`, te beheren in `/admin/teksten`.
+* Pakketten: prijs excl. btw in `packages.price` (leeg = prijs na overleg). De weergave incl. of excl. btw en het btw-tarief staan in `settings` (`price_display`, `vat_rate`).
+* Offertes worden gemaakt vanuit een pakket of sjabloon; nieuwe offertes krijgen het btw-tarief uit de instellingen.
 
 ## Beveiliging
 

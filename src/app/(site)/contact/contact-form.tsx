@@ -6,7 +6,7 @@ import { submitContact } from "./actions";
 import { Checkbox, Field, FormMessage, Input, Select, Textarea } from "@/components/ui/form";
 import { SubmitButton } from "@/components/ui/submit-button";
 
-const types = ["Kennismakingsshoot", "Mini shoot", "Halve dag", "Foto plus video", "Iets anders / weet ik nog niet"];
+const types = ["Mini shoot", "Halve dag", "Foto en video", "Op maat", "Weet ik nog niet"];
 
 export function ContactForm({ defaultType }: { defaultType?: string }) {
   const [state, action] = useActionState(submitContact, null);

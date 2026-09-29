@@ -44,7 +44,7 @@ export interface Package {
   slug: string;
   name: string;
   tagline: string | null;
-  price_from: number | null;
+  price: number | null; // excl. btw; null = prijs na overleg
   price_label: string | null;
   duration: string | null;
   features: string[];

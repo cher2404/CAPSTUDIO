@@ -1,36 +1,40 @@
 -- =============================================================================
--- CAP Studio – startdata (pakketten, sjablonen, e-mails, tips, instellingen)
+-- CAP Media Studio – startdata (pakketten, sjablonen, e-mails, tips, instellingen)
 -- Alles is daarna aan te passen in /admin.
 -- =============================================================================
 
-insert into public.packages (slug, name, tagline, price_from, price_label, duration, features, highlighted, sort) values
-  ('kennismaking', 'Kennismakingsshoot', 'Even aftasten, zonder gedoe', 95, 'vanaf', '30 minuten',
-   array['Korte intake vooraf', '1 locatie', '10 bewerkte foto''s', 'Online galerij', 'Levering binnen 7 dagen'], false, 1),
-  ('mini', 'Mini shoot', 'Snel, strak en to the point', 195, 'vanaf', '1 uur',
-   array['Intake en moodboard', '1 locatie, 1 outfitwissel', '25 bewerkte foto''s', '1 bewerkingsronde', 'Online galerij met favorieten'], false, 2),
-  ('halve-dag', 'Halve dag', 'Voor merken, coaches en campagnes', 495, 'vanaf', '4 uur',
-   array['Uitgebreide briefing en shotlist', 'Tot 2 locaties', '60+ bewerkte foto''s', '2 bewerkingsrondes', 'Gebruiksrechten voor online en social'], true, 3),
-  ('foto-video', 'Foto plus video', 'Beeld dat beweegt én blijft hangen', 895, 'vanaf', '4 tot 6 uur',
-   array['Foto en video in één dag', '60+ bewerkte foto''s', '1 reel van 30 tot 60 seconden', '3 korte clips voor social', '2 bewerkingsrondes'], false, 4)
+-- Prijzen worden excl. btw opgeslagen. 175 / 1.21 enz., zodat de website bij "incl. btw" exact €175 toont.
+insert into public.packages (slug, name, tagline, price, price_label, duration, features, highlighted, sort) values
+  ('mini', 'Mini shoot', 'Ideaal voor een nieuwe profielset of snelle content.', round(175 / 1.21, 4), '', '1 uur',
+   array['1 uur shoot', '12 bewerkte foto''s', 'Online galerij'], false, 1),
+  ('halve-dag', 'Halve dag', 'Voor trainers, coaches en kleine merken.', round(395 / 1.21, 4), '', '3 uur',
+   array['3 uur shoot', '25 bewerkte foto''s', 'Verschillende looks of locaties'], true, 2),
+  ('foto-video', 'Foto en video', 'Compleet contentpakket.', round(595 / 1.21, 4), 'vanaf', 'Halve dag',
+   array['Halve dag shoot', '25 bewerkte foto''s', 'Een korte reel voor social media'], false, 3),
+  ('op-maat', 'Op maat', 'Voor je sportschool of merk.', null, '', 'In overleg',
+   array['Meerdere shoots', 'Een maandpakket', 'Of een grotere productie'], false, 4)
 on conflict (slug) do nothing;
 
+-- Offertesjablonen op basis van de pakketten (regels excl. btw).
 insert into public.quote_templates (name, package_id, title, intro, items, validity_days, usage_rights, revision_rounds)
 select p.name, p.id, p.name,
-       'Leuk dat je met CAP Studio wilt shooten! Hieronder vind je de offerte op basis van ons gesprek. Vragen? Stel ze gerust via de knop onderaan.',
-       jsonb_build_array(jsonb_build_object('description', p.name || ' (' || p.duration || ')', 'quantity', 1, 'unit_price', round(p.price_from / 1.21, 2)),
-                         jsonb_build_object('description', 'Reiskosten', 'quantity', 1, 'unit_price', 0)),
+       'Leuk dat je met CAP Media Studio aan de slag wilt! Hieronder vind je de offerte op basis van ons gesprek. Vragen? Stel ze gerust via de knop onderaan.',
+       case when p.price is null then '[]'::jsonb
+            else jsonb_build_array(jsonb_build_object(
+              'description', p.name || ': ' || array_to_string(p.features, ', '),
+              'quantity', 1,
+              'unit_price', round(p.price, 2)))
+       end,
        14,
-       case when p.slug in ('halve-dag', 'foto-video')
-            then 'Online gebruik op eigen website, social media en betaalde social advertenties, onbeperkt in tijd.'
-            else 'Persoonlijk gebruik en eigen social media, onbeperkt in tijd.' end,
-       case when p.slug in ('halve-dag', 'foto-video') then 2 else 1 end
+       'Gebruik voor je eigen social media en website, onbeperkt in tijd. Gebruik voor betaalde advertenties alleen na aparte afspraak.',
+       1
   from public.packages p;
 
 insert into public.agreement_templates (name, is_default, default_usage_rights, default_revision_rounds, body) values
-('Standaard overeenkomst', true, 'Persoonlijk gebruik en eigen social media, onbeperkt in tijd.', 1,
+('Standaard overeenkomst', true, 'Gebruik voor je eigen social media en website, onbeperkt in tijd. Gebruik voor betaalde advertenties alleen na aparte afspraak.', 1,
 $tpl$# Overeenkomst fotografie en video
 
-**Tussen** CAP Studio (Cheryl Aldessa Prijs), hierna "de fotograaf",
+**Tussen** CAP Media Studio (Cheryl Aldessa Prijs), hierna "de fotograaf",
 **en** {{klant_naam}} {{bedrijf}} ({{klant_email}}), hierna "de opdrachtgever".
 
 Datum: {{datum}}
@@ -46,7 +50,7 @@ De bewerkte beelden worden geleverd via een privé online galerij. Bij deze opdr
 ## 3. Gebruiksrechten
 {{gebruiksrechten}}
 
-Het auteursrecht blijft bij de fotograaf. Doorverkopen of het gebruik door derden is alleen toegestaan na schriftelijke toestemming. Bij publicatie wordt waar mogelijk @capstudio vermeld.
+Het auteursrecht blijft bij de fotograaf. Doorverkopen of het gebruik door derden is alleen toegestaan na schriftelijke toestemming. Bij publicatie wordt waar mogelijk @capmediastudio vermeld.
 
 ## 4. Portfolio
 De fotograaf gebruikt beelden alleen in haar portfolio of op social media als de opdrachtgever daar in het portaal toestemming voor geeft.
@@ -58,16 +62,16 @@ Betaling volgens de factuur, binnen 14 dagen na factuurdatum. Hoge-resolutiebest
 Verzetten of annuleren kan kosteloos tot 24 uur voor de shoot via het klantportaal. Daarna kan de fotograaf 50% van het shootbedrag in rekening brengen.
 
 ## 7. Aansprakelijkheid en voorwaarden
-Op deze overeenkomst zijn de algemene voorwaarden van CAP Studio van toepassing. De aansprakelijkheid van de fotograaf is beperkt tot het factuurbedrag.
+Op deze overeenkomst zijn de algemene voorwaarden van CAP Media Studio van toepassing. De aansprakelijkheid van de fotograaf is beperkt tot het factuurbedrag.
 
 Door digitaal te ondertekenen gaat de opdrachtgever akkoord met deze overeenkomst. Naam, datum, tijd en IP-adres worden vastgelegd.
 $tpl$);
 
 insert into public.email_templates (key, name, description, subject, body, variables) values
-('login_link', 'Inloglink', 'Magic link om in te loggen op het portaal', 'Je inloglink voor CAP Studio',
+('login_link', 'Inloglink', 'Magic link om in te loggen op het portaal', 'Je inloglink voor CAP Media Studio',
 $b$Hoi{{naam_komma}}
 
-Klik op de knop hieronder om in te loggen op je CAP Studio-portaal. De link is 1 uur geldig en werkt één keer.
+Klik op de knop hieronder om in te loggen op je CAP Media Studio-portaal. De link is 1 uur geldig en werkt één keer.
 
 [Inloggen]({{link}})
 
@@ -84,7 +88,7 @@ Ondertussen kun je al inloggen op je persoonlijke portaal. Daar komen straks je 
 [Naar je portaal]({{portal_link}})
 
 Groet,
-Cheryl – CAP Studio$b$,
+Cheryl – CAP Media Studio$b$,
  array['naam', 'portal_link']),
 
 ('contact_admin', 'Nieuwe aanvraag (voor jou)', 'Naar jou bij een nieuwe aanvraag', 'Nieuwe aanvraag van {{naam}}',
@@ -169,7 +173,7 @@ $b$**{{actie}}**
 [Open in admin]({{admin_link}})$b$,
  array['actie', 'naam', 'datum', 'tijd', 'project', 'admin_link']),
 
-('quote_sent', 'Offerte verstuurd', 'Als je een offerte verstuurt', 'Je offerte van CAP Studio ({{nummer}})',
+('quote_sent', 'Offerte verstuurd', 'Als je een offerte verstuurt', 'Je offerte van CAP Media Studio ({{nummer}})',
 $b$Hoi {{naam}},
 
 Je offerte voor **{{project}}** staat klaar in je portaal.
@@ -306,5 +310,7 @@ on conflict (slug) do nothing;
 insert into public.settings (key, value) values
   ('reel_url', '""'::jsonb),
   ('hero_image', '""'::jsonb),
-  ('booking_lead_hours', '24'::jsonb)
+  ('booking_lead_hours', '24'::jsonb),
+  ('vat_rate', '21'::jsonb),
+  ('price_display', '"incl"'::jsonb)
 on conflict (key) do nothing;

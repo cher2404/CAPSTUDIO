@@ -30,32 +30,77 @@ function addDays(days: number) {
   return d.toISOString().slice(0, 10);
 }
 
+const DEFAULT_INTRO =
+  "Leuk dat je met CAP Media Studio aan de slag wilt! Hieronder vind je de offerte op basis van ons gesprek. Vragen? Stel ze gerust via de knop onderaan.";
+
+/** Nieuwe offerte: leeg, vanuit een sjabloon, of direct vanuit een pakket van de tarievenpagina ("pkg:<id>"). */
 export async function createQuote(form: FormData) {
   const { supabase } = await requireAdmin();
   const projectId = str(form, "project_id");
-  const templateId = str(form, "template_id");
+  const source = str(form, "template_id");
 
-  let tpl: QuoteTemplate | null = null;
-  if (templateId) {
-    const { data } = await supabase.from("quote_templates").select("*").eq("id", templateId).single();
-    tpl = data as QuoteTemplate;
+  const [{ data: vat }, { data: agreementTpl }] = await Promise.all([
+    supabase.from("settings").select("value").eq("key", "vat_rate").maybeSingle(),
+    supabase.from("agreement_templates").select("default_usage_rights, default_revision_rounds").eq("is_default", true).maybeSingle(),
+  ]);
+  const vatRate = vat?.value != null ? Number(vat.value) : 21;
+
+  let base = {
+    title: "Offerte",
+    intro: DEFAULT_INTRO as string | null,
+    validityDays: 14,
+    usage: (agreementTpl?.default_usage_rights as string | null) ?? null,
+    rounds: (agreementTpl?.default_revision_rounds as number | null) ?? 1,
+    items: [] as ItemInput[],
+  };
+
+  if (source.startsWith("pkg:")) {
+    const { data: pkg } = await supabase.from("packages").select("*").eq("id", source.slice(4)).single();
+    if (pkg) {
+      base = {
+        ...base,
+        title: pkg.name,
+        items: [
+          {
+            description: pkg.features?.length ? `${pkg.name}: ${pkg.features.join(", ")}` : pkg.name,
+            quantity: 1,
+            unit_price: pkg.price != null ? Math.round(Number(pkg.price) * 100) / 100 : 0,
+          },
+        ],
+      };
+    }
+  } else if (source) {
+    const { data } = await supabase.from("quote_templates").select("*").eq("id", source).single();
+    const tpl = data as QuoteTemplate | null;
+    if (tpl) {
+      base = {
+        title: tpl.title,
+        intro: tpl.intro,
+        validityDays: tpl.validity_days,
+        usage: tpl.usage_rights ?? base.usage,
+        rounds: tpl.revision_rounds,
+        items: tpl.items ?? [],
+      };
+    }
   }
+
   const { data: quote, error } = await supabase
     .from("quotes")
     .insert({
       project_id: projectId,
-      title: tpl?.title ?? "Offerte",
-      intro: tpl?.intro ?? null,
-      valid_until: addDays(tpl?.validity_days ?? 14),
-      usage_rights: tpl?.usage_rights ?? null,
-      revision_rounds: tpl?.revision_rounds ?? 1,
+      title: base.title,
+      intro: base.intro,
+      vat_rate: vatRate,
+      valid_until: addDays(base.validityDays),
+      usage_rights: base.usage,
+      revision_rounds: base.rounds,
     })
     .select("id")
     .single();
   if (error) throw error;
 
-  if (tpl?.items?.length) {
-    await supabase.from("quote_items").insert(tpl.items.map((it, i) => ({ ...it, quote_id: quote.id, sort: i })));
+  if (base.items.length) {
+    await supabase.from("quote_items").insert(base.items.map((it, i) => ({ ...it, quote_id: quote.id, sort: i })));
   }
   redirect(`/admin/offertes/${quote.id}`);
 }

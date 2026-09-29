@@ -48,7 +48,7 @@ function layout(title: string, content: string) {
 <body style="margin:0;background:#0b0b0c;padding:32px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Arial,sans-serif;color:#d9d3c8">
 <div style="max-width:560px;margin:0 auto">
   <div style="padding:0 4px 24px;border-bottom:1px solid #26262a">
-    <div style="font-family:Georgia,'Times New Roman',serif;font-size:26px;color:#f1ebe1;letter-spacing:.01em">CAP Studio</div>
+    <div style="font-family:Georgia,'Times New Roman',serif;font-size:26px;color:#f1ebe1;letter-spacing:.01em">CAP Media Studio</div>
     <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8d877e;margin-top:4px">${site.tagline}</div>
   </div>
   <div style="padding:28px 4px;font-size:15px;line-height:1.65">

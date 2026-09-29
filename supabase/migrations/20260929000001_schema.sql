@@ -1,5 +1,5 @@
 -- =============================================================================
--- CAP Studio – databaseschema
+-- CAP Media Studio – databaseschema
 -- Tabellen, helpers, triggers, RPC's en row level security.
 -- =============================================================================
 
@@ -159,8 +159,8 @@ create table public.packages (
   slug         text not null unique,
   name         text not null,
   tagline      text,
-  price_from   numeric(10, 2),
-  price_label  text,
+  price        numeric(12, 4),          -- excl. btw (4 decimalen, zodat incl. btw exact uitkomt); leeg = prijs na overleg
+  price_label  text,                    -- bijv. 'vanaf'
   duration     text,
   features     text[] not null default '{}',
   highlighted  boolean not null default false,
@@ -740,6 +740,13 @@ create table public.email_templates (
 create trigger email_templates_updated_at before update on public.email_templates
   for each row execute function public.set_updated_at();
 
+-- Aanpasbare websiteteksten (alleen overrides; standaardteksten staan in de code).
+create table public.site_texts (
+  key         text primary key,
+  value       text not null,
+  updated_at  timestamptz not null default now()
+);
+
 create table public.settings (
   key         text primary key,
   value       jsonb not null,
@@ -781,6 +788,7 @@ alter table public.articles           enable row level security;
 alter table public.portfolio_items    enable row level security;
 alter table public.email_templates    enable row level security;
 alter table public.settings           enable row level security;
+alter table public.site_texts         enable row level security;
 alter table public.deletion_requests  enable row level security;
 
 -- Admin mag overal alles.
@@ -791,7 +799,7 @@ begin
     'profiles', 'clients', 'client_notes', 'projects', 'packages', 'quote_templates', 'quotes',
     'quote_items', 'agreement_templates', 'agreements', 'signatures', 'availability',
     'appointments', 'messages', 'galleries', 'files', 'invoices', 'articles',
-    'portfolio_items', 'email_templates', 'settings', 'deletion_requests']
+    'portfolio_items', 'email_templates', 'settings', 'site_texts', 'deletion_requests']
   loop
     execute format(
       'create policy "admin_all" on public.%I for all to authenticated using (public.is_admin()) with check (public.is_admin())', t);
@@ -818,6 +826,8 @@ create policy "public_packages_select" on public.packages for select to anon, au
 create policy "public_portfolio_select" on public.portfolio_items for select to anon, authenticated
   using (published);
 create policy "public_settings_select" on public.settings for select to anon, authenticated
+  using (true);
+create policy "public_site_texts_select" on public.site_texts for select to anon, authenticated
   using (true);
 
 -- quotes (concepten blijven verborgen)

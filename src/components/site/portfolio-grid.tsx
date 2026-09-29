@@ -75,7 +75,7 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
             >
               <Image
                 src={item.image_url}
-                alt={item.alt ?? item.title ?? "Portfolio CAP Studio"}
+                alt={item.alt ?? item.title ?? "Portfolio CAP Media Studio"}
                 fill
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 className="object-cover transition duration-[1.4s] ease-[var(--ease-film)] group-hover:scale-[1.03]"
@@ -119,7 +119,7 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
                 <Image
                   key={current.id}
                   src={current.image_url}
-                  alt={current.alt ?? current.title ?? "Portfolio CAP Studio"}
+                  alt={current.alt ?? current.title ?? "Portfolio CAP Media Studio"}
                   fill
                   sizes="100vw"
                   quality={85}

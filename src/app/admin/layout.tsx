@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AppShell, type NavItem } from "@/components/portal/app-shell";
 import { requireAdmin } from "@/lib/auth";
 
-export const metadata: Metadata = { title: { default: "Admin", template: "%s | CAP Studio admin" }, robots: { index: false } };
+export const metadata: Metadata = { title: { default: "Admin", template: "%s | CAP Media Studio admin" }, robots: { index: false } };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const { supabase, profile, user } = await requireAdmin();
@@ -20,7 +20,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: "/admin/galerijen", label: "Galerijen", icon: "image" },
     { href: "/admin/sjablonen", label: "Offertesjablonen", icon: "template" },
     { href: "/admin/overeenkomst", label: "Overeenkomst", icon: "sign" },
-    { href: "/admin/pakketten", label: "Pakketten", icon: "tag" },
+    { href: "/admin/pakketten", label: "Pakketten en prijzen", icon: "tag" },
+    { href: "/admin/teksten", label: "Websiteteksten", icon: "template" },
     { href: "/admin/portfolio", label: "Portfolio", icon: "grid" },
     { href: "/admin/tips", label: "Tips", icon: "book" },
     { href: "/admin/emails", label: "E-mailsjablonen", icon: "mail" },

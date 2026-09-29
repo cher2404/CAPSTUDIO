@@ -1,6 +1,6 @@
-# CAP Studio
+# CAP Media Studio
 
-Website en klantportaal voor **CAP Studio**, het merk van Cheryl Aldessa Prijs: foto en video voor sport en lifestyle.
+Website en klantportaal voor **CAP Media Studio** ([capmediastudio.nl](https://capmediastudio.nl)), het merk van Cheryl Aldessa Prijs: foto en video voor sport en lifestyle.
 
 Next.js 16 (App Router) · TypeScript · Tailwind v4 · Supabase (auth, database, storage, RLS) · Resend · Vercel
 
@@ -13,7 +13,7 @@ Het plan van aanpak en de architectuur staan in [`docs/PLAN.md`](docs/PLAN.md), 
 **Klantportaal** (`/portal`, inloggen met magic link):
 dashboard · afspraken (zelf boeken, verzetten en annuleren tot 24 uur vooraf, bevestiging met .ics, herinnering) · offertes (accepteren of vraag stellen, pdf) · overeenkomsten (automatisch na acceptatie, digitaal ondertekenen met naam, tijd, IP en SHA-256 hash, pdf) · berichten per project (realtime, e-mailnotificatie) · privé galerijen (favorieten, download in hoge resolutie na betaling of vrijgave) · tips · documenten · account (gegevens wijzigen, portfoliotoestemming per project, gegevens downloaden, verwijderverzoek).
 
-**Admin** (`/admin`): overzicht en pipeline · klanten en projecten (status, betaalstatus, notities, facturen) · offertes vanuit sjablonen · offertesjablonen · overeenkomstsjabloon · agenda en beschikbaarheid · galerijen (drag-and-drop upload, webversies worden in de browser gemaakt) · portfolio · pakketten · tips · alle e-mailsjablonen met live voorbeeld en testmail · instellingen, AVG-verzoeken en e-maillog.
+**Admin** (`/admin`): overzicht en pipeline · websiteteksten (alle teksten van de publieke site) · pakketten en prijzen (btw-weergave incl. of excl. instelbaar) · klanten en projecten (status, betaalstatus, notities, facturen) · offertes vanuit sjablonen · offertesjablonen · overeenkomstsjabloon · agenda en beschikbaarheid · galerijen (drag-and-drop upload, webversies worden in de browser gemaakt) · portfolio · pakketten · tips · alle e-mailsjablonen met live voorbeeld en testmail · instellingen, AVG-verzoeken en e-maillog.
 
 ## Installatie
 
@@ -35,7 +35,7 @@ Log één keer in op `/login` met het adres uit `ADMIN_EMAIL`. Maak jezelf daarn
 
 ```sql
 update public.profiles set role = 'admin', full_name = 'Cheryl Aldessa Prijs'
-where email = 'hallo@capstudio.nl';
+where email = 'hallo@capmediastudio.nl';
 ```
 
 ### 3. Resend
@@ -59,7 +59,11 @@ Zonder Supabase-variabelen draait de publieke site op voorbeelddata. Het portaal
 3. `vercel.json` bevat een dagelijkse cron (18:00 NL-tijd) die herinneringen stuurt voor alle shoots van de volgende dag. Vercel roept hem aan met `CRON_SECRET`.
    - **Precies 24 uur vooraf?** Op Vercel Pro zet je de schedule op `0 * * * *` en `REMINDER_WINDOW_HOURS=24`. Gratis alternatief: laat Supabase `pg_cron` + `pg_net` elk uur `GET /api/cron/reminders` aanroepen met de header `Authorization: Bearer <CRON_SECRET>`.
 
-### 6. Optioneel: Google Calendar
+### 6. Domeinen
+
+Voeg in Vercel (*Project → Settings → Domains*) `capmediastudio.nl`, `www.capmediastudio.nl`, `capmediastudio.com` en `www.capmediastudio.com` toe, met `capmediastudio.nl` als primair domein. De app verwijst de andere drie ook zelf permanent (308) door naar `https://capmediastudio.nl` (zie `next.config.ts`).
+
+### 7. Optioneel: Google Calendar
 
 Maak in Google Cloud een OAuth-client (type *Web*) met de Calendar API aan. Haal via de [OAuth Playground](https://developers.google.com/oauthplayground) een refresh token op met scope `https://www.googleapis.com/auth/calendar.events`. Vul daarna de `GOOGLE_*` variabelen in. Boekingen, verzettingen en annuleringen komen dan automatisch in je agenda. Klanten krijgen altijd een `.ics`-uitnodiging, ook zonder deze koppeling.
 
@@ -67,10 +71,18 @@ Maak in Google Cloud een OAuth-client (type *Web*) met de Calendar API aan. Haal
 
 1. Pas `NEXT_PUBLIC_KVK`, e-mail en Instagram aan.
 2. Upload je eigen werk via **Admin → Portfolio**. De voorbeeldfoto's (Unsplash) verdwijnen zodra er één eigen foto staat. Vink bij je beste foto **Hero** aan voor de homepage.
-3. Zet je showreel en portretfoto bij **Admin → Instellingen**.
+3. Zet je showreel en portretfoto bij **Admin → Instellingen**, en schrijf je uitgebreide verhaal bij **Admin → Websiteteksten → Over mij**.
 4. Loop de pakketten, offertesjablonen, het overeenkomstsjabloon en de e-mailteksten na.
 5. Laat de privacyverklaring, de algemene voorwaarden en de overeenkomst juridisch checken. De teksten zijn een stevige basis, maar geen juridisch advies.
 6. Zet momenten open bij **Admin → Agenda**.
+
+## Prijzen en btw
+
+Pakketprijzen worden **excl. btw** opgeslagen, met vier decimalen, zodat ze incl. btw exact uitkomen (€175, €395, €595). In **Admin → Pakketten** voer je een prijs in, inclusief of exclusief btw naar keuze. In **Admin → Instellingen** kies je of de website prijzen inclusief of exclusief btw toont, en welk btw-tarief je hanteert (0% bij de KOR). Offerteregels zijn altijd excl. btw; de btw wordt erbij opgeteld. Een offerte maak je vanuit een project, direct op basis van een pakket of vanuit een sjabloon.
+
+## Websiteteksten
+
+De standaardteksten staan in `src/content/texts.ts`. In **Admin → Websiteteksten** overschrijf je ze. In de database (`site_texts`) staan alleen je aanpassingen. Zet je een veld terug naar de standaardtekst, dan volgt het weer de code.
 
 ## Facturatie later toevoegen
 

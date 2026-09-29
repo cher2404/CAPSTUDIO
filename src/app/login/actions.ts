@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { ActionState } from "@/lib/types";
 import { isEmail, safeNext, str } from "@/lib/utils";
 
-const GENERIC = "Check je inbox! Als dit e-mailadres bij CAP Studio bekend is, ontvang je binnen een minuut een inloglink.";
+const GENERIC = "Check je inbox! Als dit e-mailadres bij CAP Media Studio bekend is, ontvang je binnen een minuut een inloglink.";
 
 export async function sendMagicLink(_: ActionState, form: FormData): Promise<ActionState> {
   const email = str(form, "email").toLowerCase();

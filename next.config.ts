@@ -14,6 +14,15 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: { bodySizeLimit: "10mb" },
   },
+  // capmediastudio.com en www verwijzen permanent door naar https://capmediastudio.nl
+  async redirects() {
+    return ["capmediastudio.com", "www.capmediastudio.com", "www.capmediastudio.nl"].map((host) => ({
+      source: "/:path*",
+      has: [{ type: "host" as const, value: host }],
+      destination: "https://capmediastudio.nl/:path*",
+      permanent: true,
+    }));
+  },
   async headers() {
     return [
       {

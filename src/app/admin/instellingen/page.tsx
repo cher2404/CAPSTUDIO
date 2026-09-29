@@ -2,7 +2,7 @@ import { processDeletion, saveSettings } from "../_actions/content";
 import { ActionForm, ConfirmButton } from "@/components/admin/forms";
 import { Badge, Card, PageHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Field, Input } from "@/components/ui/form";
+import { Field, Input, Select } from "@/components/ui/form";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { requireAdmin } from "@/lib/auth";
 import { formatDateTime } from "@/lib/format";
@@ -19,7 +19,7 @@ export default async function SettingsPage() {
     supabase.from("deletion_requests").select("*").order("created_at", { ascending: false }),
     supabase.from("email_log").select("*").order("created_at", { ascending: false }).limit(30),
   ]);
-  const get = (k: string) => ((settings ?? []).find((s) => s.key === k)?.value as string) ?? "";
+  const get = (k: string) => String((settings ?? []).find((s) => s.key === k)?.value ?? "");
 
   const checks = [
     ["Supabase service key", Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_SECRET_KEY)],
@@ -45,6 +45,17 @@ export default async function SettingsPage() {
             <Field label="Showreel (YouTube/Vimeo)">
               <Input name="reel_url" defaultValue={get("reel_url")} />
             </Field>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Prijzen op de website">
+                <Select name="price_display" defaultValue={get("price_display") || "incl"}>
+                  <option value="incl">Inclusief btw</option>
+                  <option value="excl">Exclusief btw</option>
+                </Select>
+              </Field>
+              <Field label="Btw-tarief (%)" hint="0 bij de kleineondernemersregeling (KOR)">
+                <Input name="vat_rate" type="number" step="0.1" min={0} defaultValue={String(get("vat_rate") || 21)} />
+              </Field>
+            </div>
             <SubmitButton>Opslaan</SubmitButton>
           </ActionForm>
           <p className="mt-5 text-xs text-mist">

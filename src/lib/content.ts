@@ -1,5 +1,7 @@
 import "server-only";
 import { createPublicClient } from "@/lib/supabase/public";
+import { cache } from "react";
+import { textDefs, type TextKey } from "@/content/texts";
 import type { Package, PortfolioItem } from "@/lib/types";
 
 /**
@@ -33,26 +35,28 @@ export const demoPortfolio: PortfolioItem[] = [
   sort: i,
 }));
 
+const excl = (incl: number) => Math.round((incl / 1.21) * 10000) / 10000;
+
 export const demoPackages: Package[] = [
   {
-    id: "kennismaking", slug: "kennismaking", name: "Kennismakingsshoot", tagline: "Even aftasten, zonder gedoe",
-    price_from: 95, price_label: "vanaf", duration: "30 minuten", highlighted: false, sort: 1, active: true,
-    features: ["Korte intake vooraf", "1 locatie", "10 bewerkte foto's", "Online galerij", "Levering binnen 7 dagen"],
+    id: "mini", slug: "mini", name: "Mini shoot", tagline: "Ideaal voor een nieuwe profielset of snelle content.",
+    price: excl(175), price_label: "", duration: "1 uur", highlighted: false, sort: 1, active: true,
+    features: ["1 uur shoot", "12 bewerkte foto's", "Online galerij"],
   },
   {
-    id: "mini", slug: "mini", name: "Mini shoot", tagline: "Snel, strak en to the point",
-    price_from: 195, price_label: "vanaf", duration: "1 uur", highlighted: false, sort: 2, active: true,
-    features: ["Intake en moodboard", "1 locatie, 1 outfitwissel", "25 bewerkte foto's", "1 bewerkingsronde", "Online galerij met favorieten"],
+    id: "halve-dag", slug: "halve-dag", name: "Halve dag", tagline: "Voor trainers, coaches en kleine merken.",
+    price: excl(395), price_label: "", duration: "3 uur", highlighted: true, sort: 2, active: true,
+    features: ["3 uur shoot", "25 bewerkte foto's", "Verschillende looks of locaties"],
   },
   {
-    id: "halve-dag", slug: "halve-dag", name: "Halve dag", tagline: "Voor merken, coaches en campagnes",
-    price_from: 495, price_label: "vanaf", duration: "4 uur", highlighted: true, sort: 3, active: true,
-    features: ["Uitgebreide briefing en shotlist", "Tot 2 locaties", "60+ bewerkte foto's", "2 bewerkingsrondes", "Gebruiksrechten voor online en social"],
+    id: "foto-video", slug: "foto-video", name: "Foto en video", tagline: "Compleet contentpakket.",
+    price: excl(595), price_label: "vanaf", duration: "Halve dag", highlighted: false, sort: 3, active: true,
+    features: ["Halve dag shoot", "25 bewerkte foto's", "Een korte reel voor social media"],
   },
   {
-    id: "foto-video", slug: "foto-video", name: "Foto plus video", tagline: "Beeld dat beweegt én blijft hangen",
-    price_from: 895, price_label: "vanaf", duration: "4 tot 6 uur", highlighted: false, sort: 4, active: true,
-    features: ["Foto en video in één dag", "60+ bewerkte foto's", "1 reel van 30 tot 60 seconden", "3 korte clips voor social", "2 bewerkingsrondes"],
+    id: "op-maat", slug: "op-maat", name: "Op maat", tagline: "Voor je sportschool of merk.",
+    price: null, price_label: "", duration: "In overleg", highlighted: false, sort: 4, active: true,
+    features: ["Meerdere shoots", "Een maandpakket", "Of een grotere productie"],
   },
 ];
 
@@ -81,7 +85,7 @@ export async function getSetting<T = string>(key: string, fallback: T): Promise<
 export async function getHero() {
   const [hero, portfolio] = await Promise.all([getSetting("hero_image", ""), getPortfolio()]);
   const featured = portfolio.find((p) => p.featured && p.category !== "video") ?? portfolio.find((p) => p.category !== "video");
-  return { src: hero || featured?.image_url || demoPortfolio[0]!.image_url, alt: featured?.alt ?? "Filmische sportfoto door CAP Studio" };
+  return { src: hero || featured?.image_url || demoPortfolio[0]!.image_url, alt: featured?.alt ?? "Filmische sportfoto door CAP Media Studio" };
 }
 
 /** Zet een YouTube/Vimeo-link om naar een embed-URL. */
@@ -92,4 +96,43 @@ export function toEmbedUrl(url: string) {
   const vimeo = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
   if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}?dnt=1&title=0&byline=0&portrait=0`;
   return url;
+}
+
+/** Websiteteksten: standaardtekst uit de code, overschreven door wat je in de admin aanpast. */
+export const getTexts = cache(async (): Promise<Record<TextKey, string>> => {
+  const texts = Object.fromEntries(Object.entries(textDefs).map(([k, d]) => [k, d.default])) as Record<TextKey, string>;
+  const supabase = createPublicClient();
+  if (!supabase) return texts;
+  const { data } = await supabase.from("site_texts").select("key, value");
+  for (const row of data ?? []) if (row.key in texts) texts[row.key as TextKey] = row.value;
+  return texts;
+});
+
+export type Pricing = { vatRate: number; display: "incl" | "excl" };
+
+export const getPricing = cache(async (): Promise<Pricing> => {
+  const supabase = createPublicClient();
+  if (!supabase) return { vatRate: 21, display: "incl" };
+  const { data } = await supabase.from("settings").select("key, value").in("key", ["vat_rate", "price_display"]);
+  const get = (k: string) => data?.find((r) => r.key === k)?.value;
+  return { vatRate: Number(get("vat_rate") ?? 21), display: get("price_display") === "excl" ? "excl" : "incl" };
+});
+
+/** Prijs zoals hij op de website staat, volgens de btw-instelling. */
+export function displayPrice(pkg: Pick<Package, "price">, pricing: Pricing) {
+  if (pkg.price == null) return null;
+  const value = pricing.display === "incl" ? Number(pkg.price) * (1 + pricing.vatRate / 100) : Number(pkg.price);
+  const rounded = Math.round(value * 100) / 100;
+  const whole = Math.abs(rounded - Math.round(rounded)) < 0.005;
+  return new Intl.NumberFormat("nl-NL", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: whole ? 0 : 2,
+    maximumFractionDigits: whole ? 0 : 2,
+  }).format(rounded);
+}
+
+export function vatNote(pricing: Pricing) {
+  if (pricing.vatRate === 0) return "geen btw";
+  return pricing.display === "incl" ? "incl. btw" : "excl. btw";
 }

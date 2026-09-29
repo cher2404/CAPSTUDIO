@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import { renderEmail, sendEmail } from "@/lib/email";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { textDefs } from "@/content/texts";
 import type { ActionState, PortfolioCategory } from "@/lib/types";
 import { bool, num, slugify, str } from "@/lib/utils";
 
@@ -85,6 +86,17 @@ export async function deletePortfolioItem(form: FormData) {
 
 // ---------- Pakketten ----------
 
+/** Pakketprijzen worden excl. btw opgeslagen; invoeren mag incl. of excl. Leeg = prijs na overleg. */
+function packagePrice(raw: string, mode: string, vatRate: number) {
+  if (!raw) return null;
+  // "1.250,50" (NL) en "1250.50" allebei goed lezen
+  const normalized = raw.includes(",") ? raw.replace(/\./g, "").replace(",", ".") : raw;
+  const value = Number(normalized.replace(/[^\d.]/g, ""));
+  if (!Number.isFinite(value)) return null;
+  const excl = mode === "incl" ? value / (1 + vatRate / 100) : value;
+  return Math.round(excl * 10000) / 10000;
+}
+
 export async function savePackage(form: FormData) {
   const { supabase } = await requireAdmin();
   const id = str(form, "id");
@@ -93,7 +105,7 @@ export async function savePackage(form: FormData) {
     name,
     slug: slugify(str(form, "slug") || name),
     tagline: str(form, "tagline") || null,
-    price_from: num(form, "price_from", 0),
+    price: packagePrice(str(form, "price"), str(form, "price_mode"), num(form, "vat_rate", 21)),
     price_label: str(form, "price_label") || "vanaf",
     duration: str(form, "duration") || null,
     features: str(form, "features").split("\n").map((l) => l.trim()).filter(Boolean),
@@ -128,7 +140,7 @@ export async function saveEmailTemplate(_: ActionState, form: FormData): Promise
 export async function previewEmail(subject: string, body: string, variables: string[]) {
   await requireAdmin();
   const vars = Object.fromEntries(variables.map((v) => [v, v.includes("link") ? undefined : `[${v}]`]));
-  const raw = Object.fromEntries(variables.filter((v) => v.includes("link")).map((v) => [v, "https://capstudio.nl"]));
+  const raw = Object.fromEntries(variables.filter((v) => v.includes("link")).map((v) => [v, "https://capmediastudio.nl"]));
   return renderEmail({ subject, body }, vars, raw);
 }
 
@@ -141,7 +153,7 @@ export async function sendTestEmail(form: FormData) {
     to: profile!.email,
     template: key,
     vars: Object.fromEntries(variables.filter((v) => !v.includes("link")).map((v) => [v, `[${v}]`])),
-    rawVars: Object.fromEntries(variables.filter((v) => v.includes("link")).map((v) => [v, "https://capstudio.nl"])),
+    rawVars: Object.fromEntries(variables.filter((v) => v.includes("link")).map((v) => [v, "https://capmediastudio.nl"])),
   });
   redirect(`/admin/emails/${key}?test=1`);
 }
@@ -150,13 +162,37 @@ export async function sendTestEmail(form: FormData) {
 
 export async function saveSettings(_: ActionState, form: FormData): Promise<ActionState> {
   const { supabase } = await requireAdmin();
-  const rows = ["reel_url", "hero_image", "about_image"]
+  const now = new Date().toISOString();
+  const rows: { key: string; value: unknown; updated_at: string }[] = ["reel_url", "hero_image", "about_image"]
     .filter((key) => form.has(key))
-    .map((key) => ({ key, value: str(form, key), updated_at: new Date().toISOString() }));
+    .map((key) => ({ key, value: str(form, key), updated_at: now }));
+  if (form.has("vat_rate")) rows.push({ key: "vat_rate", value: Math.max(0, num(form, "vat_rate", 21)), updated_at: now });
+  if (form.has("price_display")) rows.push({ key: "price_display", value: str(form, "price_display") === "excl" ? "excl" : "incl", updated_at: now });
   const { error } = await supabase.from("settings").upsert(rows);
   if (error) return { error: error.message };
   refreshPublic();
   return { ok: true, message: "Instellingen opgeslagen." };
+}
+
+// ---------- Websiteteksten ----------
+
+export async function saveTexts(_: ActionState, form: FormData): Promise<ActionState> {
+  const { supabase } = await requireAdmin();
+  const upserts: { key: string; value: string; updated_at: string }[] = [];
+  const resets: string[] = [];
+  for (const [key, def] of Object.entries(textDefs)) {
+    if (!form.has(key)) continue;
+    const value = String(form.get(key) ?? "").replace(/\r\n/g, "\n").trim();
+    if (value === def.default.trim()) resets.push(key);
+    else upserts.push({ key, value, updated_at: new Date().toISOString() });
+  }
+  if (upserts.length) {
+    const { error } = await supabase.from("site_texts").upsert(upserts);
+    if (error) return { error: error.message };
+  }
+  if (resets.length) await supabase.from("site_texts").delete().in("key", resets);
+  refreshPublic();
+  return { ok: true, message: "Teksten opgeslagen. De website is bijgewerkt." };
 }
 
 /**

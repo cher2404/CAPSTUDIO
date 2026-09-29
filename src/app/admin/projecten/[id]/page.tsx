@@ -25,7 +25,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
   const project = data as Project & { clients: Client };
   const client = project.clients;
 
-  const [quotes, agreements, signatures, appts, galleries, invoices, messages, templates, slots] = await Promise.all([
+  const [quotes, agreements, signatures, appts, galleries, invoices, messages, templates, packages, slots] = await Promise.all([
     supabase.from("quotes").select("*").eq("project_id", id).order("created_at", { ascending: false }),
     supabase.from("agreements").select("*").eq("project_id", id).order("created_at", { ascending: false }),
     supabase.from("signatures").select("*, agreements!inner(project_id)").eq("agreements.project_id", id),
@@ -34,6 +34,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
     supabase.from("invoices").select("*").eq("project_id", id).order("created_at", { ascending: false }),
     supabase.from("messages").select("*").eq("project_id", id).order("created_at"),
     supabase.from("quote_templates").select("id, name").order("name"),
+    supabase.from("packages").select("id, name").order("sort"),
     supabase.rpc("open_slots", { p_from: new Date().toISOString() }),
   ]);
   await supabase.rpc("mark_messages_read", { p_project_id: id });
@@ -70,12 +71,21 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
               <form action={createQuote} className="flex gap-2">
                 <input type="hidden" name="project_id" value={id} />
                 <Select name="template_id" className="py-2 text-sm">
-                  <option value="">Leeg</option>
-                  {((templates.data ?? []) as Pick<QuoteTemplate, "id" | "name">[]).map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.name}
-                    </option>
-                  ))}
+                  <optgroup label="Pakketten">
+                    {((packages.data ?? []) as { id: string; name: string }[]).map((p) => (
+                      <option key={p.id} value={`pkg:${p.id}`}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Sjablonen">
+                    {((templates.data ?? []) as Pick<QuoteTemplate, "id" | "name">[]).map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <option value="">Lege offerte</option>
                 </Select>
                 <Button size="sm" variant="subtle">
                   + Offerte

@@ -31,7 +31,7 @@ function Header({ right }: { right: string[] }) {
     <View style={s.header} fixed>
       <View>
         <Text style={s.brand}>
-          CAP <Text style={s.brandItalic}>Studio</Text>
+          CAP Media <Text style={s.brandItalic}>Studio</Text>
         </Text>
         <Text style={s.tagline}>{site.tagline}</Text>
       </View>

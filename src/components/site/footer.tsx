@@ -10,7 +10,7 @@ export function SiteFooter() {
         <div className="space-y-5">
           <Logo />
           <p className="max-w-sm text-sm leading-relaxed text-mist">
-            Filmische beelden voor sporters, coaches en merken die meer willen dan een snelle snapshot. Actief in heel {site.region}.
+            Foto en video voor sport en lifestyle, met een donkere, filmische look die opvalt. Actief in heel {site.region}.
           </p>
         </div>
         <div className="space-y-3 text-sm">

@@ -22,11 +22,11 @@ export function createIcs(opts: {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//CAP Studio//Portal//NL",
+    "PRODID:-//CAP Media Studio//Portal//NL",
     "CALSCALE:GREGORIAN",
     `METHOD:${opts.cancelled ? "CANCEL" : "PUBLISH"}`,
     "BEGIN:VEVENT",
-    `UID:${opts.uid}@capstudio`,
+    `UID:${opts.uid}@capmediastudio`,
     `DTSTAMP:${stamp(new Date())}`,
     `DTSTART:${stamp(new Date(opts.start))}`,
     `DTEND:${stamp(new Date(opts.end))}`,

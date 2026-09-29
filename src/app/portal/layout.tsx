@@ -3,7 +3,7 @@ import { AppShell, type NavItem } from "@/components/portal/app-shell";
 import { getPortalCounts } from "@/lib/portal";
 import { requireClient } from "@/lib/auth";
 
-export const metadata: Metadata = { title: { default: "Klantportaal", template: "%s | CAP Studio portaal" }, robots: { index: false } };
+export const metadata: Metadata = { title: { default: "Klantportaal", template: "%s | CAP Media Studio portaal" }, robots: { index: false } };
 
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   const { client, profile } = await requireClient();

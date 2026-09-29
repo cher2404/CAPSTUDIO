@@ -2,14 +2,14 @@
  * Vaste bedrijfsgegevens. Pas deze waarden aan (of zet ze in je .env).
  */
 export const site = {
-  name: "CAP Studio",
+  name: "CAP Media Studio",
   tagline: "foto en video voor sport en lifestyle",
   owner: "Cheryl Aldessa Prijs",
   description:
-    "CAP Studio maakt filmische foto's en video's voor sport en lifestyle. Gym, training en lifestyle shoots in heel Nederland.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hallo@capstudio.nl",
-  instagram: process.env.NEXT_PUBLIC_INSTAGRAM ?? "capstudio",
+    "Foto en video voor sport en lifestyle, met een donkere, filmische look die opvalt. CAP Media Studio shoot voor sporters, trainers en merken in heel Nederland.",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://capmediastudio.nl",
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hallo@capmediastudio.nl",
+  instagram: process.env.NEXT_PUBLIC_INSTAGRAM ?? "capmediastudio",
   kvk: process.env.NEXT_PUBLIC_KVK ?? "00000000",
   btw: process.env.NEXT_PUBLIC_BTW ?? "",
   region: "Nederland",

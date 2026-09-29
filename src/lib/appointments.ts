@@ -36,7 +36,7 @@ export async function afterAppointmentChange(appointmentId: string, kind: Kind, 
     projects: { id: string; title: string; location: string | null; clients: { email: string; full_name: string | null } };
   };
   const client = appt.projects.clients;
-  const title = `Shoot CAP Studio – ${appt.projects.title}`;
+  const title = `Shoot CAP Media Studio – ${appt.projects.title}`;
   const location = appt.location ?? appt.projects.location;
 
   // Google Calendar
@@ -65,7 +65,7 @@ export async function afterAppointmentChange(appointmentId: string, kind: Kind, 
     start: appt.starts_at,
     end: appt.ends_at,
     title,
-    description: `Je shoot met CAP Studio. Details: ${absoluteUrl("/portal/afspraken")}`,
+    description: `Je shoot met CAP Media Studio. Details: ${absoluteUrl("/portal/afspraken")}`,
     location,
     cancelled: kind === "cancelled",
   });
