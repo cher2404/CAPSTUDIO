@@ -217,7 +217,7 @@ $b$Hoi {{naam}},
 
 De overeenkomst voor **{{project}}** is ondertekend op {{datum}}. Je kunt hem altijd downloaden als pdf in je portaal.
 
-[Download de pdf]({{link}})
+[Bekijk en download de pdf]({{link}})
 
 Nu nog een moment kiezen voor de shoot, als dat nog niet is gebeurd.
 
