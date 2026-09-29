@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Reveal } from "@/components/site/reveal";
-import { LinkButton } from "@/components/ui/button";
+import { Accent, SectionHead } from "@/components/site/section";
+import { Arrow, LinkButton } from "@/components/ui/button";
 import { getSetting, getTexts } from "@/lib/content";
 import { md } from "@/lib/markdown";
 import { instagramUrl, site } from "@/lib/site";
@@ -18,56 +19,69 @@ export default async function OverMijPage() {
   const [portrait, t] = await Promise.all([getSetting("about_image", ""), getTexts()]);
 
   return (
-    <div className="pt-32 md:pt-44">
-      <section className="container-x grid gap-12 md:grid-cols-[1fr_1.1fr] md:gap-20">
-        <Reveal className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-ink-850 md:sticky md:top-32 md:self-start">
-          {portrait ? (
-            <Image src={portrait} alt={`Portret van ${site.owner}`} fill priority sizes="(min-width: 768px) 45vw, 100vw" className="object-cover" />
-          ) : (
-            // Plek voor je portretfoto: stel hem in via Admin → Instellingen.
-            <div className="absolute inset-0 flex items-center justify-center glow-warm">
-              <span className="font-display text-[9rem] leading-none text-bone/10 italic">C</span>
-            </div>
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-ink-950/60 to-transparent" />
-          <p className="absolute bottom-5 left-5 text-xs tracking-[0.25em] text-bone uppercase">{site.owner}</p>
+    <div className="container-x pt-32 md:pt-44">
+      <Reveal>
+        <p className="label">
+          <span className="text-ember-soft">(—)</span> Over mij
+        </p>
+      </Reveal>
+      <Reveal className="mt-6 md:mt-8">
+        <h1 className="text-[3rem] leading-[0.92] sm:text-7xl md:text-8xl lg:text-[7.5rem]">
+          <Accent text={t["over.title"]} />
+        </h1>
+      </Reveal>
+
+      <section className="mt-14 grid gap-10 md:mt-20 md:grid-cols-12 md:gap-5">
+        <Reveal className="md:col-span-5">
+          <div className="relative aspect-[4/5] overflow-hidden bg-ink-850">
+            {portrait ? (
+              <Image src={portrait} alt={`Portret van ${site.owner}`} fill priority sizes="(min-width: 768px) 40vw, 100vw" className="object-cover" />
+            ) : (
+              // Plek voor je portretfoto: stel hem in via Admin → Instellingen.
+              <div className="absolute inset-0 flex items-end bg-[radial-gradient(70%_60%_at_30%_30%,rgba(201,151,107,.14),transparent_70%)] p-5">
+                <span className="label">Portret volgt</span>
+              </div>
+            )}
+          </div>
+          <div className="mt-3 flex justify-between font-mono text-[10px] tracking-[0.04em] text-mist uppercase">
+            <span>{site.owner}</span>
+            <span>Fotograaf · Videomaker</span>
+          </div>
         </Reveal>
 
-        <div>
+        <div className="md:col-span-6 md:col-start-7">
           <Reveal>
-            <p className="eyebrow">Over mij</p>
-            <h1 className="mt-4 text-5xl leading-[1.02] md:text-7xl">{t["over.title"]}</h1>
-          </Reveal>
-
-          <Reveal delay={100}>
-            <p className="mt-10 text-lg leading-relaxed text-bone-dim md:text-xl">{t["over.intro"]}</p>
+            <p className="font-display text-2xl leading-snug font-medium tracking-[-0.03em] text-bone md:text-[2rem]">{t["over.intro"]}</p>
           </Reveal>
 
           {t["over.story"].trim() && (
-            <Reveal delay={150} className="prose-cap mt-10 md:text-lg" >
+            <Reveal delay={120} className="prose-cap rule-t mt-10 pt-8">
               <div dangerouslySetInnerHTML={{ __html: md(t["over.story"]) }} />
             </Reveal>
           )}
 
-          <Reveal className="mt-14 grid grid-cols-3 gap-4 border-y border-ink-700/70 py-8 text-center">
-            {[
-              ["Foto", "sport en lifestyle"],
-              ["Video", "reels en clips"],
-              ["Web", "sites en apps"],
-            ].map(([title, desc]) => (
-              <div key={title}>
-                <p className="font-display text-2xl text-bone md:text-3xl">{title}</p>
-                <p className="mt-1 text-xs text-mist">{desc}</p>
-              </div>
-            ))}
+          <Reveal className="mt-12">
+            <SectionHead index="01" label="Disciplines" />
+            <dl className="mt-2">
+              {[
+                ["Foto", "Sport en lifestyle"],
+                ["Video", "Reels en clips"],
+                ["Web", "Websites en apps"],
+              ].map(([title, desc]) => (
+                <div key={title} className="rule-b flex items-baseline justify-between py-4">
+                  <dt className="font-display text-3xl font-medium tracking-[-0.04em] text-bone">{title}</dt>
+                  <dd className="label">{desc}</dd>
+                </div>
+              ))}
+            </dl>
           </Reveal>
 
-          <Reveal className="mt-12 flex flex-wrap gap-3">
+          <Reveal className="mt-10 flex flex-wrap gap-3">
             <LinkButton href="/contact?type=boeken" size="lg">
-              Boek een shoot
+              Boek een shoot <Arrow />
             </LinkButton>
             <LinkButton href={instagramUrl} target="_blank" rel="noopener noreferrer" variant="outline" size="lg">
-              Volg me op Instagram
+              Instagram ↗
             </LinkButton>
           </Reveal>
         </div>

@@ -44,21 +44,27 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
 
   return (
     <>
-      <div className="-mx-5 mb-10 flex gap-2 overflow-x-auto px-5 pb-1 md:mx-0 md:px-0" role="tablist" aria-label="Filter portfolio">
-        {filters.map((f) => (
-          <button
-            key={f.value}
-            role="tab"
-            aria-selected={filter === f.value}
-            onClick={() => setFilter(f.value)}
-            className={cn(
-              "shrink-0 rounded-full border px-5 py-2 text-sm transition-all duration-300",
-              filter === f.value ? "border-bone bg-bone text-ink-950" : "border-ink-600 text-mist hover:border-bone/50 hover:text-bone",
-            )}
-          >
-            {f.label}
-          </button>
-        ))}
+      <div className="-mx-5 mb-10 flex gap-6 overflow-x-auto px-5 pb-1 md:mx-0 md:gap-10 md:px-0" role="tablist" aria-label="Filter portfolio">
+        {filters.map((f) => {
+          const count = f.value === "alles" ? items.length : items.filter((i) => i.category === f.value).length;
+          const active = filter === f.value;
+          return (
+            <button
+              key={f.value}
+              role="tab"
+              aria-selected={active}
+              onClick={() => setFilter(f.value)}
+              className={cn(
+                "relative shrink-0 pb-2 font-display text-2xl font-medium tracking-[-0.03em] transition-colors duration-300 md:text-3xl",
+                active ? "text-bone" : "text-mist-dim hover:text-bone-dim",
+              )}
+            >
+              {f.label}
+              <sup className="ml-1 font-mono text-[10px] tracking-normal text-ember-soft">{String(count).padStart(2, "0")}</sup>
+              <span className={cn("absolute inset-x-0 bottom-0 h-px origin-left bg-ember transition-transform duration-500", active ? "scale-x-100" : "scale-x-0")} />
+            </button>
+          );
+        })}
       </div>
 
       {visible.length === 0 ? (
@@ -69,7 +75,7 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
             <button
               key={item.id}
               onClick={() => setActive(i)}
-              className="group relative mb-3 block w-full animate-fade-in overflow-hidden rounded-xl bg-ink-850 md:mb-4"
+              className="group relative mb-3 block w-full animate-fade-in overflow-hidden bg-ink-850 md:mb-5"
               style={{ aspectRatio: `${item.width} / ${item.height}` }}
               aria-label={`Bekijk ${item.alt ?? item.title ?? "foto"}`}
             >
@@ -81,10 +87,13 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
                 className="object-cover transition duration-[1.4s] ease-[var(--ease-film)] group-hover:scale-[1.03]"
               />
               <div className="absolute inset-0 flex items-end bg-gradient-to-t from-ink-950/70 via-transparent to-transparent p-4 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                <span className="text-left text-xs tracking-[0.2em] text-bone uppercase">{item.title ?? item.category}</span>
+                <span className="flex w-full justify-between font-mono text-[10px] tracking-[0.04em] text-bone uppercase">
+                  <span>{String(i + 1).padStart(2, "0")} / {item.title ?? item.category}</span>
+                  <span>Bekijk ↗</span>
+                </span>
               </div>
               {item.category === "video" && (
-                <span className="absolute top-3 right-3 flex size-10 items-center justify-center rounded-full bg-ink-950/60 backdrop-blur">
+                <span className="absolute top-3 right-3 flex size-10 items-center justify-center bg-ink-950/60 backdrop-blur">
                   <svg viewBox="0 0 24 24" className="ml-0.5 size-4 fill-bone" aria-hidden>
                     <path d="M8 5v14l11-7z" />
                   </svg>
@@ -155,7 +164,7 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
               </button>
             </>
           )}
-          <p className="absolute bottom-5 left-1/2 -translate-x-1/2 text-xs tracking-[0.2em] text-mist">
+          <p className="absolute bottom-5 left-1/2 -translate-x-1/2 font-mono text-[11px] text-mist">
             {(active ?? 0) + 1} / {visible.length}
           </p>
         </div>

@@ -67,7 +67,7 @@ export default async function AgreementPage({ params, searchParams }: { params: 
             <ul className="space-y-3 text-sm">
               {signatures.map((s) => (
                 <li key={s.id}>
-                  <p className="font-display text-2xl text-bone italic">{s.signer_name}</p>
+                  <p className="serif text-3xl text-bone">{s.signer_name}</p>
                   <p className="text-xs text-mist">
                     {new Intl.DateTimeFormat("nl-NL", { dateStyle: "long", timeStyle: "short", timeZone: "Europe/Amsterdam" }).format(new Date(s.signed_at))} · IP{" "}
                     {s.ip_address ?? "onbekend"}

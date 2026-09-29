@@ -26,7 +26,7 @@ export default async function TipsPage() {
                 <img src={a.cover_url} alt="" loading="lazy" className="aspect-[16/8] w-full object-cover" />
               )}
               <div className="flex flex-1 flex-col p-6">
-                <span className="font-display text-lg text-ember-soft italic">{String(i + 1).padStart(2, "0")}</span>
+                <span className="font-mono text-xs text-ember-soft">{String(i + 1).padStart(2, "0")}</span>
                 <h2 className="mt-2 text-2xl md:text-3xl">{a.title}</h2>
                 {a.excerpt && <p className="mt-3 flex-1 text-sm text-mist">{a.excerpt}</p>}
                 <span className="mt-5 text-sm text-bone-dim transition-transform group-hover:translate-x-1">Lezen →</span>

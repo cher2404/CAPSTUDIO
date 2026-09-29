@@ -19,7 +19,17 @@
   --color-rose: #c7837a;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-cormorant), ui-serif, Georgia, serif;
+  --font-display: var(--font-inter-tight), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+
+  /* Strak: rechte hoeken, alleen een minimale afronding */
+  --radius-sm: 1px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 2px;
+  --radius-2xl: 3px;
+  --radius-3xl: 3px;
 
   --ease-film: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -57,6 +67,15 @@
   h1, h2, h3, .font-display {
     font-family: var(--font-display);
     color: var(--color-bone);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+  }
+  h3 { letter-spacing: -0.02em; line-height: 1.1; }
+  /* Italic accent: elegante serif binnen strakke koppen */
+  em, .serif {
+    font-family: var(--font-serif);
+    font-style: italic;
     font-weight: 400;
     letter-spacing: -0.01em;
   }
@@ -81,16 +100,27 @@
     position: fixed;
     inset: -50%;
     z-index: 60;
-    opacity: 0.05;
+    opacity: 0.035;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
 
-  .eyebrow {
-    font-size: 0.7rem;
-    letter-spacing: 0.24em;
+  .eyebrow, .label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-mist);
   }
+
+  /* Hairline-raster, zoals in een studio-layout */
+  .rule { border-color: color-mix(in oklab, var(--color-bone) 12%, transparent); }
+  .rule-t { border-top: 1px solid color-mix(in oklab, var(--color-bone) 12%, transparent); }
+  .rule-b { border-bottom: 1px solid color-mix(in oklab, var(--color-bone) 12%, transparent); }
+
+  /* Link met pijl die meeschuift */
+  .arrow-link { display: inline-flex; align-items: center; gap: 0.6rem; }
+  .arrow-link .arrow { transition: transform 0.4s var(--ease-film); }
+  .arrow-link:hover .arrow { transform: translateX(4px); }
 
   .container-x {
     width: 100%;
@@ -111,7 +141,7 @@
 
   .field {
     width: 100%;
-    border-radius: 0.75rem;
+    border-radius: 2px;
     border: 1px solid var(--color-ink-700);
     background: var(--color-ink-900);
     padding: 0.75rem 1rem;
@@ -127,9 +157,9 @@
 
   .prose-cap { color: var(--color-bone-dim); line-height: 1.75; }
   .prose-cap > * + * { margin-top: 1em; }
-  .prose-cap h1 { font-size: 2.25rem; line-height: 1.1; margin-top: 1.5em; }
-  .prose-cap h2 { font-size: 1.75rem; line-height: 1.15; margin-top: 1.6em; }
-  .prose-cap h3 { font-size: 1.35rem; margin-top: 1.4em; }
+  .prose-cap h1 { font-size: 2rem; line-height: 1.1; margin-top: 1.5em; }
+  .prose-cap h2 { font-size: 1.5rem; line-height: 1.15; margin-top: 1.6em; }
+  .prose-cap h3 { font-size: 1.2rem; margin-top: 1.4em; }
   .prose-cap strong { color: var(--color-bone); font-weight: 600; }
   .prose-cap a { color: var(--color-ember-soft); text-decoration: underline; text-underline-offset: 3px; }
   .prose-cap ul { list-style: none; padding-left: 0; }

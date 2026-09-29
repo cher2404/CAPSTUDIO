@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/site/reveal";
-import { LinkButton } from "@/components/ui/button";
+import { PageIntro, SectionHead } from "@/components/site/section";
+import { Arrow, LinkButton } from "@/components/ui/button";
 import { displayPrice, getPackages, getPricing, getTexts, vatNote } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
@@ -16,74 +17,77 @@ export default async function DienstenPage() {
   const [packages, pricing, t] = await Promise.all([getPackages(), getPricing(), getTexts()]);
 
   return (
-    <div className="container-x pt-32 md:pt-44">
-      <Reveal className="max-w-2xl">
-        <p className="eyebrow">Pakketten</p>
-        <h1 className="mt-4 text-5xl leading-none md:text-7xl">{t["diensten.title"]}</h1>
-        {t["diensten.intro"] && <p className="mt-5 text-mist md:text-lg">{t["diensten.intro"]}</p>}
-      </Reveal>
+    <>
+      <PageIntro label="Pakketten" title={t["diensten.title"]} intro={t["diensten.intro"]} />
 
-      <div className="mt-14 grid gap-4 md:mt-20 md:grid-cols-2 xl:grid-cols-4">
-        {packages.map((p, i) => {
-          const price = displayPrice(p, pricing);
-          return (
-            <Reveal
-              key={p.id}
-              delay={i * 90}
-              className={cn(
-                "relative flex flex-col rounded-2xl border p-7 transition-colors duration-500",
-                p.highlighted ? "border-ember/50 bg-gradient-to-b from-ember/10 to-ink-900" : "border-ink-700/70 bg-ink-900/60 hover:border-ink-600",
-              )}
-            >
-              {p.highlighted && (
-                <span className="absolute -top-3 left-7 rounded-full bg-ember px-3 py-1 text-[10px] font-semibold tracking-[0.15em] text-ink-950 uppercase">
-                  Meest gekozen
-                </span>
-              )}
-              {p.duration && <p className="text-xs tracking-wide text-mist">{p.duration}</p>}
-              <h2 className="mt-3 text-3xl">{p.name}</h2>
-              <p className="mt-6 min-h-12">
-                {price ? (
-                  <>
-                    {p.price_label && <span className="mr-1.5 text-sm text-mist">{p.price_label}</span>}
-                    <span className="font-display text-5xl text-bone">{price}</span>
-                    <span className="mt-1 block text-xs text-mist-dim">{vatNote(pricing)}</span>
-                  </>
-                ) : (
-                  <span className="font-display text-3xl text-bone">Prijs na overleg</span>
+      <section className="container-x mt-16 md:mt-24">
+        <SectionHead index="01" label="Tarieven" action={<span className="label">{vatNote(pricing)}</span>} />
+        <div className="mt-8 grid border-ink-700/70 md:grid-cols-2 md:border-t xl:grid-cols-4">
+          {packages.map((p, i) => {
+            const price = displayPrice(p, pricing);
+            return (
+              <Reveal
+                key={p.id}
+                delay={i * 90}
+                className={cn(
+                  "relative flex flex-col border-b border-ink-700/70 py-8 md:px-6 md:py-8 xl:border-b-0",
+                  "md:[&:nth-child(2n)]:border-l xl:[&:not(:first-child)]:border-l",
+                  p.highlighted && "bg-gradient-to-b from-ember/[0.07] to-transparent",
                 )}
-              </p>
-              <ul className="mt-6 space-y-3 border-t border-ink-700/70 pt-6 text-sm text-bone-dim">
-                {p.features.map((f) => (
-                  <li key={f} className="flex gap-3">
-                    <span className="mt-2 h-px w-3 shrink-0 bg-ember" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              {p.tagline && <p className="mt-6 flex-1 text-sm leading-relaxed text-mist">{p.tagline}</p>}
-              <LinkButton
-                href={`/contact?type=offerte&pakket=${encodeURIComponent(p.slug)}`}
-                variant={p.highlighted ? "primary" : "outline"}
-                className="mt-8 w-full"
               >
-                Vraag offerte aan
-              </LinkButton>
-            </Reveal>
-          );
-        })}
-      </div>
+                <div className="flex items-baseline justify-between">
+                  <span className="font-mono text-xs text-mist-dim">0{i + 1}</span>
+                  {p.highlighted ? <span className="label text-ember-soft">Meest gekozen</span> : <span className="label">{p.duration}</span>}
+                </div>
+                <h2 className="mt-10 text-4xl md:text-[2.6rem]">{p.name}</h2>
 
-      <Reveal className="mt-12 grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-ember/25 bg-ember/5 p-6 md:p-8">
-          <p className="leading-relaxed text-bone-dim">{t["diensten.included"]}</p>
-        </div>
-        <div className="rounded-2xl border border-tide/25 bg-tide/5 p-6 md:p-8">
-          <p className="leading-relaxed text-bone-dim">{t["diensten.extra"]}</p>
-        </div>
-      </Reveal>
+                <div className="mt-8 min-h-20">
+                  {price ? (
+                    <>
+                      <p className="label mb-1">{p.price_label || "\u00a0"}</p>
+                      <p className="font-display text-6xl font-medium tracking-[-0.05em] text-bone">{price}</p>
+                    </>
+                  ) : (
+                    <p className="font-display text-4xl font-medium tracking-[-0.04em] text-bone">
+                      Prijs na <em className="text-ember-soft">overleg</em>
+                    </p>
+                  )}
+                </div>
 
-      <p className="mt-6 text-sm text-mist">{t["diensten.disclaimer"]}</p>
-    </div>
+                <ul className="mt-8 text-sm text-bone-dim">
+                  {p.features.map((f) => (
+                    <li key={f} className="rule-t flex gap-3 py-2.5">
+                      <span className="text-ember-soft">+</span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                {p.tagline && <p className="rule-t flex-1 pt-4 text-sm leading-relaxed text-mist">{p.tagline}</p>}
+                <LinkButton
+                  href={`/contact?type=offerte&pakket=${encodeURIComponent(p.slug)}`}
+                  variant={p.highlighted ? "primary" : "outline"}
+                  className="mt-8 w-full justify-between"
+                >
+                  Vraag offerte aan <Arrow />
+                </LinkButton>
+              </Reveal>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="container-x mt-20 md:mt-32">
+        <SectionHead index="02" label="Goed om te weten" />
+        <div className="mt-8 grid gap-8 md:grid-cols-12">
+          <Reveal className="md:col-span-5">
+            <p className="font-display text-2xl leading-snug font-medium tracking-[-0.03em] text-bone md:text-3xl">{t["diensten.included"]}</p>
+          </Reveal>
+          <Reveal delay={100} className="space-y-6 md:col-span-5 md:col-start-8">
+            <p className="leading-relaxed text-bone-dim">{t["diensten.extra"]}</p>
+            <p className="rule-t pt-6 text-sm text-mist">{t["diensten.disclaimer"]}</p>
+          </Reveal>
+        </div>
+      </section>
+    </>
   );
 }

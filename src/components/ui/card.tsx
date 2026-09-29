@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("rounded-2xl border border-ink-700/70 bg-ink-900/70 p-5 md:p-6", className)} {...props} />;
+  return <div className={cn("rounded-[3px] border border-ink-700/70 bg-ink-900/60 p-5 md:p-6", className)} {...props} />;
 }
 
 export function Badge({
@@ -21,7 +21,7 @@ export function Badge({
     bad: "border-rose/40 text-rose bg-rose/10",
   };
   return (
-    <span className={cn("inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-wide", tones[tone], className)}>
+    <span className={cn("inline-flex items-center rounded-[2px] border px-2 py-0.5 font-mono text-[10px] tracking-[0.04em] uppercase", tones[tone], className)}>
       {children}
     </span>
   );
@@ -42,7 +42,7 @@ export function PageHeader({ eyebrow, title, children, action }: { eyebrow?: str
     <div className="mb-8 flex flex-col gap-4 md:mb-10 md:flex-row md:items-end md:justify-between">
       <div>
         {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
-        <h1 className="text-4xl md:text-5xl">{title}</h1>
+        <h1 className="text-4xl md:text-6xl">{title}</h1>
         {children && <div className="mt-3 max-w-2xl text-sm text-mist md:text-base">{children}</div>}
       </div>
       {action && <div className="shrink-0">{action}</div>}

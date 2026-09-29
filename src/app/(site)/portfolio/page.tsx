@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { PortfolioGrid } from "@/components/site/portfolio-grid";
 import { Reveal } from "@/components/site/reveal";
-import { LinkButton } from "@/components/ui/button";
+import { Arrow, LinkButton } from "@/components/ui/button";
+import { PageIntro, SectionHead } from "@/components/site/section";
 import { getPortfolio, getSetting, getTexts, toEmbedUrl } from "@/lib/content";
 
 export const revalidate = 300;
@@ -18,37 +19,46 @@ export default async function PortfolioPage() {
   const withEmbeds = items.map((i) => (i.video_url ? { ...i, video_url: toEmbedUrl(i.video_url) } : i));
 
   return (
-    <div className="container-x pt-32 md:pt-44">
-      <Reveal className="mb-12 max-w-2xl md:mb-16">
-        <p className="eyebrow">Werk</p>
-        <h1 className="mt-4 text-5xl leading-none md:text-7xl">{t["portfolio.title"]}</h1>
-        <p className="mt-5 text-mist md:text-lg">{t["portfolio.intro"]}</p>
-      </Reveal>
+    <>
+      <PageIntro label="Werk" title={t["portfolio.title"]} intro={t["portfolio.intro"]} />
 
       {reelEmbed && (
-        <Reveal className="mb-16 md:mb-24">
-          <div className="relative aspect-video overflow-hidden rounded-2xl border border-ink-700/60 bg-ink-900">
-            <iframe
-              src={reelEmbed}
-              title="Showreel CAP Media Studio"
-              className="absolute inset-0 h-full w-full"
-              loading="lazy"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-          <p className="mt-3 text-xs tracking-[0.2em] text-mist uppercase">Showreel</p>
-        </Reveal>
+        <section className="container-x mt-16 md:mt-24">
+          <SectionHead index="01" label="Showreel" />
+          <Reveal className="mt-8">
+            <div className="relative aspect-video overflow-hidden bg-ink-900">
+              <iframe
+                src={reelEmbed}
+                title="Showreel CAP Media Studio"
+                className="absolute inset-0 h-full w-full"
+                loading="lazy"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </Reveal>
+        </section>
       )}
 
-      <PortfolioGrid items={withEmbeds} />
+      <section className="container-x mt-16 md:mt-24">
+        <SectionHead index={reelEmbed ? "02" : "01"} label="Selectie" />
+        <div className="mt-8">
+          <PortfolioGrid items={withEmbeds} />
+        </div>
+      </section>
 
-      <div className="mt-20 text-center">
-        <p className="font-display text-3xl text-bone md:text-4xl">Zie je jezelf hier al staan?</p>
-        <LinkButton href="/contact?type=boeken" size="lg" className="mt-6">
-          Boek een shoot
-        </LinkButton>
-      </div>
-    </div>
+      <section className="container-x mt-24 md:mt-36">
+        <Reveal className="rule-t grid items-end gap-8 pt-10 md:grid-cols-12">
+          <p className="font-display text-4xl leading-[0.95] font-medium tracking-[-0.04em] text-bone md:col-span-8 md:text-6xl">
+            Zie je jezelf hier al <em className="text-ember-soft">staan?</em>
+          </p>
+          <div className="md:col-span-4 md:flex md:justify-end">
+            <LinkButton href="/contact?type=boeken" size="lg" className="w-full md:w-auto">
+              Boek een shoot <Arrow />
+            </LinkButton>
+          </div>
+        </Reveal>
+      </section>
+    </>
   );
 }

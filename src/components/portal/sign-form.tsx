@@ -21,7 +21,7 @@ export function SignForm({ agreementId, hash, defaultName }: { agreementId: stri
       </Field>
       {name.trim().length > 2 && (
         <div className="rounded-xl border border-ink-700 bg-ink-950 px-5 py-4">
-          <p className="font-display text-3xl text-bone italic">{name}</p>
+          <p className="serif text-4xl text-bone">{name}</p>
           <p className="mt-1 text-xs text-mist">Digitaal ondertekend op {now}</p>
         </div>
       )}

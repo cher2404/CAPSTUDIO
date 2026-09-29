@@ -7,7 +7,7 @@ Website + klantportal voor **CAP Media Studio** (Cheryl Aldessa Prijs), foto en 
 | Onderdeel | Keuze |
 | --- | --- |
 | Framework | Next.js 16 (App Router, Server Components, Server Actions), TypeScript |
-| Styling | Tailwind CSS v4, fonts via `next/font` (Cormorant Garamond voor koppen, Inter voor tekst) |
+| Styling | Tailwind CSS v4, fonts via `next/font`: Inter Tight (koppen), Instrument Serif italic (accenten), Inter (tekst), JetBrains Mono (labels). Strak raster, hairlines, rechte hoeken. |
 | Backend | Supabase: Postgres + Row Level Security, Auth (magic link), Storage |
 | E-mail | Resend, met sjablonen uit de database (door admin aanpasbaar) |
 | PDF | `@react-pdf/renderer` (offertes en overeenkomsten) |

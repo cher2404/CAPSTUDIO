@@ -28,7 +28,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
       <div className="absolute inset-0 glow-cool" />
       <div className="relative w-full max-w-md animate-fade-up">
         <Logo className="mb-12" />
-        <h1 className="text-4xl md:text-5xl">Welkom terug</h1>
+        <h1 className="text-5xl md:text-6xl">Welkom <em className="text-ember-soft">terug</em></h1>
         <p className="mt-3 mb-8 text-mist">
           Log in op je klantportaal met je e-mailadres. Je krijgt een persoonlijke link, geen wachtwoord nodig.
         </p>
