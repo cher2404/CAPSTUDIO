@@ -25,12 +25,12 @@ export default function OpengraphImage() {
           {site.tagline}
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 150, lineHeight: 1 }}>
+          <div style={{ display: "flex", fontSize: 150, lineHeight: 1 }}>
             CAP <span style={{ fontStyle: "italic", color: "#d7a878", marginLeft: 28 }}>Studio</span>
           </div>
           <div style={{ fontSize: 40, marginTop: 24, color: "#cfc8bc" }}>Kracht, zweet en licht. Filmisch vastgelegd.</div>
         </div>
-        <div style={{ fontSize: 22, color: "#9a948b", fontFamily: "sans-serif" }}>{site.owner} · Nederland</div>
+        <div style={{ display: "flex", fontSize: 22, color: "#9a948b", fontFamily: "sans-serif" }}>{`${site.owner} · Nederland`}</div>
       </div>
     ),
     size,

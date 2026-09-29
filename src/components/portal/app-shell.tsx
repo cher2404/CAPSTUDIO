@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Logo } from "@/components/site/logo";
 import { initials } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -59,8 +59,6 @@ export function AppShell({
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  useEffect(() => setOpen(false), [pathname]);
-
   const isActive = (item: NavItem) => (item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(item.href + "/"));
 
   const navList = (
@@ -69,6 +67,7 @@ export function AppShell({
         <Link
           key={item.href}
           href={item.href}
+          onClick={() => setOpen(false)}
           className={cn(
             "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors",
             isActive(item) ? "bg-ink-800 text-bone" : "text-mist hover:bg-ink-850 hover:text-bone",

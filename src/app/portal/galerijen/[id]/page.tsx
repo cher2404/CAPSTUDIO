@@ -42,7 +42,7 @@ export default async function GalleryPage({ params }: { params: Promise<{ id: st
           </div>
         )}
       </div>
-      <ClientGallery items={items.map(({ id, url, file_name, width, height, is_favorite }) => ({ id, url, file_name, width, height, is_favorite }))} canDownload={Boolean(canDownload)} />
+      <ClientGallery items={items.map(({ id, url, file_name, width, height, is_favorite, mime_type }) => ({ id, url, file_name, width, height, is_favorite, mime_type }))} canDownload={Boolean(canDownload)} />
     </>
   );
 }

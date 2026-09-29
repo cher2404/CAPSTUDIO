@@ -7,6 +7,8 @@ import type { Appointment, Slot } from "@/lib/types";
 
 export const metadata = { title: "Afspraken" };
 
+const currentTime = () => new Date().getTime();
+
 export default async function AfsprakenPage({ searchParams }: { searchParams: Promise<{ project?: string; verzet?: string }> }) {
   const { project: projectParam, verzet } = await searchParams;
   const { supabase, projects } = await getMyProjects();
@@ -17,7 +19,7 @@ export default async function AfsprakenPage({ searchParams }: { searchParams: Pr
   ]);
   const appointments = (apptData ?? []) as Appointment[];
   const slots = (slotData ?? []) as Slot[];
-  const now = Date.now();
+  const now = currentTime();
   const upcoming = appointments.filter((a) => a.status === "bevestigd" && new Date(a.ends_at).getTime() > now).reverse();
   const past = appointments.filter((a) => !upcoming.includes(a));
   const bookable = projects.filter((p) => p.status !== "opgeleverd");

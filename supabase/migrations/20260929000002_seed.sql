@@ -17,7 +17,7 @@ on conflict (slug) do nothing;
 insert into public.quote_templates (name, package_id, title, intro, items, validity_days, usage_rights, revision_rounds)
 select p.name, p.id, p.name,
        'Leuk dat je met CAP Studio wilt shooten! Hieronder vind je de offerte op basis van ons gesprek. Vragen? Stel ze gerust via de knop onderaan.',
-       jsonb_build_array(jsonb_build_object('description', p.name || ' (' || p.duration || ')', 'quantity', 1, 'unit_price', p.price_from),
+       jsonb_build_array(jsonb_build_object('description', p.name || ' (' || p.duration || ')', 'quantity', 1, 'unit_price', round(p.price_from / 1.21, 2)),
                          jsonb_build_object('description', 'Reiskosten', 'quantity', 1, 'unit_price', 0)),
        14,
        case when p.slug in ('halve-dag', 'foto-video')

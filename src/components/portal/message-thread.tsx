@@ -21,11 +21,15 @@ export function MessageThread({
   otherName: string;
 }) {
   const [messages, setMessages] = useState(initial);
+  const [prevInitial, setPrevInitial] = useState(initial);
+  if (initial !== prevInitial) {
+    // Server heeft nieuwe data gestuurd (na revalidate): overnemen.
+    setPrevInitial(initial);
+    setMessages(initial);
+  }
   const [state, action] = useActionState(sendMessage, null);
   const formRef = useRef<HTMLFormElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => setMessages(initial), [initial]);
 
   // Realtime: nieuwe berichten direct tonen
   useEffect(() => {

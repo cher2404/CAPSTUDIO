@@ -11,6 +11,7 @@ interface Item {
   width: number | null;
   height: number | null;
   is_favorite: boolean;
+  mime_type?: string | null;
 }
 
 function Heart({ filled }: { filled: boolean }) {
@@ -77,7 +78,9 @@ export function ClientGallery({ items: initial, canDownload }: { items: Item[]; 
         <div className="columns-2 gap-2 md:columns-3 md:gap-3 xl:columns-4">
           {visible.map((item, i) => (
             <figure key={item.id} className="group relative mb-2 break-inside-avoid overflow-hidden rounded-lg bg-ink-850 md:mb-3" style={{ aspectRatio: `${item.width ?? 4} / ${item.height ?? 5}` }}>
-              {item.url && (
+              {item.url && item.mime_type?.startsWith("video/") ? (
+                <video src={item.url} preload="metadata" controls playsInline className="h-full w-full object-cover" />
+              ) : item.url && (
                 // eslint-disable-next-line @next/next/no-img-element -- privé signed URL, al geschaald bij upload
                 <img
                   src={item.url}
@@ -130,7 +133,9 @@ export function ClientGallery({ items: initial, canDownload }: { items: Item[]; 
             </div>
           </div>
           <div className="relative flex flex-1 items-center justify-center px-2 pb-6 md:px-16">
-            {current.url && (
+            {current.url && current.mime_type?.startsWith("video/") ? (
+              <video key={current.id} src={current.url} controls autoPlay playsInline className="max-h-full max-w-full" />
+            ) : current.url && (
               // eslint-disable-next-line @next/next/no-img-element
               <img key={current.id} src={current.url} alt={current.file_name} className="max-h-full max-w-full animate-fade-in object-contain" onContextMenu={(e) => !canDownload && e.preventDefault()} />
             )}
