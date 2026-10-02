@@ -1,6 +1,6 @@
 # CAP Media Studio – plan van aanpak
 
-Website + klantportal voor **CAP Media Studio** (Cheryl Aldessa Prijs), foto en video voor sport en lifestyle. Domein: capmediastudio.nl (capmediastudio.com verwijst door).
+Website + klantportal voor **CAP Media Studio** (Cheryl Aldessa Prijs): een creatieve studio voor foto en video (met een specialisatie in sport en lifestyle), websites en apps, en games. Domein: capmediastudio.nl (capmediastudio.com verwijst door).
 
 ## Stack
 
@@ -37,6 +37,8 @@ src/app
 * Websiteteksten: standaard in `src/content/texts.ts`, aanpassingen in `site_texts`, te beheren in `/admin/teksten`.
 * Pakketten: prijs excl. btw in `packages.price` (leeg = prijs na overleg). De weergave incl. of excl. btw en het btw-tarief staan in `settings` (`price_display`, `vat_rate`).
 * Offertes worden gemaakt vanuit een pakket of sjabloon; nieuwe offertes krijgen het btw-tarief uit de instellingen.
+* Disciplines: `beeld` (foto en video), `digitaal` (apps en websites) en `games`. Pakketten en overeenkomstsjablonen hebben een discipline; de tarievenpagina groepeert daarop. Een offerte vanuit een pakket krijgt automatisch het overeenkomstsjabloon van die discipline (`quotes.agreement_template_id`), en per offerte kun je dat wijzigen.
+* Portfolio-categorieën: sport, lifestyle, video, apps en games. Apps en games hebben een omschrijving en link. Filters tonen alleen categorieën waar werk in staat.
 
 ## Beveiliging
 

@@ -28,7 +28,7 @@ export default async function AfsprakenPage({ searchParams }: { searchParams: Pr
 
   return (
     <>
-      <PageHeader eyebrow="Afspraken" title="Je shoots">
+      <PageHeader eyebrow="Afspraken" title="Je afspraken">
         Kies zelf een moment uit mijn agenda. Verzetten of annuleren kan tot 24 uur van tevoren.
       </PageHeader>
 
@@ -66,14 +66,14 @@ export default async function AfsprakenPage({ searchParams }: { searchParams: Pr
 
         {bookable.length > 0 ? (
           <Card>
-            <h2 className="mb-1 text-2xl">{upcoming.length ? "Nog een shoot plannen" : "Plan je shoot"}</h2>
+            <h2 className="mb-1 text-2xl">{upcoming.length ? "Nog een afspraak plannen" : "Plan een afspraak"}</h2>
             <p className="mb-6 text-sm text-mist">Alle tijden zijn in Nederlandse tijd.</p>
             <SlotPicker mode="book" slots={slots} projects={bookable.map((p) => ({ id: p.id, title: p.title }))} defaultProjectId={projectParam} />
           </Card>
         ) : (
           !upcoming.length && (
             <Card>
-              <p className="text-sm text-mist">Je hebt nog geen project om een shoot voor te plannen. Vraag eerst een shoot aan via de contactpagina.</p>
+              <p className="text-sm text-mist">Je hebt nog geen project om een afspraak voor te plannen. Start eerst een project via de contactpagina.</p>
             </Card>
           )
         )}

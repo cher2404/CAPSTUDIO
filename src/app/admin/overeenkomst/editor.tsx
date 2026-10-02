@@ -4,7 +4,8 @@ import { useState } from "react";
 import { saveAgreementTemplate } from "../_actions/quotes";
 import { ActionForm } from "@/components/admin/forms";
 import { Card } from "@/components/ui/card";
-import { Field, Input, Textarea } from "@/components/ui/form";
+import { Checkbox, Field, Input, Select, Textarea } from "@/components/ui/form";
+import { disciplines } from "@/lib/categories";
 import { SubmitButton } from "@/components/ui/submit-button";
 import type { AgreementTemplate } from "@/lib/types";
 
@@ -16,7 +17,7 @@ const placeholders: [string, string][] = [
   ["offerte_nummer", "Offertenummer"],
   ["totaal", "Totaalbedrag"],
   ["gebruiksrechten", "Gebruiksrechten uit de offerte"],
-  ["bewerkingsrondes", "Aantal bewerkingsrondes"],
+  ["bewerkingsrondes", "Aantal bewerkings- of feedbackrondes"],
   ["datum", "Datum van vandaag"],
 ];
 
@@ -28,7 +29,16 @@ export function AgreementEditor({ template, previewHtml }: { template: Agreement
         <input type="hidden" name="id" value={template?.id ?? ""} />
         <Card className="grid gap-4 md:grid-cols-2">
           <Field label="Naam">
-            <Input name="name" defaultValue={template?.name ?? "Standaard overeenkomst"} />
+            <Input name="name" defaultValue={template?.name ?? ""} placeholder="Bijv. Digitaal project" required />
+          </Field>
+          <Field label="Discipline">
+            <Select name="category" defaultValue={template?.category ?? "beeld"}>
+              {disciplines.map((d) => (
+                <option key={d.value} value={d.value}>
+                  {d.label}
+                </option>
+              ))}
+            </Select>
           </Field>
           <Field label="Standaard bewerkingsrondes">
             <Input name="default_revision_rounds" type="number" defaultValue={template?.default_revision_rounds ?? 1} />
@@ -36,6 +46,7 @@ export function AgreementEditor({ template, previewHtml }: { template: Agreement
           <Field label="Standaard gebruiksrechten (als de offerte niets vermeldt)" className="md:col-span-2">
             <Textarea name="default_usage_rights" defaultValue={template?.default_usage_rights ?? ""} rows={2} className="min-h-16" />
           </Field>
+          <Checkbox name="is_default" defaultChecked={template?.is_default ?? false} label="Standaardsjabloon (voor offertes zonder gekozen sjabloon)" />
         </Card>
         <Card>
           <div className="mb-4 flex gap-2">
@@ -45,7 +56,7 @@ export function AgreementEditor({ template, previewHtml }: { template: Agreement
               </button>
             ))}
           </div>
-          <Textarea name="body" defaultValue={template?.body ?? ""} rows={28} className={`font-mono text-xs leading-relaxed ${tab === "edit" ? "" : "hidden"}`} />
+          <Textarea name="body" key={template?.id ?? "nieuw"} defaultValue={template?.body ?? ""} rows={28} className={`font-mono text-xs leading-relaxed ${tab === "edit" ? "" : "hidden"}`} />
           {tab === "preview" && <div className="prose-cap" dangerouslySetInnerHTML={{ __html: previewHtml }} />}
         </Card>
         <SubmitButton>Sjabloon opslaan</SubmitButton>

@@ -6,6 +6,7 @@ import { Card, PageHeader } from "@/components/ui/card";
 import { Field, Input } from "@/components/ui/form";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { requireAdmin } from "@/lib/auth";
+import { portfolioCategories } from "@/lib/categories";
 import type { PortfolioItem } from "@/lib/types";
 
 export const metadata = { title: "Portfolio" };
@@ -23,7 +24,7 @@ export default async function AdminPortfolioPage() {
       <PageHeader eyebrow="Website" title="Portfolio">
         {items.length === 0
           ? "Er staan nu voorbeeldfoto's op de website. Zodra je hier je eigen werk toevoegt, worden die vervangen."
-          : "Gebruik alleen beelden waarvoor de klant toestemming heeft gegeven (zie projecten)."}
+          : "Gebruik alleen werk waarvoor de klant toestemming heeft gegeven (zie projecten). Voor apps en games upload je een screenshot en vul je een omschrijving en link in."}
       </PageHeader>
 
       <div className="mb-8 grid gap-5 lg:grid-cols-2">
@@ -52,16 +53,23 @@ export default async function AdminPortfolioPage() {
               <input type="hidden" name="id" value={item.id} />
               <div className="grid grid-cols-[1fr_70px] gap-2">
                 <select name="category" defaultValue={item.category} className="field py-2">
-                  <option value="gym">Gym</option>
-                  <option value="training">Training</option>
-                  <option value="lifestyle">Lifestyle</option>
-                  <option value="video">Video</option>
+                  {portfolioCategories.map((c) => (
+                    <option key={c.value} value={c.value}>
+                      {c.label}
+                    </option>
+                  ))}
                 </select>
                 <input name="sort" type="number" defaultValue={item.sort} className="field py-2" title="Volgorde" />
               </div>
               <input name="title" defaultValue={item.title ?? ""} placeholder="Titel (optioneel)" className="field py-2" />
               <input name="alt" defaultValue={item.alt ?? ""} placeholder="Beschrijving voor SEO/toegankelijkheid" className="field py-2" />
               {item.category === "video" && <input name="video_url" defaultValue={item.video_url ?? ""} placeholder="Video-link (YouTube/Vimeo)" className="field py-2" />}
+              {(item.category === "apps" || item.category === "games") && (
+                <>
+                  <textarea name="description" defaultValue={item.description ?? ""} placeholder="Korte omschrijving van het project" rows={2} className="field py-2" />
+                  <input name="link_url" defaultValue={item.link_url ?? ""} placeholder="Link naar de app, site of game (optioneel)" className="field py-2" />
+                </>
+              )}
               <div className="flex flex-wrap items-center gap-3 text-xs text-mist">
                 <label className="flex items-center gap-1.5">
                   <input type="checkbox" name="featured" defaultChecked={item.featured} className="accent-[var(--color-ember)]" /> Hero

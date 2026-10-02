@@ -21,8 +21,8 @@ export default async function BerichtenPage() {
         Stel je vragen, deel ideeën of stuur voorbeelden. Ik krijg direct een seintje.
       </PageHeader>
       {projects.length === 0 ? (
-        <EmptyState title="Nog geen projecten" action={<LinkButton href="/contact" size="sm">Vraag een shoot aan</LinkButton>}>
-          Berichten horen bij een project. Zodra je een shoot aanvraagt, kun je hier chatten.
+        <EmptyState title="Nog geen projecten" action={<LinkButton href="/contact" size="sm">Start een project</LinkButton>}>
+          Berichten horen bij een project. Zodra je een project start, kun je hier chatten.
         </EmptyState>
       ) : (
         <ul className="space-y-3">

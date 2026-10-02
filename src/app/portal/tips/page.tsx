@@ -12,7 +12,7 @@ export default async function TipsPage() {
 
   return (
     <>
-      <PageHeader eyebrow="Kennisbank" title="Tips voor je shoot">
+      <PageHeader eyebrow="Kennisbank" title="Tips">
         Alles wat je moet weten om er het maximale uit te halen.
       </PageHeader>
       {articles.length === 0 ? (

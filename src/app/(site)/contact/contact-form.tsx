@@ -6,7 +6,7 @@ import { submitContact } from "./actions";
 import { Checkbox, Field, FormMessage, Input, Select, Textarea } from "@/components/ui/form";
 import { SubmitButton } from "@/components/ui/submit-button";
 
-const types = ["Mini shoot", "Halve dag", "Foto en video", "Op maat", "Weet ik nog niet"];
+const types = ["Mini shoot", "Halve dag", "Foto en video", "Foto of video op maat", "Website", "App of webapp", "Game of interactief", "Weet ik nog niet"];
 
 export function ContactForm({ defaultType }: { defaultType?: string }) {
   const [state, action] = useActionState(submitContact, null);
@@ -32,7 +32,7 @@ export function ContactForm({ defaultType }: { defaultType?: string }) {
         <Field label="Telefoon (optioneel)">
           <Input name="phone" type="tel" autoComplete="tel" placeholder="06 …" />
         </Field>
-        <Field label="Soort shoot">
+        <Field label="Waar gaat het om?">
           <Select name="type" defaultValue={defaultType ?? types[4]}>
             {types.map((t) => (
               <option key={t}>{t}</option>

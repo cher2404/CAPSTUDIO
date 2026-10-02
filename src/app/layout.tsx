@@ -12,13 +12,13 @@ const mono = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"], 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} | Foto en video voor sport en lifestyle`,
+    default: `${site.name} | Foto, video, apps en games`,
     template: `%s | ${site.name}`,
   },
   description: site.description,
   applicationName: site.name,
   authors: [{ name: site.owner }],
-  keywords: ["sportfotografie", "fitness fotograaf", "lifestyle fotografie", "gym shoot", "sportvideo", "fotograaf Nederland"],
+  keywords: ["creatieve studio", "fotograaf", "videomaker", "sportfotografie", "lifestyle fotografie", "website laten maken", "app laten maken", "webapp", "games", "Nederland"],
   openGraph: {
     type: "website",
     locale: site.locale,

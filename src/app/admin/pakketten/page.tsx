@@ -6,6 +6,7 @@ import { Checkbox, Field, Input, Select, Textarea } from "@/components/ui/form";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { requireAdmin } from "@/lib/auth";
 import { displayPrice, type Pricing } from "@/lib/content";
+import { disciplineLabel, disciplines } from "@/lib/categories";
 import type { Package } from "@/lib/types";
 
 export const metadata = { title: "Pakketten" };
@@ -19,9 +20,20 @@ function PackageForm({ p, pricing }: { p?: Package; pricing: Pricing }) {
       <Field label="Naam">
         <Input name="name" defaultValue={p?.name} required />
       </Field>
-      <Field label="Duur (label boven de naam)">
-        <Input name="duration" defaultValue={p?.duration ?? ""} placeholder="1 uur" />
-      </Field>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="Discipline">
+          <Select name="category" defaultValue={p?.category ?? "beeld"}>
+            {disciplines.map((d) => (
+              <option key={d.value} value={d.value}>
+                {d.label}
+              </option>
+            ))}
+          </Select>
+        </Field>
+        <Field label="Label rechtsboven">
+          <Input name="duration" defaultValue={p?.duration ?? ""} placeholder="1 uur" />
+        </Field>
+      </div>
       <div className="grid grid-cols-[90px_1fr_130px] gap-3 md:col-span-2">
         <Field label="Voorvoegsel">
           <Input name="price_label" defaultValue={p?.price_label ?? ""} placeholder="vanaf" />
@@ -84,6 +96,7 @@ export default async function PackagesPage() {
           <Card key={p.id}>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-2xl">
+                <span className="label mr-3 align-middle">{disciplineLabel[p.category ?? "beeld"]}</span>
                 {p.name}{" "}
                 <span className="font-sans text-sm text-mist">
                   {p.price != null ? `${displayPrice(p, pricing)} ${pricing.display === "incl" ? "incl." : "excl."} btw` : "prijs na overleg"}

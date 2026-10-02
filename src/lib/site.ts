@@ -3,10 +3,10 @@
  */
 export const site = {
   name: "CAP Media Studio",
-  tagline: "foto en video voor sport en lifestyle",
+  tagline: "foto · video · apps · games",
   owner: "Cheryl Aldessa Prijs",
   description:
-    "Foto en video voor sport en lifestyle, met een donkere, filmische look die opvalt. CAP Media Studio shoot voor sporters, trainers en merken in heel Nederland.",
+    "CAP Media Studio is een creatieve studio voor foto, video, websites, apps en games. Met een donkere, filmische look die opvalt. Gevestigd in Nederland.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://capmediastudio.nl",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hallo@capmediastudio.nl",
   instagram: process.env.NEXT_PUBLIC_INSTAGRAM ?? "capmediastudio",

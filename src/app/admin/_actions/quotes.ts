@@ -9,7 +9,7 @@ import { sendEmail } from "@/lib/email";
 import { euro, formatDate } from "@/lib/format";
 import { absoluteUrl } from "@/lib/site";
 import type { ActionState, QuoteTemplate } from "@/lib/types";
-import { num, str } from "@/lib/utils";
+import { bool, num, str } from "@/lib/utils";
 
 type ItemInput = { description: string; quantity: number; unit_price: number };
 
@@ -52,11 +52,25 @@ export async function createQuote(form: FormData) {
     usage: (agreementTpl?.default_usage_rights as string | null) ?? null,
     rounds: (agreementTpl?.default_revision_rounds as number | null) ?? 1,
     items: [] as ItemInput[],
+    templateId: null as string | null,
   };
 
   if (source.startsWith("pkg:")) {
     const { data: pkg } = await supabase.from("packages").select("*").eq("id", source.slice(4)).single();
     if (pkg) {
+      // Overeenkomstsjabloon dat bij de discipline van het pakket hoort
+      const { data: tpl } = await supabase
+        .from("agreement_templates")
+        .select("id, default_usage_rights, default_revision_rounds")
+        .eq("category", pkg.category === "games" ? "digitaal" : pkg.category)
+        .order("is_default", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (tpl) {
+        base.templateId = tpl.id;
+        base.usage = tpl.default_usage_rights ?? base.usage;
+        base.rounds = tpl.default_revision_rounds ?? base.rounds;
+      }
       base = {
         ...base,
         title: pkg.name,
@@ -80,6 +94,7 @@ export async function createQuote(form: FormData) {
         usage: tpl.usage_rights ?? base.usage,
         rounds: tpl.revision_rounds,
         items: tpl.items ?? [],
+        templateId: null,
       };
     }
   }
@@ -94,6 +109,7 @@ export async function createQuote(form: FormData) {
       valid_until: addDays(base.validityDays),
       usage_rights: base.usage,
       revision_rounds: base.rounds,
+      agreement_template_id: base.templateId,
     })
     .select("id")
     .single();
@@ -120,6 +136,7 @@ export async function saveQuote(_: ActionState, form: FormData): Promise<ActionS
       vat_rate: num(form, "vat_rate", 21),
       usage_rights: str(form, "usage_rights") || null,
       revision_rounds: Math.max(0, Math.round(num(form, "revision_rounds", 1))),
+      agreement_template_id: str(form, "agreement_template_id") || null,
     })
     .eq("id", id);
   if (error) return { error: error.message };
@@ -222,17 +239,32 @@ export async function deleteQuoteTemplate(form: FormData) {
 export async function saveAgreementTemplate(_: ActionState, form: FormData): Promise<ActionState> {
   const { supabase } = await requireAdmin();
   const id = str(form, "id");
+  const category = ["beeld", "digitaal", "games"].includes(str(form, "category")) ? str(form, "category") : "beeld";
   const row = {
-    name: str(form, "name") || "Standaard overeenkomst",
+    name: str(form, "name") || "Overeenkomst",
     body: str(form, "body"),
+    category,
     default_usage_rights: str(form, "default_usage_rights") || null,
     default_revision_rounds: Math.round(num(form, "default_revision_rounds", 1)),
-    is_default: true,
   };
-  const { error } = id ? await supabase.from("agreement_templates").update(row).eq("id", id) : await supabase.from("agreement_templates").insert(row);
+  const { data, error } = id
+    ? await supabase.from("agreement_templates").update(row).eq("id", id).select("id").single()
+    : await supabase.from("agreement_templates").insert(row).select("id").single();
   if (error) return { error: error.message };
+
+  if (bool(form, "is_default")) {
+    await supabase.from("agreement_templates").update({ is_default: false }).neq("id", data.id).eq("is_default", true);
+    await supabase.from("agreement_templates").update({ is_default: true }).eq("id", data.id);
+  }
   revalidatePath("/admin/overeenkomst");
+  if (!id) redirect(`/admin/overeenkomst?id=${data.id}`);
   return { ok: true, message: "Sjabloon opgeslagen. Nieuwe overeenkomsten gebruiken deze tekst." };
+}
+
+export async function deleteAgreementTemplate(form: FormData) {
+  const { supabase } = await requireAdmin();
+  await supabase.from("agreement_templates").delete().eq("id", str(form, "id")).eq("is_default", false);
+  redirect("/admin/overeenkomst");
 }
 
 export async function revokeAgreement(form: FormData) {

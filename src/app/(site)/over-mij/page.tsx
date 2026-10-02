@@ -11,7 +11,7 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Over mij",
-  description: `Maak kennis met ${site.owner}, fotograaf en videomaker achter ${site.name}.`,
+  description: `Maak kennis met ${site.owner}: fotograaf, videomaker en developer achter ${site.name}.`,
   alternates: { canonical: "/over-mij" },
 };
 
@@ -45,7 +45,7 @@ export default async function OverMijPage() {
           </div>
           <div className="mt-3 flex justify-between font-mono text-[10px] tracking-[0.04em] text-mist uppercase">
             <span>{site.owner}</span>
-            <span>Fotograaf · Videomaker</span>
+            <span>Foto · Video · Apps</span>
           </div>
         </Reveal>
 
@@ -64,9 +64,10 @@ export default async function OverMijPage() {
             <SectionHead index="01" label="Disciplines" />
             <dl className="mt-2">
               {[
-                ["Foto", "Sport en lifestyle"],
+                ["Foto", "Sport, lifestyle en merken"],
                 ["Video", "Reels en clips"],
-                ["Web", "Websites en apps"],
+                ["Apps", "Websites en webapps"],
+                ["Games", "Interactief en speels"],
               ].map(([title, desc]) => (
                 <div key={title} className="rule-b flex items-baseline justify-between py-4">
                   <dt className="font-display text-3xl font-medium tracking-[-0.04em] text-bone">{title}</dt>
@@ -78,7 +79,7 @@ export default async function OverMijPage() {
 
           <Reveal className="mt-10 flex flex-wrap gap-3">
             <LinkButton href="/contact?type=boeken" size="lg">
-              Boek een shoot <Arrow />
+              Start een project <Arrow />
             </LinkButton>
             <LinkButton href={instagramUrl} target="_blank" rel="noopener noreferrer" variant="outline" size="lg">
               Instagram ↗

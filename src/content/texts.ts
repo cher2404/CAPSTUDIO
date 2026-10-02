@@ -6,37 +6,55 @@ export type TextDef = { label: string; page: string; default: string; multiline?
 
 export const textDefs = {
   // Home
-  "home.hero_title": { page: "Home", label: "Kop", default: "Sterke beelden voor sportief Nederland" },
+  "home.hero_title": { page: "Home", label: "Kop", default: "Creatieve studio voor beeld en digitaal" },
   "home.hero_subtitle": {
     page: "Home",
     label: "Ondertitel",
-    default: "Foto en video voor sport en lifestyle, met een donkere, filmische look die opvalt.",
+    default: "Foto, video, websites en apps. Met een donkere, filmische look die opvalt, en altijd met oog voor hoe het werkt.",
     multiline: true,
   },
-  "home.hero_button": { page: "Home", label: "Knop", default: "Boek een shoot" },
-  "home.block_foto_title": { page: "Home", label: "Blok 1: titel", default: "Foto" },
-  "home.block_foto_text": {
+  "home.hero_button": { page: "Home", label: "Knop", default: "Start een project" },
+  "home.block_1_title": { page: "Home", label: "Discipline 1: titel", default: "Foto" },
+  "home.block_1_text": {
     page: "Home",
-    label: "Blok 1: tekst",
-    default: "Krachtige beelden van jou, je training of je merk. Echt, dynamisch en klaar voor social media en je website.",
+    label: "Discipline 1: tekst",
+    default: "Krachtige beelden van jou, je team of je merk. Echt, dynamisch en klaar voor social media en je website. Met een specialisatie in sport en lifestyle.",
     multiline: true,
   },
-  "home.block_video_title": { page: "Home", label: "Blok 2: titel", default: "Video" },
-  "home.block_video_text": {
+  "home.block_1_tag": { page: "Home", label: "Discipline 1: label (optioneel)", default: "" },
+  "home.block_2_title": { page: "Home", label: "Discipline 2: titel", default: "Video" },
+  "home.block_2_text": {
     page: "Home",
-    label: "Blok 2: tekst",
-    default: "Korte reels en clips die de sfeer van je gym of training laten zien. Perfect voor Instagram en TikTok.",
+    label: "Discipline 2: tekst",
+    default: "Korte reels en clips die de sfeer van je merk, gym of event laten zien. Perfect voor Instagram en TikTok.",
     multiline: true,
   },
-  "home.block_persoonlijk_title": { page: "Home", label: "Blok 3: titel", default: "Persoonlijk" },
-  "home.block_persoonlijk_text": {
+  "home.block_2_tag": { page: "Home", label: "Discipline 2: label (optioneel)", default: "" },
+  "home.block_3_title": { page: "Home", label: "Discipline 3: titel", default: "Apps en websites" },
+  "home.block_3_text": {
     page: "Home",
-    label: "Blok 3: tekst",
+    label: "Discipline 3: tekst",
+    default: "Websites, webapps en klantportalen die snel zijn, goed werken en er net zo goed uitzien als je beelden.",
+    multiline: true,
+  },
+  "home.block_3_tag": { page: "Home", label: "Discipline 3: label (optioneel)", default: "" },
+  "home.block_4_title": { page: "Home", label: "Discipline 4: titel (leeg = verborgen)", default: "Games" },
+  "home.block_4_text": {
+    page: "Home",
+    label: "Discipline 4: tekst",
+    default: "Speelse, interactieve ervaringen en games. Een nieuwe richting waar ik nu mee experimenteer.",
+    multiline: true,
+  },
+  "home.block_4_tag": { page: "Home", label: "Discipline 4: label (optioneel)", default: "Lab" },
+  "home.approach_title": { page: "Home", label: "Werkwijze: kop", default: "Persoonlijk" },
+  "home.approach_text": {
+    page: "Home",
+    label: "Werkwijze: tekst",
     default:
-      "Geen standaard shoot, maar beelden die passen bij jou. We bespreken vooraf wat je nodig hebt, zodat je op de dag zelf gewoon kunt doen waar je goed in bent.",
+      "Geen standaard aanpak, maar werk dat past bij jou. We bespreken vooraf wat je nodig hebt, zodat je op de dag zelf gewoon kunt doen waar je goed in bent.",
     multiline: true,
   },
-  "home.work_title": { page: "Home", label: "Kop portfolio-selectie", default: "Uit het portfolio" },
+  "home.work_title": { page: "Home", label: "Kop portfolio-selectie", default: "Geselecteerd werk" },
   "home.cta_title": { page: "Home", label: "Afsluiter", default: "Benieuwd wat ik voor jou kan doen?" },
   "home.cta_button": { page: "Home", label: "Afsluiter: knop", default: "Vraag een vrijblijvende offerte aan" },
 
@@ -54,19 +72,34 @@ export const textDefs = {
   "diensten.intro": {
     page: "Diensten en tarieven",
     label: "Intro",
-    default: "Kies het pakket dat bij je past. Twijfel je? Vraag een offerte aan, dan denk ik met je mee.",
+    default: "Van een fotoshoot tot een complete app. Twijfel je wat je nodig hebt? Vraag een offerte aan, dan denk ik met je mee.",
+    multiline: true,
+  },
+  "diensten.beeld_title": { page: "Diensten en tarieven", label: "Sectie foto en video: titel", default: "Foto en video" },
+  "diensten.digitaal_title": { page: "Diensten en tarieven", label: "Sectie digitaal: titel", default: "Apps en websites" },
+  "diensten.digitaal_intro": {
+    page: "Diensten en tarieven",
+    label: "Sectie digitaal: intro",
+    default: "Elk digitaal project is anders. Na een kennismaking krijg je een voorstel met een duidelijke planning en prijs.",
+    multiline: true,
+  },
+  "diensten.games_title": { page: "Diensten en tarieven", label: "Sectie games: titel", default: "Games" },
+  "diensten.games_intro": {
+    page: "Diensten en tarieven",
+    label: "Sectie games: intro",
+    default: "Interactief en speels: van een kleine webgame tot een prototype. Zin om te experimenteren? Laten we praten.",
     multiline: true,
   },
   "diensten.included": {
     page: "Diensten en tarieven",
-    label: "Inbegrepen",
+    label: "Foto en video: inbegrepen",
     default:
       "Bij elk pakket inbegrepen: een kort kennismakingsgesprek, professionele bewerking in mijn eigen stijl, 1 bewerkingsronde en gebruik voor je eigen social media en website.",
     multiline: true,
   },
   "diensten.extra": {
     page: "Diensten en tarieven",
-    label: "Extra",
+    label: "Foto en video: extra",
     default: "Extra: gebruik voor betaalde advertenties, extra bewerkte foto's of een snelle oplevering reken ik apart.",
     multiline: true,
   },
@@ -100,7 +133,7 @@ export const textDefs = {
   "contact.intro": {
     page: "Contact",
     label: "Intro",
-    default: "Vertel me kort wat je zoekt. Ik reageer binnen twee werkdagen, en je krijgt direct toegang tot je eigen klantportaal.",
+    default: "Een shoot, een website, een app of een gek idee: vertel me kort wat je zoekt. Ik reageer binnen twee werkdagen, en je krijgt direct toegang tot je eigen klantportaal.",
     multiline: true,
   },
 } satisfies Record<string, TextDef>;

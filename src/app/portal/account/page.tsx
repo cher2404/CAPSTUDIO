@@ -24,7 +24,7 @@ export default async function AccountPage() {
         <Card id="toestemming">
           <h2 className="text-2xl">Toestemming portfolio</h2>
           <p className="mt-2 mb-5 max-w-2xl text-sm text-mist">
-            Mag ik beelden van jouw shoot gebruiken in mijn portfolio en op social media? Dat bepaal je per project, en je kunt het altijd
+            Mag ik werk uit jouw project gebruiken in mijn portfolio en op social media? Dat bepaal je per project, en je kunt het altijd
             weer intrekken.
           </p>
           {projects.length ? (

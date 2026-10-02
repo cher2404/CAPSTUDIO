@@ -3,7 +3,8 @@ export type PaymentStatus = "open" | "deels" | "betaald";
 export type QuoteStatus = "concept" | "verstuurd" | "vraag" | "geaccepteerd" | "afgewezen" | "verlopen";
 export type AgreementStatus = "te_ondertekenen" | "ondertekend" | "ingetrokken";
 export type AppointmentStatus = "bevestigd" | "geannuleerd" | "afgerond";
-export type PortfolioCategory = "gym" | "training" | "lifestyle" | "video";
+export type PortfolioCategory = "sport" | "lifestyle" | "video" | "apps" | "games";
+export type Discipline = "beeld" | "digitaal" | "games";
 
 export interface Profile {
   id: string;
@@ -48,6 +49,7 @@ export interface Package {
   price_label: string | null;
   duration: string | null;
   features: string[];
+  category: Discipline;
   highlighted: boolean;
   sort: number;
   active: boolean;
@@ -76,6 +78,7 @@ export interface Quote {
   valid_until: string | null;
   usage_rights: string | null;
   revision_rounds: number;
+  agreement_template_id: string | null;
   sent_at: string | null;
   accepted_at: string | null;
   created_at: string;
@@ -99,6 +102,7 @@ export interface AgreementTemplate {
   body: string;
   default_usage_rights: string | null;
   default_revision_rounds: number;
+  category: Discipline;
   is_default: boolean;
   updated_at: string;
 }
@@ -216,6 +220,8 @@ export interface PortfolioItem {
   image_url: string;
   storage_path: string | null;
   video_url: string | null;
+  description: string | null;
+  link_url: string | null;
   width: number;
   height: number;
   alt: string | null;

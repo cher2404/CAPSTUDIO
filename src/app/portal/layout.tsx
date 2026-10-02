@@ -15,7 +15,7 @@ export default async function PortalLayout({ children }: { children: React.React
     { href: "/portal/offertes", label: "Offertes", icon: "quote", badge: counts.openQuotes },
     { href: "/portal/overeenkomsten", label: "Overeenkomsten", icon: "sign", badge: counts.toSign },
     { href: "/portal/berichten", label: "Berichten", icon: "chat", badge: counts.unread },
-    { href: "/portal/galerijen", label: "Mijn foto's", icon: "image" },
+    { href: "/portal/galerijen", label: "Opleveringen", icon: "image" },
     { href: "/portal/documenten", label: "Documenten", icon: "folder" },
     { href: "/portal/tips", label: "Tips", icon: "book" },
     { href: "/portal/account", label: "Account", icon: "user" },

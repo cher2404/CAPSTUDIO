@@ -64,7 +64,7 @@ export default async function DashboardPage() {
       <div className="grid gap-5 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-2xl">Aankomende shoots</h2>
+            <h2 className="text-2xl">Aankomende afspraken</h2>
             <Link href="/portal/afspraken" className="text-xs text-mist hover:text-bone">
               Alles →
             </Link>
@@ -87,7 +87,7 @@ export default async function DashboardPage() {
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-mist">Nog geen shoot gepland.</p>
+            <p className="text-sm text-mist">Nog niets gepland.</p>
           )}
         </Card>
 
@@ -173,11 +173,11 @@ export default async function DashboardPage() {
               title="Nog geen project"
               action={
                 <LinkButton href="/contact" size="sm">
-                  Vraag een shoot aan
+                  Start een project
                 </LinkButton>
               }
             >
-              Zodra je een shoot aanvraagt, zie je hier de voortgang.
+              Zodra je een project start, zie je hier de voortgang.
             </EmptyState>
           )}
         </Card>

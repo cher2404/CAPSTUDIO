@@ -28,7 +28,7 @@ export default function OpengraphImage() {
           <div style={{ display: "flex", fontSize: 120, lineHeight: 1 }}>
             CAP Media <span style={{ fontStyle: "italic", color: "#d7a878", marginLeft: 28 }}>Studio</span>
           </div>
-          <div style={{ fontSize: 40, marginTop: 24, color: "#cfc8bc" }}>Sterke beelden voor sportief Nederland</div>
+          <div style={{ fontSize: 40, marginTop: 24, color: "#cfc8bc" }}>Creatieve studio voor beeld en digitaal</div>
         </div>
         <div style={{ display: "flex", fontSize: 22, color: "#9a948b", fontFamily: "sans-serif" }}>{`${site.owner} · Nederland`}</div>
       </div>

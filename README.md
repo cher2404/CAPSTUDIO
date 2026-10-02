@@ -1,6 +1,6 @@
 # CAP Media Studio
 
-Website en klantportaal voor **CAP Media Studio** ([capmediastudio.nl](https://capmediastudio.nl)), het merk van Cheryl Aldessa Prijs: foto en video voor sport en lifestyle.
+Website en klantportaal voor **CAP Media Studio** ([capmediastudio.nl](https://capmediastudio.nl)), de creatieve studio van Cheryl Aldessa Prijs: foto en video, websites en apps, en games.
 
 Next.js 16 (App Router) · TypeScript · Tailwind v4 · Supabase (auth, database, storage, RLS) · Resend · Vercel
 

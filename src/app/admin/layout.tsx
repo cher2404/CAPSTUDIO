@@ -19,7 +19,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: "/admin/agenda", label: "Agenda", icon: "calendar" },
     { href: "/admin/galerijen", label: "Galerijen", icon: "image" },
     { href: "/admin/sjablonen", label: "Offertesjablonen", icon: "template" },
-    { href: "/admin/overeenkomst", label: "Overeenkomst", icon: "sign" },
+    { href: "/admin/overeenkomst", label: "Overeenkomsten", icon: "sign" },
     { href: "/admin/pakketten", label: "Pakketten en prijzen", icon: "tag" },
     { href: "/admin/teksten", label: "Websiteteksten", icon: "template" },
     { href: "/admin/portfolio", label: "Portfolio", icon: "grid" },

@@ -8,17 +8,19 @@ import { site } from "@/lib/site";
 
 export const revalidate = 300;
 
-const categoryLabel: Record<string, string> = { gym: "Gym", training: "Training", lifestyle: "Lifestyle", video: "Video" };
+const categoryLabel: Record<string, string> = { sport: "Sport", lifestyle: "Lifestyle", video: "Video", apps: "Apps", games: "Games" };
 
 export default async function HomePage() {
   const [hero, portfolio, t] = await Promise.all([getHero(), getPortfolio(), getTexts()]);
-  const selected = portfolio.filter((p) => p.category !== "video").slice(0, 5);
+  const selected = portfolio.filter((p) => p.category !== "video" || p.image_url).slice(0, 5);
 
-  const blocks = [
-    { title: t["home.block_foto_title"], text: t["home.block_foto_text"] },
-    { title: t["home.block_video_title"], text: t["home.block_video_text"] },
-    { title: t["home.block_persoonlijk_title"], text: t["home.block_persoonlijk_text"] },
-  ];
+  const blocks = ([1, 2, 3, 4] as const)
+    .map((n) => ({
+      title: t[`home.block_${n}_title`],
+      text: t[`home.block_${n}_text`],
+      tag: t[`home.block_${n}_tag`],
+    }))
+    .filter((b) => b.title.trim());
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -59,8 +61,8 @@ export default async function HomePage() {
           <div className="rule-t mt-10 grid animate-fade-up grid-cols-2 gap-y-6 pt-5 pb-8 [animation-delay:300ms] md:mt-14 md:grid-cols-12 md:pb-10">
             <p className="col-span-2 max-w-md text-[15px] leading-relaxed text-bone-dim md:col-span-5 md:text-base">{t["home.hero_subtitle"]}</p>
             <div className="hidden md:col-span-2 md:col-start-7 md:block">
-              <p className="label">Discipline</p>
-              <p className="mt-1.5 text-sm text-bone">Foto · Video</p>
+              <p className="label">Disciplines</p>
+              <p className="mt-1.5 text-sm text-bone">Foto · Video · Apps</p>
             </div>
             <div className="hidden md:col-span-2 md:block">
               <p className="label">Werkgebied</p>
@@ -77,26 +79,42 @@ export default async function HomePage() {
 
       {/* Wat ik doe */}
       <section className="container-x pt-24 md:pt-40">
-        <SectionHead index="01" label="Wat ik doe" />
-        <div className="mt-10 grid md:mt-16 md:grid-cols-3">
+        <SectionHead index="01" label="Disciplines" />
+        <div className={`mt-10 grid gap-x-6 gap-y-12 md:mt-16 md:grid-cols-2 ${blocks.length === 4 ? "xl:grid-cols-4" : "xl:grid-cols-3"}`}>
           {blocks.map((b, i) => (
             <Reveal
               key={i}
-              delay={i * 110}
-              className="rule-t border-ink-700/70 py-8 md:border-t-0 md:border-l md:px-8 md:py-2 md:first:border-l-0 md:first:pl-0"
+              delay={i * 100}
+              className="border-t border-ink-600 pt-5"
             >
-              <span className="font-mono text-xs text-mist-dim">0{i + 1}</span>
-              <h2 className="mt-5 text-5xl md:mt-10 md:text-6xl">{b.title}</h2>
+              <div className="flex items-baseline justify-between">
+                <span className="font-mono text-xs text-mist-dim">0{i + 1}</span>
+                {b.tag && <span className="label border border-ember/40 px-1.5 py-0.5 text-ember-soft">{b.tag}</span>}
+              </div>
+              <h2 className="mt-5 text-5xl md:mt-10 xl:text-[3.4rem]">{b.title}</h2>
               <p className="mt-5 max-w-sm leading-relaxed text-mist">{b.text}</p>
             </Reveal>
           ))}
         </div>
       </section>
 
+      {/* Werkwijze */}
+      <section className="container-x pt-24 md:pt-40">
+        <SectionHead index="02" label="Werkwijze" />
+        <Reveal className="mt-10 grid gap-6 md:mt-14 md:grid-cols-12">
+          <h2 className="text-5xl md:col-span-4 md:text-7xl">
+            <em className="text-ember-soft">{t["home.approach_title"]}</em>
+          </h2>
+          <p className="font-display text-2xl leading-snug font-medium tracking-[-0.03em] text-bone md:col-span-7 md:col-start-6 md:text-[2.1rem]">
+            {t["home.approach_text"]}
+          </p>
+        </Reveal>
+      </section>
+
       {/* Geselecteerd werk */}
       <section className="container-x pt-24 md:pt-40">
         <SectionHead
-          index="02"
+          index="03"
           label={t["home.work_title"]}
           action={
             <Link href="/portfolio" className="arrow-link label text-bone hover:text-ember-soft">
@@ -131,7 +149,7 @@ export default async function HomePage() {
 
       {/* Afsluiter */}
       <section className="container-x pt-28 md:pt-44">
-        <SectionHead index="03" label="Samenwerken" />
+        <SectionHead index="04" label="Samenwerken" />
         <Reveal className="mt-10 grid items-end gap-10 md:mt-14 md:grid-cols-12">
           <h2 className="text-[2.6rem] leading-[0.95] sm:text-6xl md:col-span-8 md:text-7xl lg:text-8xl">
             <Accent text={t["home.cta_title"]} />

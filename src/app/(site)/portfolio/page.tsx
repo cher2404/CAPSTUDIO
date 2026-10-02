@@ -9,7 +9,7 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Portfolio",
-  description: "Filmische foto's en video's van gym-, trainings- en lifestyle shoots door CAP Media Studio.",
+  description: "Werk van CAP Media Studio: filmische foto's en video's, websites, apps en games.",
   alternates: { canonical: "/portfolio" },
 };
 
@@ -50,11 +50,11 @@ export default async function PortfolioPage() {
       <section className="container-x mt-24 md:mt-36">
         <Reveal className="rule-t grid items-end gap-8 pt-10 md:grid-cols-12">
           <p className="font-display text-4xl leading-[0.95] font-medium tracking-[-0.04em] text-bone md:col-span-8 md:text-6xl">
-            Zie je jezelf hier al <em className="text-ember-soft">staan?</em>
+            Zin om samen iets te <em className="text-ember-soft">maken?</em>
           </p>
           <div className="md:col-span-4 md:flex md:justify-end">
             <LinkButton href="/contact?type=boeken" size="lg" className="w-full md:w-auto">
-              Boek een shoot <Arrow />
+              Start een project <Arrow />
             </LinkButton>
           </div>
         </Reveal>

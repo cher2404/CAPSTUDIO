@@ -12,7 +12,7 @@ export function SiteFooter() {
             {site.email} <span className="arrow">→</span>
           </a>
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-mist">
-            Foto en video voor sport en lifestyle, met een donkere, filmische look die opvalt. Actief in heel {site.region}.
+            Creatieve studio voor foto, video, websites, apps en games. Met een donkere, filmische look die opvalt. Actief in heel {site.region}.
           </p>
         </div>
         <div className="space-y-2.5 text-sm md:col-span-2 md:col-start-7">

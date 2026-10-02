@@ -56,7 +56,7 @@ Deze privacyverklaring kan worden aangepast. De meest actuele versie staat altij
 `;
 
 export const terms = `
-Deze algemene voorwaarden gelden voor alle offertes, opdrachten en overeenkomsten van ${site.name} (${site.owner}, KvK ${site.kvk}), hierna "de fotograaf".
+Deze algemene voorwaarden gelden voor alle offertes, opdrachten en overeenkomsten van ${site.name} (${site.owner}, KvK ${site.kvk}), hierna "CAP Media Studio". Ze gelden voor fotografie en video én voor digitale projecten zoals websites, apps en games.
 
 ## 1. Offertes
 1. Offertes zijn vrijblijvend en geldig tot de datum die op de offerte staat.
@@ -64,17 +64,17 @@ Deze algemene voorwaarden gelden voor alle offertes, opdrachten en overeenkomste
 3. Een opdracht komt tot stand zodra de opdrachtgever de offerte accepteert in het klantportaal en de overeenkomst digitaal ondertekent.
 
 ## 2. Uitvoering
-1. De fotograaf voert de opdracht naar beste kunnen en met vakmanschap uit, in haar eigen herkenbare, filmische stijl.
-2. De fotograaf bepaalt de selectie en de bewerking van de beelden, in haar eigen stijl. Standaard is 1 bewerkingsronde inbegrepen; het aantal staat in de overeenkomst.
-3. De opdrachtgever zorgt dat de fotograaf toegang heeft tot de afgesproken locatie en dat eventuele toestemming (bijvoorbeeld van een gym) geregeld is.
+1. CAP Media Studio voert de opdracht naar beste kunnen en met vakmanschap uit, in haar eigen herkenbare, filmische stijl.
+2. CAP Media Studio bepaalt de selectie en de bewerking van de beelden, in haar eigen stijl. Standaard is 1 bewerkingsronde inbegrepen; het aantal staat in de overeenkomst.
+3. De opdrachtgever zorgt dat CAP Media Studio toegang heeft tot de afgesproken locatie en dat eventuele toestemming (bijvoorbeeld van een gym) geregeld is.
 
 ## 3. Verzetten en annuleren
 1. De opdrachtgever kan een afspraak kosteloos verzetten of annuleren tot 24 uur voor aanvang, via het klantportaal.
-2. Bij annulering binnen 24 uur mag de fotograaf 50% van het shootbedrag in rekening brengen.
-3. Bij ziekte of overmacht van de fotograaf wordt in overleg een nieuwe datum gepland. Als dat niet lukt, worden reeds betaalde bedragen terugbetaald.
+2. Bij annulering binnen 24 uur mag CAP Media Studio 50% van het shootbedrag in rekening brengen.
+3. Bij ziekte of overmacht van CAP Media Studio wordt in overleg een nieuwe datum gepland. Als dat niet lukt, worden reeds betaalde bedragen terugbetaald.
 4. Bij extreem weer bij een buitenshoot zoeken we samen een nieuwe datum, zonder extra kosten.
 
-## 4. Oplevering
+## 4. Oplevering foto en video
 1. Beelden worden geleverd via een privé online galerij in het klantportaal.
 2. De levertermijn is een streeftermijn. Overschrijding geeft geen recht op schadevergoeding.
 3. Hoge-resolutiebestanden zijn te downloaden zodra de betaling is ontvangen, tenzij anders afgesproken.
@@ -82,23 +82,30 @@ Deze algemene voorwaarden gelden voor alle offertes, opdrachten en overeenkomste
 
 ## 5. Betaling
 1. Facturen worden binnen 14 dagen na factuurdatum betaald.
-2. Bij te late betaling mag de fotograaf wettelijke rente en redelijke incassokosten in rekening brengen.
+2. Bij te late betaling mag CAP Media Studio wettelijke rente en redelijke incassokosten in rekening brengen.
 
 ## 6. Auteursrecht en gebruik
-1. Het auteursrecht op alle beelden blijft bij de fotograaf.
+1. Het auteursrecht op alle beelden blijft bij CAP Media Studio.
 2. De opdrachtgever krijgt een gebruikslicentie zoals vastgelegd in de overeenkomst. Zonder aanvullende afspraak is dat gebruik voor de eigen social media en website van de opdrachtgever. Gebruik in betaalde advertenties vereist een aparte afspraak.
 3. Beelden mogen niet worden bewerkt, bijgesneden op een manier die het beeld wezenlijk verandert, of voorzien van filters, zonder toestemming.
 4. Bij publicatie wordt, waar redelijkerwijs mogelijk, de naam ${site.name} of @${site.instagram} vermeld.
-5. De fotograaf gebruikt beelden alleen voor haar portfolio en promotie als de opdrachtgever daar per project toestemming voor geeft.
+5. CAP Media Studio gebruikt beelden alleen voor haar portfolio en promotie als de opdrachtgever daar per project toestemming voor geeft.
 
-## 7. Aansprakelijkheid
-1. De aansprakelijkheid van de fotograaf is beperkt tot het bedrag van de betreffende factuur.
-2. De fotograaf is niet aansprakelijk voor indirecte schade of voor schade door onjuiste informatie van de opdrachtgever.
-3. Bij verlies of beschadiging van beeldmateriaal door een technisch defect is de fotograaf niet verder aansprakelijk dan het opnieuw uitvoeren van (een deel van) de opdracht.
+## 7. Digitale projecten (websites, apps, games)
+1. De scope, planning en het aantal feedbackrondes staan in de offerte en overeenkomst. Extra wensen buiten de scope worden vooraf besproken en apart geoffreerd.
+2. Na volledige betaling krijgt de opdrachtgever het gebruiksrecht op het opgeleverde werk, zoals vastgelegd in de overeenkomst. Herbruikbare onderdelen en eigen tools van CAP Media Studio blijven haar eigendom.
+3. Hosting, domeinnamen en accounts van externe diensten staan bij voorkeur op naam van de opdrachtgever. De kosten daarvan zijn voor de opdrachtgever.
+4. Onderhoud, updates en doorontwikkeling na oplevering zijn niet inbegrepen, tenzij anders afgesproken.
+5. CAP Media Studio is niet aansprakelijk voor storingen bij externe diensten zoals hosting, app stores of betaalproviders.
 
-## 8. Privacy
-De fotograaf verwerkt persoonsgegevens volgens de [privacyverklaring](/privacy).
+## 8. Aansprakelijkheid
+1. De aansprakelijkheid van CAP Media Studio is beperkt tot het bedrag van de betreffende factuur.
+2. CAP Media Studio is niet aansprakelijk voor indirecte schade of voor schade door onjuiste informatie van de opdrachtgever.
+3. Bij verlies of beschadiging van beeldmateriaal door een technisch defect is CAP Media Studio niet verder aansprakelijk dan het opnieuw uitvoeren van (een deel van) de opdracht.
 
-## 9. Toepasselijk recht
+## 9. Privacy
+CAP Media Studio verwerkt persoonsgegevens volgens de [privacyverklaring](/privacy).
+
+## 10. Toepasselijk recht
 Op alle overeenkomsten is Nederlands recht van toepassing.
 `;

@@ -5,7 +5,7 @@ import { ActionForm, ConfirmButton } from "@/components/admin/forms";
 import { ItemsEditor } from "@/components/admin/items-editor";
 import { Card } from "@/components/ui/card";
 import { Button, buttonClass } from "@/components/ui/button";
-import { Field, Input, Textarea } from "@/components/ui/form";
+import { Field, Input, Select, Textarea } from "@/components/ui/form";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { QuoteStatusBadge } from "@/components/ui/status";
 import { requireAdmin } from "@/lib/auth";
@@ -18,7 +18,10 @@ export default async function QuoteEditorPage({ params }: { params: Promise<{ id
   const { data } = await supabase.from("quotes").select("*, projects(id, title, clients(full_name, email))").eq("id", id).maybeSingle();
   if (!data) notFound();
   const quote = data as Quote & { projects: { id: string; title: string; clients: { full_name: string | null; email: string } } };
-  const { data: items } = await supabase.from("quote_items").select("*").eq("quote_id", id).order("sort");
+  const [{ data: items }, { data: agreementTemplates }] = await Promise.all([
+    supabase.from("quote_items").select("*").eq("quote_id", id).order("sort"),
+    supabase.from("agreement_templates").select("id, name, is_default").order("name"),
+  ]);
   const locked = quote.status === "geaccepteerd";
 
   return (
@@ -64,6 +67,17 @@ export default async function QuoteEditorPage({ params }: { params: Promise<{ id
             </Field>
             <Field label="Bewerkingsrondes">
               <Input name="revision_rounds" type="number" min={0} defaultValue={quote.revision_rounds} />
+            </Field>
+            <Field label="Overeenkomstsjabloon" className="md:col-span-2" hint="Na acceptatie wordt hiermee automatisch de overeenkomst gemaakt.">
+              <Select name="agreement_template_id" defaultValue={quote.agreement_template_id ?? ""}>
+                <option value="">Standaardsjabloon</option>
+                {(agreementTemplates ?? []).map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                    {t.is_default ? " (standaard)" : ""}
+                  </option>
+                ))}
+              </Select>
             </Field>
             <Field label="Gebruiksrechten" className="md:col-span-2" hint="Komt ook in de overeenkomst.">
               <Textarea name="usage_rights" defaultValue={quote.usage_rights ?? ""} rows={2} className="min-h-16" />

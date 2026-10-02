@@ -3,18 +3,16 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
+import { portfolioCategories, portfolioCategoryLabel } from "@/lib/categories";
 import type { PortfolioCategory, PortfolioItem } from "@/lib/types";
 
-const filters: { value: "alles" | PortfolioCategory; label: string }[] = [
-  { value: "alles", label: "Alles" },
-  { value: "gym", label: "Gym" },
-  { value: "training", label: "Training" },
-  { value: "lifestyle", label: "Lifestyle" },
-  { value: "video", label: "Video" },
-];
-
 export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
-  const [filter, setFilter] = useState<(typeof filters)[number]["value"]>("alles");
+  // Alleen categorieën tonen waar werk in staat
+  const filters: { value: "alles" | PortfolioCategory; label: string }[] = [
+    { value: "alles", label: "Alles" },
+    ...portfolioCategories.filter((c) => items.some((i) => i.category === c.value)),
+  ];
+  const [filter, setFilter] = useState<"alles" | PortfolioCategory>("alles");
   const [active, setActive] = useState<number | null>(null);
 
   const visible = useMemo(() => (filter === "alles" ? items : items.filter((i) => i.category === filter)), [items, filter]);
@@ -88,7 +86,7 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
               />
               <div className="absolute inset-0 flex items-end bg-gradient-to-t from-ink-950/70 via-transparent to-transparent p-4 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                 <span className="flex w-full justify-between font-mono text-[10px] tracking-[0.04em] text-bone uppercase">
-                  <span>{String(i + 1).padStart(2, "0")} / {item.title ?? item.category}</span>
+                  <span>{String(i + 1).padStart(2, "0")} / {item.title ?? portfolioCategoryLabel[item.category]}</span>
                   <span>Bekijk ↗</span>
                 </span>
               </div>
@@ -137,6 +135,17 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
               </div>
             )}
           </div>
+          {(current.description || current.link_url || current.title) && (
+            <div className="absolute inset-x-0 bottom-12 mx-auto flex max-w-3xl flex-col gap-2 px-6 text-center md:bottom-14" onClick={(e) => e.stopPropagation()}>
+              {current.title && <p className="font-display text-2xl font-medium tracking-[-0.03em] text-bone">{current.title}</p>}
+              {current.description && <p className="text-sm text-bone-dim">{current.description}</p>}
+              {current.link_url && (
+                <a href={current.link_url} target="_blank" rel="noopener noreferrer" className="label mx-auto mt-1 text-ember-soft hover:text-bone">
+                  Bekijk project ↗
+                </a>
+              )}
+            </div>
+          )}
           <button onClick={close} className="absolute top-4 right-4 flex size-11 items-center justify-center text-2xl text-bone/80 hover:text-bone" aria-label="Sluiten">
             ×
           </button>

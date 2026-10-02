@@ -163,6 +163,7 @@ create table public.packages (
   price_label  text,                    -- bijv. 'vanaf'
   duration     text,
   features     text[] not null default '{}',
+  category     text not null default 'beeld' check (category in ('beeld', 'digitaal', 'games')),
   highlighted  boolean not null default false,
   sort         int not null default 0,
   active       boolean not null default true,
@@ -281,10 +282,14 @@ create table public.agreement_templates (
   body                     text not null,
   default_usage_rights     text,
   default_revision_rounds  int not null default 1,
+  category                 text not null default 'beeld' check (category in ('beeld', 'digitaal', 'games')),
   is_default               boolean not null default false,
   updated_at               timestamptz not null default now()
 );
 create unique index agreement_templates_one_default on public.agreement_templates (is_default) where is_default;
+
+-- Welk overeenkomstsjabloon hoort bij een offerte (leeg = standaardsjabloon)
+alter table public.quotes add column agreement_template_id uuid references public.agreement_templates (id) on delete set null;
 create trigger agreement_templates_updated_at before update on public.agreement_templates
   for each row execute function public.set_updated_at();
 
@@ -514,8 +519,13 @@ begin
 
   select * into v_project from public.projects where id = v_quote.project_id;
   select * into v_client from public.clients where id = v_project.client_id;
-  select * into v_tpl from public.agreement_templates where is_default limit 1;
-  if not found then
+  if v_quote.agreement_template_id is not null then
+    select * into v_tpl from public.agreement_templates where id = v_quote.agreement_template_id;
+  end if;
+  if v_tpl.id is null then
+    select * into v_tpl from public.agreement_templates where is_default limit 1;
+  end if;
+  if v_tpl.id is null then
     select * into v_tpl from public.agreement_templates order by updated_at desc limit 1;
   end if;
 
@@ -711,7 +721,9 @@ create trigger articles_updated_at before update on public.articles
 create table public.portfolio_items (
   id           uuid primary key default gen_random_uuid(),
   title        text,
-  category     text not null check (category in ('gym', 'training', 'lifestyle', 'video')),
+  category     text not null check (category in ('sport', 'lifestyle', 'video', 'apps', 'games')),
+  description  text,
+  link_url     text,
   image_url    text not null,
   storage_path text,
   video_url    text,

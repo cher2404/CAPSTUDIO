@@ -43,7 +43,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         <p className="mt-10 text-sm text-mist">
           Nog geen klant?{" "}
           <Link href="/contact" className="text-bone underline-offset-4 hover:underline">
-            Vraag een shoot aan
+            Start een project
           </Link>{" "}
           en je krijgt automatisch toegang.
         </p>

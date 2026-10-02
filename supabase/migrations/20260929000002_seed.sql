@@ -4,15 +4,22 @@
 -- =============================================================================
 
 -- Prijzen worden excl. btw opgeslagen. 175 / 1.21 enz., zodat de website bij "incl. btw" exact €175 toont.
-insert into public.packages (slug, name, tagline, price, price_label, duration, features, highlighted, sort) values
+-- Categorieën: beeld (foto en video), digitaal (apps en websites), games.
+insert into public.packages (slug, name, tagline, price, price_label, duration, features, category, highlighted, active, sort) values
   ('mini', 'Mini shoot', 'Ideaal voor een nieuwe profielset of snelle content.', round(175 / 1.21, 4), '', '1 uur',
-   array['1 uur shoot', '12 bewerkte foto''s', 'Online galerij'], false, 1),
+   array['1 uur shoot', '12 bewerkte foto''s', 'Online galerij'], 'beeld', false, true, 1),
   ('halve-dag', 'Halve dag', 'Voor trainers, coaches en kleine merken.', round(395 / 1.21, 4), '', '3 uur',
-   array['3 uur shoot', '25 bewerkte foto''s', 'Verschillende looks of locaties'], true, 2),
+   array['3 uur shoot', '25 bewerkte foto''s', 'Verschillende looks of locaties'], 'beeld', true, true, 2),
   ('foto-video', 'Foto en video', 'Compleet contentpakket.', round(595 / 1.21, 4), 'vanaf', 'Halve dag',
-   array['Halve dag shoot', '25 bewerkte foto''s', 'Een korte reel voor social media'], false, 3),
+   array['Halve dag shoot', '25 bewerkte foto''s', 'Een korte reel voor social media'], 'beeld', false, true, 3),
   ('op-maat', 'Op maat', 'Voor je sportschool of merk.', null, '', 'In overleg',
-   array['Meerdere shoots', 'Een maandpakket', 'Of een grotere productie'], false, 4)
+   array['Meerdere shoots', 'Een maandpakket', 'Of een grotere productie'], 'beeld', false, true, 4),
+  ('website', 'Website', 'Een snelle, strakke site die past bij je merk, met beelden die kloppen.', null, '', 'Ontwerp en bouw',
+   array['Ontwerp in je eigen stijl', 'Gebouwd voor mobiel en snelheid', 'Zelf teksten en beelden beheren'], 'digitaal', false, true, 10),
+  ('app', 'App of webapp', 'Van idee tot werkende app: een klantportaal, boekingssysteem of je eigen tool.', null, '', 'Op maat',
+   array['Concept en ontwerp', 'Web of mobiel', 'Doorontwikkeling mogelijk'], 'digitaal', false, true, 11),
+  ('game', 'Game of interactief', 'Een game, interactieve ervaring of iets speels voor je merk.', null, '', 'Op maat',
+   array['Concept en prototype', 'Web of mobiel', 'In overleg'], 'games', false, false, 20)
 on conflict (slug) do nothing;
 
 -- Offertesjablonen op basis van de pakketten (regels excl. btw).
@@ -26,12 +33,14 @@ select p.name, p.id, p.name,
               'unit_price', round(p.price, 2)))
        end,
        14,
-       'Gebruik voor je eigen social media en website, onbeperkt in tijd. Gebruik voor betaalde advertenties alleen na aparte afspraak.',
-       1
+       case when p.category = 'beeld'
+            then 'Gebruik voor je eigen social media en website, onbeperkt in tijd. Gebruik voor betaalde advertenties alleen na aparte afspraak.'
+            else 'Na volledige betaling krijg je het gebruiksrecht op het opgeleverde werk voor je eigen organisatie.' end,
+       case when p.category = 'beeld' then 1 else 2 end
   from public.packages p;
 
 insert into public.agreement_templates (name, is_default, default_usage_rights, default_revision_rounds, body) values
-('Standaard overeenkomst', true, 'Gebruik voor je eigen social media en website, onbeperkt in tijd. Gebruik voor betaalde advertenties alleen na aparte afspraak.', 1,
+('Foto en video (standaard)', true, 'Gebruik voor je eigen social media en website, onbeperkt in tijd. Gebruik voor betaalde advertenties alleen na aparte afspraak.', 1,
 $tpl$# Overeenkomst fotografie en video
 
 **Tussen** CAP Media Studio (Cheryl Aldessa Prijs), hierna "de fotograaf",
@@ -67,6 +76,43 @@ Op deze overeenkomst zijn de algemene voorwaarden van CAP Media Studio van toepa
 Door digitaal te ondertekenen gaat de opdrachtgever akkoord met deze overeenkomst. Naam, datum, tijd en IP-adres worden vastgelegd.
 $tpl$);
 
+insert into public.agreement_templates (name, category, is_default, default_usage_rights, default_revision_rounds, body) values
+('Digitaal project (websites, apps, games)', 'digitaal', false, 'Na volledige betaling krijg je het gebruiksrecht op het opgeleverde werk voor je eigen organisatie.', 2,
+$tpl$# Overeenkomst digitaal project
+
+**Tussen** CAP Media Studio (Cheryl Aldessa Prijs), hierna "de opdrachtnemer",
+**en** {{klant_naam}} {{bedrijf}} ({{klant_email}}), hierna "de opdrachtgever".
+
+Datum: {{datum}}
+Project: {{project}}
+Op basis van offerte: {{offerte_nummer}} (totaal € {{totaal}} incl. btw)
+
+## 1. De opdracht
+De opdrachtnemer ontwerpt en bouwt het project zoals beschreven in offerte {{offerte_nummer}}. Wijzigingen in de scope worden vooraf besproken en zo nodig apart geoffreerd.
+
+## 2. Feedbackrondes
+Bij deze opdracht horen **{{bewerkingsrondes}} feedbackronde(s)** op het ontwerp en de oplevering. Extra rondes worden in overleg gefactureerd.
+
+## 3. Gebruiksrechten
+{{gebruiksrechten}}
+
+Herbruikbare onderdelen, eigen tools en code-bibliotheken van de opdrachtnemer blijven haar eigendom; de opdrachtgever krijgt daarvan een gebruiksrecht voor dit project. Software van derden (zoals open source) valt onder de licentie van die partij.
+
+## 4. Hosting, accounts en onderhoud
+Hosting, domeinnamen en accounts van externe diensten staan bij voorkeur op naam van de opdrachtgever. Onderhoud en doorontwikkeling na oplevering zijn niet inbegrepen, tenzij anders afgesproken.
+
+## 5. Portfolio
+De opdrachtnemer toont het project alleen in haar portfolio als de opdrachtgever daar in het portaal toestemming voor geeft.
+
+## 6. Betaling
+Betaling volgens de factuur, binnen 14 dagen na factuurdatum. Bij grotere projecten kan in termijnen worden gefactureerd.
+
+## 7. Aansprakelijkheid en voorwaarden
+Op deze overeenkomst zijn de algemene voorwaarden van CAP Media Studio van toepassing. De aansprakelijkheid van de opdrachtnemer is beperkt tot het factuurbedrag.
+
+Door digitaal te ondertekenen gaat de opdrachtgever akkoord met deze overeenkomst. Naam, datum, tijd en IP-adres worden vastgelegd.
+$tpl$);
+
 insert into public.email_templates (key, name, description, subject, body, variables) values
 ('login_link', 'Inloglink', 'Magic link om in te loggen op het portaal', 'Je inloglink voor CAP Media Studio',
 $b$Hoi{{naam_komma}}
@@ -96,7 +142,7 @@ $b$Nieuwe aanvraag via de website.
 
 **Naam:** {{naam}}
 **E-mail:** {{email}}
-**Type shoot:** {{type}}
+**Soort project:** {{type}}
 **Bericht:**
 
 {{bericht}}
@@ -104,17 +150,17 @@ $b$Nieuwe aanvraag via de website.
 [Open in admin]({{admin_link}})$b$,
  array['naam', 'email', 'type', 'bericht', 'admin_link']),
 
-('appointment_confirmed', 'Afspraak bevestigd', 'Na het boeken van een shoot', 'Je shoot staat gepland: {{datum}}',
+('appointment_confirmed', 'Afspraak bevestigd', 'Na het boeken van een afspraak', 'Je afspraak staat gepland: {{datum}}',
 $b$Hoi {{naam}},
 
-Top, je shoot staat vast!
+Top, onze afspraak staat vast!
 
 **Wanneer:** {{datum}}, {{tijd}}
 **Project:** {{project}}
 
 In de bijlage zit een agenda-uitnodiging. Verzetten of annuleren kan tot 24 uur van tevoren in je portaal.
 
-Tip: lees vast [Zo bereid je je voor]({{tips_link}}).
+Gaan we shooten? Lees dan vast [Zo bereid je je voor]({{tips_link}}).
 
 [Bekijk je afspraak]({{link}})
 
@@ -122,10 +168,10 @@ Tot dan!
 Cheryl$b$,
  array['naam', 'datum', 'tijd', 'project', 'link', 'tips_link']),
 
-('appointment_rescheduled', 'Afspraak verzet', 'Na het verzetten van een shoot', 'Je shoot is verzet naar {{datum}}',
+('appointment_rescheduled', 'Afspraak verzet', 'Na het verzetten van een afspraak', 'Je afspraak is verzet naar {{datum}}',
 $b$Hoi {{naam}},
 
-Je shoot is verzet. Dit is het nieuwe moment:
+Je afspraak is verzet. Dit is het nieuwe moment:
 
 **Wanneer:** {{datum}}, {{tijd}}
 **Project:** {{project}}
@@ -136,10 +182,10 @@ Groet,
 Cheryl$b$,
  array['naam', 'datum', 'tijd', 'project', 'link']),
 
-('appointment_cancelled', 'Afspraak geannuleerd', 'Na het annuleren van een shoot', 'Je shoot op {{datum}} is geannuleerd',
+('appointment_cancelled', 'Afspraak geannuleerd', 'Na het annuleren van een afspraak', 'Je afspraak op {{datum}} is geannuleerd',
 $b$Hoi {{naam}},
 
-Je shoot op {{datum}} om {{tijd}} is geannuleerd. Wil je een nieuw moment kiezen? Dat kan altijd in je portaal.
+Je afspraak op {{datum}} om {{tijd}} is geannuleerd. Wil je een nieuw moment kiezen? Dat kan altijd in je portaal.
 
 [Kies een nieuw moment]({{link}})
 
@@ -147,15 +193,15 @@ Groet,
 Cheryl$b$,
  array['naam', 'datum', 'tijd', 'project', 'link']),
 
-('appointment_reminder', 'Herinnering (24 uur vooraf)', 'Automatisch 24 uur voor de shoot', 'Morgen is het zover!',
+('appointment_reminder', 'Herinnering (24 uur vooraf)', 'Automatisch 24 uur voor de afspraak', 'Morgen is het zover!',
 $b$Hoi {{naam}},
 
-Nog even en we gaan shooten!
+Nog even en we zien elkaar!
 
 **Wanneer:** {{datum}}, {{tijd}}
 **Project:** {{project}}
 
-Checklist: outfits gestreken, water mee, goed geslapen. Twijfel je nog over je outfit? Lees [Wat trek ik aan tijdens een shoot]({{tips_link}}).
+Gaan we shooten? Check dan nog even de [tips voor je shoot]({{tips_link}}).
 
 [Bekijk je afspraak]({{link}})
 
@@ -223,7 +269,7 @@ De overeenkomst voor **{{project}}** is ondertekend op {{datum}}. Je kunt hem al
 
 [Bekijk en download de pdf]({{link}})
 
-Nu nog een moment kiezen voor de shoot, als dat nog niet is gebeurd.
+Nu nog een moment plannen, als dat nog niet is gebeurd.
 
 Groet,
 Cheryl$b$,

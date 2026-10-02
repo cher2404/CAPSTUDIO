@@ -7,7 +7,7 @@ import { instagramUrl, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Boek een shoot of vraag een vrijblijvende offerte aan bij CAP Media Studio. Foto en video voor sport en lifestyle.",
+  description: "Start een project of vraag een vrijblijvende offerte aan bij CAP Media Studio: foto, video, websites, apps en games.",
   alternates: { canonical: "/contact" },
 };
 
@@ -15,7 +15,10 @@ const packageToType: Record<string, string> = {
   mini: "Mini shoot",
   "halve-dag": "Halve dag",
   "foto-video": "Foto en video",
-  "op-maat": "Op maat",
+  "op-maat": "Foto of video op maat",
+  website: "Website",
+  app: "App of webapp",
+  game: "Game of interactief",
 };
 
 export default async function ContactPage({ searchParams }: { searchParams: Promise<{ pakket?: string; type?: string }> }) {

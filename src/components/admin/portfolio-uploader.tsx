@@ -5,11 +5,12 @@ import { useState } from "react";
 import { addPortfolioItems } from "@/app/admin/_actions/content";
 import { pool, resizeImage, safeName } from "@/lib/image-client";
 import { createClient } from "@/lib/supabase/client";
+import { portfolioCategories } from "@/lib/categories";
 import type { PortfolioCategory } from "@/lib/types";
 
 export function PortfolioUploader() {
   const router = useRouter();
-  const [category, setCategory] = useState<PortfolioCategory>("gym");
+  const [category, setCategory] = useState<PortfolioCategory>("sport");
   const [progress, setProgress] = useState<string>("");
 
   async function handle(files: File[]) {
@@ -38,10 +39,11 @@ export function PortfolioUploader() {
   return (
     <div className="flex flex-col gap-3 md:flex-row md:items-center">
       <select value={category} onChange={(e) => setCategory(e.target.value as PortfolioCategory)} className="field md:w-44">
-        <option value="gym">Gym</option>
-        <option value="training">Training</option>
-        <option value="lifestyle">Lifestyle</option>
-        <option value="video">Video (thumbnail)</option>
+        {portfolioCategories.map((c) => (
+          <option key={c.value} value={c.value}>
+            {c.label}
+          </option>
+        ))}
       </select>
       <label className="flex flex-1 cursor-pointer items-center justify-center rounded-xl border border-dashed border-ink-600 px-4 py-4 text-sm text-bone-dim hover:border-ink-500">
         <input type="file" multiple accept="image/*" className="sr-only" disabled={!!progress} onChange={(e) => handle([...(e.target.files ?? [])])} />

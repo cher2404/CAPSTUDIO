@@ -60,7 +60,7 @@ export function SiteHeader() {
             href="/contact?type=boeken"
             className="group/btn flex h-10 items-center gap-2.5 border border-bone/30 px-4 text-sm text-bone transition-colors duration-300 hover:border-bone hover:bg-bone hover:text-ink-950"
           >
-            Boek een shoot <span className="transition-transform duration-500 group-hover/btn:translate-x-1">→</span>
+            Start een project <span className="transition-transform duration-500 group-hover/btn:translate-x-1">→</span>
           </Link>
         </nav>
         <button
@@ -101,7 +101,7 @@ export function SiteHeader() {
           onClick={() => setOpen(false)}
           className="mt-auto flex h-14 items-center justify-between bg-bone px-5 font-medium text-ink-950"
         >
-          Boek een shoot <span>→</span>
+          Start een project <span>→</span>
         </Link>
       </div>
     </header>

@@ -5,7 +5,7 @@ import { withPreviewUrls } from "@/lib/galleries";
 import { getMyProjects } from "@/lib/portal";
 import type { Gallery, GalleryFile } from "@/lib/types";
 
-export const metadata = { title: "Mijn foto's" };
+export const metadata = { title: "Opleveringen" };
 
 export default async function GalerijenPage() {
   const { supabase, projects } = await getMyProjects();
@@ -23,11 +23,11 @@ export default async function GalerijenPage() {
 
   return (
     <>
-      <PageHeader eyebrow="Mijn foto's" title="Je galerijen">
-        Bekijk je beelden, kies je favorieten en download ze in hoge resolutie zodra ze zijn vrijgegeven.
+      <PageHeader eyebrow="Opleveringen" title="Je bestanden">
+        Bekijk je opgeleverde werk, kies je favorieten en download alles in hoge resolutie zodra het is vrijgegeven.
       </PageHeader>
       {galleries.length === 0 ? (
-        <EmptyState title="Nog even geduld">Na de shoot ga ik aan de slag met bewerken. Je krijgt een mail zodra je galerij klaarstaat.</EmptyState>
+        <EmptyState title="Nog even geduld">Zodra je werk klaar is, verschijnt het hier en krijg je een mail.</EmptyState>
       ) : (
         <div className="grid gap-5 md:grid-cols-2">
           {galleries.map((g) => {

@@ -116,7 +116,7 @@ export function SlotPicker(props: Props) {
           )}
         </p>
         <SubmitButton disabled={!slot} pendingText="Bevestigen…">
-          {props.mode === "book" ? "Bevestig shoot" : "Verzet naar dit moment"}
+          {props.mode === "book" ? "Bevestig afspraak" : "Verzet naar dit moment"}
         </SubmitButton>
       </div>
       <FormMessage state={state} />
