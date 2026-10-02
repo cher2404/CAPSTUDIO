@@ -37,7 +37,7 @@ Ik verkoop je gegevens nooit. Ik werk wel met een paar zorgvuldig gekozen dienst
 Met deze partijen zijn verwerkersafspraken gemaakt. Waar gegevens buiten de EU komen, gebeurt dat op basis van de standaardcontractbepalingen van de Europese Commissie.
 
 ## Cookies
-De website gebruikt noodzakelijke cookies om het klantportaal te laten werken (je inlogsessie). Die kun je niet uitzetten. Anonieme statistieken (Vercel Analytics, zonder tracking-cookies) worden alleen geladen als je in de cookiebanner op "Alles accepteren" klikt. Je kunt je keuze altijd aanpassen via de cookie-instellingen onderaan deze pagina.
+De website gebruikt noodzakelijke cookies om het klantportaal te laten werken (je inlogsessie). Die kun je niet uitzetten. Anonieme statistieken (Vercel Analytics, zonder tracking-cookies) worden alleen geladen als je in de cookiebanner op "Akkoord" klikt. Je kunt je keuze altijd aanpassen via de cookie-instellingen onderaan deze pagina.
 
 ## Jouw rechten
 Je hebt het recht om je gegevens in te zien, te laten corrigeren of te laten verwijderen. Ook kun je bezwaar maken, de verwerking laten beperken, je toestemming intrekken en je gegevens laten overdragen.

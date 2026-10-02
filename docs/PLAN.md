@@ -32,6 +32,10 @@ src/app
     └── files/[id]/download      signed download-url voor hoge resolutie
 ```
 
+## Ontwerpconcept
+
+Het **contactvel**: de site gedraagt zich als een vel negatieven van de fotograaf. De hero is één frame met filmrand, framenummers en belichtingsgegevens; daaronder een strook frames waarvan de favoriet met vetpotlood is omcirkeld. Verder: een statement met kleine beelden tussen de woorden, disciplines en werk als index (met meebewegende voorvertoning), een prijslijst in plaats van kaartjes, live tijd in Nederland en een beschikbaarheidsstatus. Bewust vermeden: icoontjes-in-kaartjes, gloed-gradients en overal fade-ins.
+
 ## Content en prijzen
 
 * Websiteteksten: standaard in `src/content/texts.ts`, aanpassingen in `site_texts`, te beheren in `/admin/teksten`.

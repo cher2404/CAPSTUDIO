@@ -28,7 +28,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
     <div className="container-x pt-32 md:pt-44">
       <Reveal>
         <p className="label">
-          <span className="text-ember-soft">(—)</span> Contact
+          Contact
         </p>
       </Reveal>
       <Reveal className="mt-6 md:mt-8">

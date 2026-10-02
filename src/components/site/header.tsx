@@ -13,7 +13,7 @@ const nav = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function SiteHeader() {
+export function SiteHeader({ availability }: { availability?: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -37,24 +37,39 @@ export function SiteHeader() {
       )}
     >
       <div className="container-x grid h-18 grid-cols-[1fr_auto] items-center md:h-20 md:grid-cols-12">
-        <Logo className="md:col-span-4" />
-        <nav className="hidden items-center gap-8 md:col-span-8 md:flex md:justify-end" aria-label="Hoofdmenu">
-          {nav.map((item, i) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "group flex items-baseline gap-1.5 text-sm transition-colors hover:text-bone",
-                pathname.startsWith(item.href) ? "text-bone" : "text-mist",
-              )}
-            >
-              <span className="font-mono text-[9px] text-mist-dim transition-colors group-hover:text-ember-soft">0{i + 1}</span>
-              {item.label}
-            </Link>
-          ))}
-          <span className="h-4 w-px bg-ink-600" />
+        <div className="flex items-center gap-8 md:col-span-5">
+          <Logo />
+          {availability && (
+            <span className="hidden items-center gap-2 text-xs text-mist lg:flex">
+              <span className="relative flex size-1.5">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-moss opacity-60" />
+                <span className="relative inline-flex size-1.5 rounded-full bg-moss" />
+              </span>
+              {availability}
+            </span>
+          )}
+        </div>
+        <nav className="hidden items-center gap-8 md:col-span-7 md:flex md:justify-end" aria-label="Hoofdmenu">
+          {nav.map((item) => {
+            const active = pathname.startsWith(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn("relative text-sm transition-colors hover:text-bone", active ? "text-bone" : "text-mist")}
+              >
+                {item.label}
+                <span
+                  className={cn(
+                    "absolute -bottom-1.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-ember transition-opacity",
+                    active ? "opacity-100" : "opacity-0",
+                  )}
+                />
+              </Link>
+            );
+          })}
           <Link href="/login" className="text-sm text-mist transition-colors hover:text-bone">
-            Klantportaal
+            Inloggen
           </Link>
           <Link
             href="/contact?type=boeken"
@@ -92,7 +107,7 @@ export function SiteHeader() {
               className="rule-b flex items-baseline justify-between py-4 font-display text-4xl font-medium tracking-[-0.04em] text-bone transition-colors hover:text-ember-soft"
             >
               {item.label}
-              <span className="font-mono text-[10px] tracking-normal text-mist">0{i}</span>
+              <span className="font-mono text-[10px] tracking-normal text-mist">{String(i).padStart(2, "0")}</span>
             </Link>
           ))}
         </nav>

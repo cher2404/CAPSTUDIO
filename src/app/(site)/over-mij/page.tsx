@@ -22,7 +22,7 @@ export default async function OverMijPage() {
     <div className="container-x pt-32 md:pt-44">
       <Reveal>
         <p className="label">
-          <span className="text-ember-soft">(—)</span> Over mij
+          Over mij
         </p>
       </Reveal>
       <Reveal className="mt-6 md:mt-8">

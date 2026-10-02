@@ -5,7 +5,7 @@ export function LegalPage({ title, updated, body, cookies }: { title: string; up
   return (
     <div className="container-x pt-32 md:pt-44">
       <div className="mx-auto max-w-3xl">
-        <p className="label"><span className="text-ember-soft">(—)</span> Laatst bijgewerkt: {updated}</p>
+        <p className="label">Laatst bijgewerkt: {updated}</p>
         <h1 className="mt-4 text-5xl md:text-7xl">{title}</h1>
         <div className="prose-cap mt-10" dangerouslySetInnerHTML={{ __html: md(body) }} />
         {cookies && (

@@ -5,6 +5,13 @@
 export type TextDef = { label: string; page: string; default: string; multiline?: boolean; markdown?: boolean };
 
 export const textDefs = {
+  // Algemeen
+  "site.availability": {
+    page: "Algemeen",
+    label: "Beschikbaarheid (in de header en footer, leeg = verborgen)",
+    default: "Beschikbaar voor nieuwe projecten",
+  },
+
   // Home
   "home.hero_title": { page: "Home", label: "Kop", default: "Creatieve studio voor beeld en digitaal" },
   "home.hero_subtitle": {
@@ -46,6 +53,12 @@ export const textDefs = {
     multiline: true,
   },
   "home.block_4_tag": { page: "Home", label: "Discipline 4: label (optioneel)", default: "Lab" },
+  "home.statement": {
+    page: "Home",
+    label: "Statement onder de hero. {foto} {video} {apps} {games} worden kleine beelden uit je portfolio.",
+    default: "Ik maak {foto} foto's en {video} video's, bouw {apps} websites en apps, en speel met {games} games. Alles met dezelfde filmische blik.",
+    multiline: true,
+  },
   "home.approach_title": { page: "Home", label: "Werkwijze: kop", default: "Persoonlijk" },
   "home.approach_text": {
     page: "Home",
@@ -56,6 +69,7 @@ export const textDefs = {
   },
   "home.work_title": { page: "Home", label: "Kop portfolio-selectie", default: "Geselecteerd werk" },
   "home.cta_title": { page: "Home", label: "Afsluiter", default: "Benieuwd wat ik voor jou kan doen?" },
+  "home.cta_link": { page: "Home", label: "Afsluiter: grote link (laatste woord wordt cursief)", default: "Laten we praten" },
   "home.cta_button": { page: "Home", label: "Afsluiter: knop", default: "Vraag een vrijblijvende offerte aan" },
 
   // Portfolio
@@ -63,7 +77,7 @@ export const textDefs = {
   "portfolio.intro": {
     page: "Portfolio",
     label: "Intro",
-    default: "Een selectie uit recente shoots. Klik op een beeld om het groot te bekijken.",
+    default: "Een selectie uit recent werk: foto, video en digitaal. Klik op een beeld om het groot te bekijken.",
     multiline: true,
   },
 

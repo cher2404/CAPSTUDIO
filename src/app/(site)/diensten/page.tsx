@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Reveal } from "@/components/site/reveal";
-import { Accent, PageIntro, SectionHead } from "@/components/site/section";
-import { Arrow, LinkButton } from "@/components/ui/button";
+import { Accent, PageIntro } from "@/components/site/section";
 import { disciplines } from "@/lib/categories";
 import { displayPrice, getPackages, getPricing, getTexts, vatNote, type Pricing } from "@/lib/content";
 import type { Package } from "@/lib/types";
@@ -15,52 +15,45 @@ export const metadata: Metadata = {
   alternates: { canonical: "/diensten" },
 };
 
-function PackageColumn({ p, i, pricing }: { p: Package; i: number; pricing: Pricing }) {
+/** Eén regel op de prijslijst. */
+function PriceRow({ p, pricing }: { p: Package; pricing: Pricing }) {
   const price = displayPrice(p, pricing);
   return (
-    <Reveal
-      delay={i * 90}
-      className={cn("relative flex flex-col border-t border-ink-600 pt-5 pb-2", p.highlighted && "bg-gradient-to-b from-ember/[0.07] to-transparent")}
-    >
-      <div className="flex items-baseline justify-between">
-        <span className="font-mono text-xs text-mist-dim">0{i + 1}</span>
-        {p.highlighted ? <span className="label text-ember-soft">Meest gekozen</span> : <span className="label">{p.duration}</span>}
-      </div>
-      <h3 className="mt-10 text-4xl md:text-[2.6rem]">{p.name}</h3>
-
-      <div className="mt-8 min-h-20">
-        {price ? (
-          <>
-            <p className="label mb-1">{p.price_label || " "}</p>
-            <p className="font-display text-6xl font-medium tracking-[-0.05em] text-bone">{price}</p>
-          </>
-        ) : (
-          <>
-            <p className="label mb-1">{" "}</p>
-            <p className="font-display text-4xl font-medium tracking-[-0.04em] text-bone">
-              Prijs na <em className="text-ember-soft">overleg</em>
-            </p>
-          </>
-        )}
-      </div>
-
-      <ul className="mt-8 text-sm text-bone-dim">
-        {p.features.map((f) => (
-          <li key={f} className="rule-t flex gap-3 py-2.5">
-            <span className="text-ember-soft">+</span>
-            {f}
-          </li>
-        ))}
-      </ul>
-      {p.tagline && <p className="rule-t flex-1 pt-4 text-sm leading-relaxed text-mist">{p.tagline}</p>}
-      <LinkButton
+    <li>
+      <Link
         href={`/contact?type=offerte&pakket=${encodeURIComponent(p.slug)}`}
-        variant={p.highlighted ? "primary" : "outline"}
-        className="mt-8 w-full justify-between"
+        className="group grid gap-4 border-b border-ink-700/80 py-8 transition-colors md:grid-cols-12 md:gap-6 md:py-10"
       >
-        Vraag offerte aan <Arrow />
-      </LinkButton>
-    </Reveal>
+        <div className="md:col-span-4">
+          <h3 className="flex items-baseline gap-3 text-4xl transition-colors duration-500 group-hover:text-ember-soft md:text-5xl">
+            {p.name}
+            {p.highlighted && <span className="font-mono text-[10px] font-normal tracking-[0.08em] text-ember-soft uppercase">Favoriet</span>}
+          </h3>
+          {p.duration && <p className="mt-2 font-mono text-[10px] tracking-[0.08em] text-mist uppercase">{p.duration}</p>}
+        </div>
+
+        <div className="md:col-span-5">
+          <p className="text-bone-dim">{p.features.join(" · ")}</p>
+          {p.tagline && <p className="mt-2 text-sm text-mist">{p.tagline}</p>}
+        </div>
+
+        <div className="flex items-end justify-between gap-4 md:col-span-3 md:flex-col md:items-end md:justify-between">
+          <p className="text-right">
+            {price ? (
+              <>
+                {p.price_label && <span className="mr-2 text-sm text-mist">{p.price_label}</span>}
+                <span className="font-display text-4xl font-medium tracking-[-0.04em] text-bone md:text-5xl">{price}</span>
+              </>
+            ) : (
+              <span className="serif text-3xl text-bone md:text-4xl">in overleg</span>
+            )}
+          </p>
+          <span className="inline-flex items-center gap-2 text-sm text-bone-dim transition-colors group-hover:text-bone">
+            Offerte aanvragen <span className="transition-transform duration-500 group-hover:translate-x-1.5">→</span>
+          </span>
+        </div>
+      </Link>
+    </li>
   );
 }
 
@@ -80,42 +73,40 @@ export default async function DienstenPage() {
     <>
       <PageIntro label="Diensten" title={t["diensten.title"]} intro={t["diensten.intro"]} />
 
-      {sections.map((section, si) => (
-        <section key={section.value} className="container-x mt-16 md:mt-28">
-          <SectionHead
-            index={String(si + 1).padStart(2, "0")}
-            label={section.title}
-            action={section.items.some((p) => p.price != null) ? <span className="label">{vatNote(pricing)}</span> : undefined}
-          />
-          <div className="mt-8 grid gap-x-6 gap-y-12 md:mt-12 md:grid-cols-12">
-            <Reveal className="md:col-span-4">
-              <h2 className="text-5xl md:text-6xl">
+      {sections.map((section) => (
+        <section key={section.value} className="container-x mt-20 md:mt-32">
+          <div className="grid gap-6 md:grid-cols-12">
+            <div className="md:col-span-3">
+              <h2 className="text-4xl md:sticky md:top-28 md:text-5xl">
                 <Accent text={section.title} />
               </h2>
-              {section.intro && <p className="mt-5 max-w-sm leading-relaxed text-mist">{section.intro}</p>}
-            </Reveal>
-          </div>
-          <div className={cn("mt-10 grid gap-x-6 gap-y-12 md:grid-cols-2", section.items.length >= 4 ? "xl:grid-cols-4" : "xl:grid-cols-3")}>
-            {section.items.map((p, i) => (
-              <PackageColumn key={p.id} p={p} i={i} pricing={pricing} />
-            ))}
+              {section.intro && <p className="mt-4 max-w-xs text-sm leading-relaxed text-mist">{section.intro}</p>}
+              {section.items.some((p) => p.price != null) && (
+                <p className="mt-4 font-mono text-[10px] tracking-[0.08em] text-mist uppercase">Prijzen {vatNote(pricing)}</p>
+              )}
+            </div>
+            <ul className={cn("border-t border-ink-600 md:col-span-9")}>
+              {section.items.map((p) => (
+                <PriceRow key={p.id} p={p} pricing={pricing} />
+              ))}
+            </ul>
           </div>
 
           {section.value === "beeld" && (
-            <div className="mt-14 grid gap-8 md:grid-cols-12">
-              <Reveal className="md:col-span-5">
-                <p className="font-display text-2xl leading-snug font-medium tracking-[-0.03em] text-bone md:text-3xl">{t["diensten.included"]}</p>
+            <div className="mt-12 grid gap-6 md:grid-cols-12">
+              <Reveal className="md:col-span-5 md:col-start-4">
+                <p className="text-lg leading-relaxed text-bone">{t["diensten.included"]}</p>
               </Reveal>
-              <Reveal delay={100} className="space-y-6 md:col-span-5 md:col-start-8">
-                <p className="leading-relaxed text-bone-dim">{t["diensten.extra"]}</p>
+              <Reveal delay={100} className="md:col-span-4">
+                <p className="leading-relaxed text-mist">{t["diensten.extra"]}</p>
               </Reveal>
             </div>
           )}
         </section>
       ))}
 
-      <div className="container-x mt-16">
-        <p className="rule-t pt-6 text-sm text-mist">{t["diensten.disclaimer"]}</p>
+      <div className="container-x mt-20">
+        <p className="text-sm text-mist md:pl-[25%]">{t["diensten.disclaimer"]}</p>
       </div>
     </>
   );

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
+import { WorkIndex } from "./work-index";
 import { portfolioCategories, portfolioCategoryLabel } from "@/lib/categories";
 import type { PortfolioCategory, PortfolioItem } from "@/lib/types";
 
@@ -13,6 +14,7 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
     ...portfolioCategories.filter((c) => items.some((i) => i.category === c.value)),
   ];
   const [filter, setFilter] = useState<"alles" | PortfolioCategory>("alles");
+  const [view, setView] = useState<"raster" | "index">("raster");
   const [active, setActive] = useState<number | null>(null);
 
   const visible = useMemo(() => (filter === "alles" ? items : items.filter((i) => i.category === filter)), [items, filter]);
@@ -42,30 +44,60 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
 
   return (
     <>
-      <div className="-mx-5 mb-10 flex gap-6 overflow-x-auto px-5 pb-1 md:mx-0 md:gap-10 md:px-0" role="tablist" aria-label="Filter portfolio">
-        {filters.map((f) => {
-          const count = f.value === "alles" ? items.length : items.filter((i) => i.category === f.value).length;
-          const active = filter === f.value;
-          return (
+      <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="-mx-5 flex gap-6 overflow-x-auto px-5 pb-1 md:mx-0 md:gap-10 md:px-0" role="tablist" aria-label="Filter portfolio">
+          {filters.map((f) => {
+            const count = f.value === "alles" ? items.length : items.filter((i) => i.category === f.value).length;
+            const active = filter === f.value;
+            return (
+              <button
+                key={f.value}
+                role="tab"
+                aria-selected={active}
+                onClick={() => setFilter(f.value)}
+                className={cn(
+                  "relative shrink-0 pb-2 font-display text-2xl font-medium tracking-[-0.03em] transition-colors duration-300 md:text-3xl",
+                  active ? "text-bone" : "text-mist-dim hover:text-bone-dim",
+                )}
+              >
+                {f.label}
+                <sup className="ml-1 font-mono text-[10px] tracking-normal text-ember-soft">{String(count).padStart(2, "0")}</sup>
+                <span
+                  className={cn(
+                    "absolute inset-x-0 bottom-0 h-px origin-left bg-ember transition-transform duration-500",
+                    active ? "scale-x-100" : "scale-x-0",
+                  )}
+                />
+              </button>
+            );
+          })}
+        </div>
+        <div className="flex shrink-0 gap-4 font-mono text-[10px] tracking-[0.08em] uppercase" aria-label="Weergave">
+          {(["raster", "index"] as const).map((v) => (
             <button
-              key={f.value}
-              role="tab"
-              aria-selected={active}
-              onClick={() => setFilter(f.value)}
+              key={v}
+              onClick={() => setView(v)}
+              aria-pressed={view === v}
               className={cn(
-                "relative shrink-0 pb-2 font-display text-2xl font-medium tracking-[-0.03em] transition-colors duration-300 md:text-3xl",
-                active ? "text-bone" : "text-mist-dim hover:text-bone-dim",
+                "transition-colors",
+                view === v ? "text-bone underline decoration-ember underline-offset-4" : "text-mist hover:text-bone",
               )}
             >
-              {f.label}
-              <sup className="ml-1 font-mono text-[10px] tracking-normal text-ember-soft">{String(count).padStart(2, "0")}</sup>
-              <span className={cn("absolute inset-x-0 bottom-0 h-px origin-left bg-ember transition-transform duration-500", active ? "scale-x-100" : "scale-x-0")} />
+              {v}
             </button>
-          );
-        })}
+          ))}
+        </div>
       </div>
 
-      {visible.length === 0 ? (
+      {view === "index" && visible.length > 0 ? (
+        <WorkIndex
+          items={visible.map((v) => ({
+            ...v,
+            year: v.created_at ? String(new Date(v.created_at).getFullYear()) : "",
+          }))}
+          onSelect={(i) => setActive(i)}
+        />
+      ) : visible.length === 0 ? (
         <p className="py-20 text-center text-mist">Hier komt binnenkort nieuw werk te staan.</p>
       ) : (
         <div className="columns-1 gap-3 sm:columns-2 md:gap-4 lg:columns-3">
@@ -86,7 +118,9 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
               />
               <div className="absolute inset-0 flex items-end bg-gradient-to-t from-ink-950/70 via-transparent to-transparent p-4 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                 <span className="flex w-full justify-between font-mono text-[10px] tracking-[0.04em] text-bone uppercase">
-                  <span>{String(i + 1).padStart(2, "0")} / {item.title ?? portfolioCategoryLabel[item.category]}</span>
+                  <span>
+                    {String(i + 1).padStart(2, "0")} / {item.title ?? portfolioCategoryLabel[item.category]}
+                  </span>
                   <span>Bekijk ↗</span>
                 </span>
               </div>
@@ -136,17 +170,29 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
             )}
           </div>
           {(current.description || current.link_url || current.title) && (
-            <div className="absolute inset-x-0 bottom-12 mx-auto flex max-w-3xl flex-col gap-2 px-6 text-center md:bottom-14" onClick={(e) => e.stopPropagation()}>
+            <div
+              className="absolute inset-x-0 bottom-12 mx-auto flex max-w-3xl flex-col gap-2 px-6 text-center md:bottom-14"
+              onClick={(e) => e.stopPropagation()}
+            >
               {current.title && <p className="font-display text-2xl font-medium tracking-[-0.03em] text-bone">{current.title}</p>}
               {current.description && <p className="text-sm text-bone-dim">{current.description}</p>}
               {current.link_url && (
-                <a href={current.link_url} target="_blank" rel="noopener noreferrer" className="label mx-auto mt-1 text-ember-soft hover:text-bone">
+                <a
+                  href={current.link_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="label mx-auto mt-1 text-ember-soft hover:text-bone"
+                >
                   Bekijk project ↗
                 </a>
               )}
             </div>
           )}
-          <button onClick={close} className="absolute top-4 right-4 flex size-11 items-center justify-center text-2xl text-bone/80 hover:text-bone" aria-label="Sluiten">
+          <button
+            onClick={close}
+            className="absolute top-4 right-4 flex size-11 items-center justify-center text-2xl text-bone/80 hover:text-bone"
+            aria-label="Sluiten"
+          >
             ×
           </button>
           {visible.length > 1 && (

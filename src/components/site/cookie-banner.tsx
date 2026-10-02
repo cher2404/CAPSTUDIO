@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 
 const KEY = "cap-cookie-consent";
 
@@ -48,24 +47,21 @@ export function CookieBanner() {
       role="dialog"
       aria-live="polite"
       aria-label="Cookies"
-      className="fixed inset-x-3 bottom-3 z-[70] animate-fade-up rounded-2xl border border-ink-700 bg-ink-900/95 p-5 shadow-2xl backdrop-blur-xl md:inset-x-auto md:right-6 md:bottom-6 md:max-w-sm"
+      className="fixed inset-x-3 bottom-3 z-[70] flex animate-fade-up flex-col gap-3 border border-ink-600 bg-ink-950/95 px-4 py-3 text-sm backdrop-blur-xl md:right-auto md:bottom-5 md:left-5 md:max-w-xl md:flex-row md:items-center md:gap-6"
     >
-      <p className="font-display text-xl text-bone">Cookies, kort en eerlijk</p>
-      <p className="mt-2 text-sm leading-relaxed text-mist">
-        Ik gebruik alleen cookies die nodig zijn om de site en het klantportaal te laten werken. Met jouw akkoord meet ik ook anoniem
-        bezoek, zodat ik de site kan verbeteren. Meer lezen? Check de{" "}
-        <Link href="/privacy" className="text-ember-soft underline underline-offset-2">
-          privacyverklaring
+      <p className="text-mist">
+        Alleen noodzakelijke cookies, tenzij je anoniem bezoek laat meten.{" "}
+        <Link href="/privacy" className="text-bone-dim underline underline-offset-2 hover:text-bone">
+          Privacy
         </Link>
-        .
       </p>
-      <div className="mt-4 flex gap-2">
-        <Button size="sm" onClick={() => choose("all")}>
-          Alles accepteren
-        </Button>
-        <Button size="sm" variant="outline" onClick={() => choose("necessary")}>
+      <div className="flex shrink-0 gap-4">
+        <button onClick={() => choose("all")} className="text-bone underline decoration-ember underline-offset-4 hover:text-ember-soft">
+          Akkoord
+        </button>
+        <button onClick={() => choose("necessary")} className="text-mist hover:text-bone">
           Alleen noodzakelijk
-        </Button>
+        </button>
       </div>
     </div>
   );

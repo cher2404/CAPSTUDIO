@@ -27,8 +27,8 @@ export function SectionHead({
 }) {
   return (
     <Reveal className={cn("rule-t flex items-baseline justify-between gap-4 pt-4", className)}>
-      <p className="label">
-        <span className="text-ember-soft">({index})</span> {label}
+      <p className="label" data-index={index}>
+        {label}
       </p>
       {action}
     </Reveal>
@@ -40,9 +40,7 @@ export function PageIntro({ label, title, intro }: { label: string; title: strin
   return (
     <div className="container-x pt-32 md:pt-44">
       <Reveal>
-        <p className="label">
-          <span className="text-ember-soft">(—)</span> {label}
-        </p>
+        <p className="label">{label}</p>
       </Reveal>
       <div className="mt-6 grid items-end gap-8 md:mt-8 md:grid-cols-12">
         <Reveal className="md:col-span-8">

@@ -1,26 +1,66 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Arrow, LinkButton } from "@/components/ui/button";
+import { Exposure, FilmEdge } from "@/components/site/film";
+import { GreaseMark } from "@/components/site/grease-mark";
+import { LiveClock } from "@/components/site/live-clock";
 import { Reveal } from "@/components/site/reveal";
-import { Accent, SectionHead } from "@/components/site/section";
+import { Accent } from "@/components/site/section";
+import { WorkIndex } from "@/components/site/work-index";
 import { getHero, getPortfolio, getTexts } from "@/lib/content";
+import type { PortfolioCategory, PortfolioItem } from "@/lib/types";
 import { site } from "@/lib/site";
 
 export const revalidate = 300;
 
-const categoryLabel: Record<string, string> = { sport: "Sport", lifestyle: "Lifestyle", video: "Video", apps: "Apps", games: "Games" };
+/** Statement met kleine beelden tussen de woorden: {foto} {video} {apps} {games}. */
+function Statement({ text, portfolio }: { text: string; portfolio: PortfolioItem[] }) {
+  const pick: Record<string, PortfolioCategory[]> = {
+    foto: ["sport", "lifestyle"],
+    video: ["video", "sport"],
+    apps: ["apps", "lifestyle"],
+    games: ["games", "sport"],
+  };
+  const used = new Set<string>();
+  const imageFor = (token: string) => {
+    for (const cat of pick[token] ?? []) {
+      const hit = portfolio.find((p) => p.category === cat && !used.has(p.id));
+      if (hit) {
+        used.add(hit.id);
+        return hit;
+      }
+    }
+    return portfolio.find((p) => !used.has(p.id));
+  };
+
+  return (
+    <p className="font-display text-[2rem] leading-[1.08] font-medium tracking-[-0.04em] text-bone sm:text-5xl md:text-6xl lg:text-[4.6rem]">
+      {text.split(/(\{\w+\})/g).map((part, i) => {
+        const token = part.match(/^\{(\w+)\}$/)?.[1];
+        if (!token) return <span key={i}>{part}</span>;
+        if (!pick[token]) return null;
+        const img = imageFor(token);
+        return (
+          <span
+            key={i}
+            className="relative mx-1 inline-block h-[0.78em] w-[1.25em] -rotate-2 overflow-hidden bg-ink-800 align-[-0.04em] ring-1 ring-bone/10 transition-transform duration-500 odd:rotate-2 hover:scale-150 md:w-[1.35em]"
+          >
+            {img && <Image src={img.image_url} alt="" fill sizes="120px" className="object-cover" />}
+          </span>
+        );
+      })}
+    </p>
+  );
+}
 
 export default async function HomePage() {
   const [hero, portfolio, t] = await Promise.all([getHero(), getPortfolio(), getTexts()]);
-  const selected = portfolio.filter((p) => p.category !== "video" || p.image_url).slice(0, 5);
+  const stills = portfolio.filter((p) => p.image_url);
+  const frames = stills.slice(0, 6);
+  const work = stills.slice(0, 6).map((p) => ({ ...p, year: p.created_at ? String(new Date(p.created_at).getFullYear()) : "" }));
 
-  const blocks = ([1, 2, 3, 4] as const)
-    .map((n) => ({
-      title: t[`home.block_${n}_title`],
-      text: t[`home.block_${n}_text`],
-      tag: t[`home.block_${n}_tag`],
-    }))
-    .filter((b) => b.title.trim());
+  const disciplines = ([1, 2, 3, 4] as const)
+    .map((n) => ({ title: t[`home.block_${n}_title`], text: t[`home.block_${n}_text`], tag: t[`home.block_${n}_tag`] }))
+    .filter((d) => d.title.trim());
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -34,132 +74,136 @@ export default async function HomePage() {
     sameAs: [`https://instagram.com/${site.instagram}`],
   };
 
-  // Raster voor geselecteerd werk: bewust asymmetrisch
-  const layout = [
-    "col-span-12 md:col-span-7 aspect-[4/5] md:aspect-[7/8]",
-    "col-span-6 md:col-span-5 aspect-[4/5] md:mt-40",
-    "col-span-6 md:col-span-4 md:col-start-2 aspect-[4/5]",
-    "col-span-12 md:col-span-6 md:col-start-7 aspect-[3/2] md:mt-32",
-    "col-span-12 md:col-span-5 md:col-start-5 aspect-[4/5]",
-  ];
-
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* Hero */}
-      <section className="relative flex h-[100svh] min-h-[600px] flex-col justify-end overflow-hidden">
+      {/* Hero: het scherm als één frame op de film */}
+      <section className="relative flex h-[100svh] min-h-[620px] flex-col overflow-hidden">
         <Image src={hero.src} alt={hero.alt} fill priority quality={75} sizes="100vw" className="animate-slow-zoom object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/40 to-ink-950/30" />
-        <div className="absolute inset-0 bg-[radial-gradient(60%_50%_at_10%_90%,rgba(201,151,107,.18),transparent_70%)]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/30 to-ink-950/50" />
 
-        <div className="container-x relative">
-          <h1 className="max-w-[14ch] animate-fade-up text-[3.1rem] leading-[0.92] [animation-delay:100ms] sm:text-7xl md:text-8xl lg:text-[8.5rem]">
+        <div className="container-x relative mt-22 md:mt-24">
+          <FilmEdge start={12} />
+          <div className="mt-6 flex items-start justify-between">
+            <Exposure />
+            <p className="font-mono text-[10px] tracking-[0.08em] text-bone/60 uppercase">
+              NL <LiveClock />
+            </p>
+          </div>
+        </div>
+
+        <div className="container-x relative mt-auto pb-10 md:pb-14">
+          <p className="mb-5 font-mono text-[10px] tracking-[0.08em] text-ember-soft uppercase">Frame 12A — {site.name}</p>
+          <h1 className="max-w-[13ch] animate-fade-up text-[3.2rem] leading-[0.9] sm:text-7xl md:text-8xl lg:text-[9rem]">
             <Accent text={t["home.hero_title"]} />
           </h1>
-
-          <div className="rule-t mt-10 grid animate-fade-up grid-cols-2 gap-y-6 pt-5 pb-8 [animation-delay:300ms] md:mt-14 md:grid-cols-12 md:pb-10">
-            <p className="col-span-2 max-w-md text-[15px] leading-relaxed text-bone-dim md:col-span-5 md:text-base">{t["home.hero_subtitle"]}</p>
-            <div className="hidden md:col-span-2 md:col-start-7 md:block">
-              <p className="label">Disciplines</p>
-              <p className="mt-1.5 text-sm text-bone">Foto · Video · Apps</p>
-            </div>
-            <div className="hidden md:col-span-2 md:block">
-              <p className="label">Werkgebied</p>
-              <p className="mt-1.5 text-sm text-bone">Heel Nederland</p>
-            </div>
-            <div className="col-span-2 flex md:col-span-1 md:col-start-12 md:justify-end">
-              <LinkButton href="/contact?type=boeken" size="lg" className="w-full md:w-auto">
-                {t["home.hero_button"]} <Arrow />
-              </LinkButton>
-            </div>
+          <div className="mt-8 flex flex-col gap-6 md:mt-10 md:flex-row md:items-end md:justify-between">
+            <p className="max-w-md text-[15px] leading-relaxed text-bone-dim md:text-base">{t["home.hero_subtitle"]}</p>
+            <Link
+              href="/contact?type=boeken"
+              className="group inline-flex items-center gap-4 self-start border-b border-bone pb-1.5 font-display text-2xl font-medium tracking-[-0.03em] text-bone transition-colors hover:border-ember-soft hover:text-ember-soft md:self-auto md:text-3xl"
+            >
+              {t["home.hero_button"]}
+              <span className="transition-transform duration-500 group-hover:translate-x-2">→</span>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Wat ik doe */}
-      <section className="container-x pt-24 md:pt-40">
-        <SectionHead index="01" label="Disciplines" />
-        <div className={`mt-10 grid gap-x-6 gap-y-12 md:mt-16 md:grid-cols-2 ${blocks.length === 4 ? "xl:grid-cols-4" : "xl:grid-cols-3"}`}>
-          {blocks.map((b, i) => (
-            <Reveal
-              key={i}
-              delay={i * 100}
-              className="border-t border-ink-600 pt-5"
-            >
-              <div className="flex items-baseline justify-between">
-                <span className="font-mono text-xs text-mist-dim">0{i + 1}</span>
-                {b.tag && <span className="label border border-ember/40 px-1.5 py-0.5 text-ember-soft">{b.tag}</span>}
-              </div>
-              <h2 className="mt-5 text-5xl md:mt-10 xl:text-[3.4rem]">{b.title}</h2>
-              <p className="mt-5 max-w-sm leading-relaxed text-mist">{b.text}</p>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+      {/* Contactvel: een strook frames, de favoriet omcirkeld */}
+      {frames.length > 0 && (
+        <section className="container-x mt-4">
+          <div className="grid grid-cols-3 gap-1.5 md:grid-cols-6">
+            {frames.map((f, i) => (
+              <Link key={f.id} href="/portfolio" className={`group relative block ${i >= 3 ? "hidden md:block" : ""}`}>
+                <span className="relative block aspect-[3/2] overflow-hidden bg-ink-850">
+                  <Image src={f.image_url} alt={f.alt ?? ""} fill sizes="(min-width: 768px) 16vw, 33vw" className="object-cover grayscale transition duration-700 group-hover:grayscale-0" />
+                </span>
+                <span className="mt-1.5 block font-mono text-[9px] tracking-[0.1em] text-mist-dim uppercase">
+                  {13 + Math.floor(i / 2)}
+                  {i % 2 ? "A" : ""} ▸
+                </span>
+                {i === 1 && <GreaseMark className="absolute -inset-3 h-[calc(100%+1.5rem)] w-[calc(100%+1.5rem)] text-ember" />}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
-      {/* Werkwijze */}
-      <section className="container-x pt-24 md:pt-40">
-        <SectionHead index="02" label="Werkwijze" />
-        <Reveal className="mt-10 grid gap-6 md:mt-14 md:grid-cols-12">
-          <h2 className="text-5xl md:col-span-4 md:text-7xl">
-            <em className="text-ember-soft">{t["home.approach_title"]}</em>
-          </h2>
-          <p className="font-display text-2xl leading-snug font-medium tracking-[-0.03em] text-bone md:col-span-7 md:col-start-6 md:text-[2.1rem]">
-            {t["home.approach_text"]}
-          </p>
+      {/* Statement */}
+      <section className="container-x pt-28 md:pt-44">
+        <Reveal className="max-w-6xl">
+          <Statement text={t["home.statement"]} portfolio={stills} />
         </Reveal>
       </section>
 
-      {/* Geselecteerd werk */}
-      <section className="container-x pt-24 md:pt-40">
-        <SectionHead
-          index="03"
-          label={t["home.work_title"]}
-          action={
-            <Link href="/portfolio" className="arrow-link label text-bone hover:text-ember-soft">
+      {/* Disciplines als index */}
+      <section className="container-x pt-28 md:pt-40">
+        <div className="grid gap-6 md:grid-cols-12">
+          <p className="font-mono text-[10px] tracking-[0.08em] text-mist uppercase md:col-span-3">Wat ik doe</p>
+          <ul className="md:col-span-9">
+            {disciplines.map((d, i) => (
+              <li key={i} className="group grid gap-3 border-t border-ink-600 py-7 md:grid-cols-9 md:gap-6 md:py-9">
+                <h2 className="text-5xl transition-colors duration-500 group-hover:text-ember-soft md:col-span-4 md:text-6xl">
+                  {d.title}
+                  {d.tag && <sup className="ml-2 align-super font-mono text-[10px] font-normal tracking-[0.08em] text-ember-soft uppercase">{d.tag}</sup>}
+                </h2>
+                <p className="max-w-md leading-relaxed text-mist md:col-span-5 md:pt-2">{d.text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Werk */}
+      {work.length > 0 && (
+        <section className="container-x pt-28 md:pt-40">
+          <div className="mb-8 flex items-end justify-between gap-6 md:mb-12">
+            <h2 className="text-5xl md:text-7xl">
+              <Accent text={t["home.work_title"]} />
+            </h2>
+            <Link href="/portfolio" className="arrow-link shrink-0 pb-2 text-sm text-bone-dim hover:text-bone">
               Alles bekijken <span className="arrow">→</span>
             </Link>
-          }
-        />
-        <div className="mt-10 grid grid-cols-12 gap-x-3 gap-y-10 md:mt-16 md:gap-x-5 md:gap-y-16">
-          {selected.map((item, i) => (
-            <Reveal key={item.id} delay={(i % 2) * 100} className={layout[i]} as="article">
-              <Link href="/portfolio" className="group block h-full">
-                <div className="relative h-full overflow-hidden bg-ink-850">
-                  <Image
-                    src={item.image_url}
-                    alt={item.alt ?? item.title ?? `Portfolio ${site.name}`}
-                    fill
-                    sizes={i === 0 ? "(min-width: 768px) 58vw, 100vw" : "(min-width: 768px) 42vw, 50vw"}
-                    className="object-cover grayscale-[15%] transition duration-[1.4s] ease-[var(--ease-film)] group-hover:scale-[1.03] group-hover:grayscale-0"
-                  />
-                </div>
-                <div className="mt-3 flex justify-between font-mono text-[10px] tracking-[0.04em] text-mist uppercase">
-                  <span>
-                    {String(i + 1).padStart(2, "0")} / {item.title ?? categoryLabel[item.category]}
-                  </span>
-                  <span className="transition-colors group-hover:text-ember-soft">{categoryLabel[item.category]}</span>
-                </div>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
+          </div>
+          <WorkIndex items={work} />
+        </section>
+      )}
+
+      {/* Werkwijze */}
+      <section className="container-x pt-28 md:pt-44">
+        <figure className="grid gap-8 md:grid-cols-12">
+          <figcaption className="font-mono text-[10px] tracking-[0.08em] text-mist uppercase md:col-span-3">Werkwijze</figcaption>
+          <blockquote className="md:col-span-8">
+            <p className="serif text-4xl leading-[1.1] text-bone md:text-6xl">
+              <span className="text-ember-soft">{t["home.approach_title"]}.</span> {t["home.approach_text"]}
+            </p>
+            <p className="mt-8 font-mono text-[10px] tracking-[0.08em] text-mist uppercase">— Cheryl, {site.name}</p>
+          </blockquote>
+        </figure>
       </section>
 
-      {/* Afsluiter */}
+      {/* Afsluiter: één grote link */}
       <section className="container-x pt-28 md:pt-44">
-        <SectionHead index="04" label="Samenwerken" />
-        <Reveal className="mt-10 grid items-end gap-10 md:mt-14 md:grid-cols-12">
-          <h2 className="text-[2.6rem] leading-[0.95] sm:text-6xl md:col-span-8 md:text-7xl lg:text-8xl">
-            <Accent text={t["home.cta_title"]} />
-          </h2>
-          <div className="md:col-span-4 md:flex md:justify-end">
-            <LinkButton href="/contact?type=offerte" size="lg" className="w-full md:w-auto">
-              {t["home.cta_button"]} <Arrow />
-            </LinkButton>
-          </div>
-        </Reveal>
+        <p className="font-mono text-[10px] tracking-[0.08em] text-mist uppercase">{t["home.cta_title"]}</p>
+        <Link
+          href="/contact?type=offerte"
+          className="group mt-4 flex items-end justify-between gap-6 border-b border-ink-600 pb-6 transition-colors hover:border-ember"
+        >
+          <span className="font-display text-[3.2rem] leading-[0.9] font-semibold tracking-[-0.05em] text-bone transition-colors duration-500 group-hover:text-ember-soft sm:text-7xl md:text-8xl lg:text-[9.5rem]">
+            <Accent text={t["home.cta_link"]} className="font-normal" />
+          </span>
+          <span className="mb-2 font-display text-4xl text-bone transition-transform duration-500 group-hover:translate-x-3 group-hover:-rotate-45 md:text-7xl">
+            →
+          </span>
+        </Link>
+        <div className="mt-5 flex flex-col justify-between gap-2 text-sm text-mist md:flex-row">
+          <span>{t["home.cta_button"]}</span>
+          <a href={`mailto:${site.email}`} className="text-bone-dim hover:text-bone">
+            {site.email}
+          </a>
+        </div>
       </section>
     </>
   );

@@ -228,6 +228,7 @@ export interface PortfolioItem {
   featured: boolean;
   published: boolean;
   sort: number;
+  created_at?: string;
 }
 
 export interface EmailTemplate {
