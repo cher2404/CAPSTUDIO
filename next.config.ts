@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
       permanent: true,
     }));
   },
+  // Klikbare ontwerpconcepten staan als losse HTML-pagina in public/werk.
+  async rewrites() {
+    return [{ source: "/werk/tennisapp", destination: "/werk/tennisapp/index.html" }];
+  },
   async headers() {
     return [
       {

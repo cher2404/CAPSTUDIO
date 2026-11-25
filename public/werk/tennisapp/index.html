@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tennisapp concept · CAP Media Studio</title>
+<meta name="description" content="Klikbaar ontwerpconcept voor een tennisclub-app door CAP Media Studio.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F3EE; --surface:#FFFFFF; --surface-2:#F5F6F1; --ink:#0F1A14; --ink-2:#4B574F; --ink-3:#89928B;
+  --line:#E6E8E1; --accent:#1F7A4D; --accent-soft:color-mix(in srgb,var(--accent) 13%,var(--surface)); --ball:#D7F25C;
+  --win:#1F9D55; --win-soft:#E2F5EA; --loss:#D6453D; --loss-soft:#FBE7E5; --draw:#8A8F87; --draw-soft:#EEEFEB;
+  --warn:#E2572B; --shadow:0 1px 2px rgba(15,26,20,.05),0 6px 20px rgba(15,26,20,.06); --page:#DADDD3;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1310; --surface:#161E19; --surface-2:#1C2520; --ink:#EEF2EC; --ink-2:#B3BDB5; --ink-3:#7C877F;
+    --line:#26312A; --accent-soft:color-mix(in srgb,var(--accent) 22%,var(--surface)); --win-soft:rgba(31,157,85,.18); --loss-soft:rgba(214,69,61,.18); --draw-soft:rgba(255,255,255,.07);
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.3); --page:#060908;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1310; --surface:#161E19; --surface-2:#1C2520; --ink:#EEF2EC; --ink-2:#B3BDB5; --ink-3:#7C877F;
+  --line:#26312A; --accent-soft:color-mix(in srgb,var(--accent) 22%,var(--surface)); --win-soft:rgba(31,157,85,.18); --loss-soft:rgba(214,69,61,.18); --draw-soft:rgba(255,255,255,.07);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.3); --page:#060908;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--page);color:var(--ink);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;align-items:flex-start;gap:48px;padding:32px 16px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:inherit}
+svg{display:block;flex-shrink:0}
+
+.notes{max-width:340px;padding-top:24px}
+.notes h1{font-size:28px;line-height:1.15;letter-spacing:-.02em;margin-bottom:12px}
+.notes p{color:var(--ink-2);font-size:15px;line-height:1.55;margin-bottom:18px}
+.notes h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin:22px 0 10px}
+.notes ul{list-style:none;display:grid;gap:10px}
+.notes li{font-size:14px;line-height:1.45;color:var(--ink-2);padding-left:22px;position:relative}
+.notes li::before{content:"";position:absolute;left:0;top:5px;width:10px;height:10px;border-radius:50%;background:var(--ball);box-shadow:inset 0 0 0 2px var(--accent)}
+.notes li b{color:var(--ink)}
+.notes .tog{margin-top:24px;display:inline-flex;gap:8px;align-items:center;font-size:13px;padding:8px 14px;border-radius:99px;background:var(--surface);box-shadow:var(--shadow)}
+
+.phone{width:390px;height:844px;border-radius:52px;background:#000;padding:12px;box-shadow:0 30px 80px rgba(0,0,0,.25);flex-shrink:0;position:sticky;top:32px}
+.screen{width:100%;height:100%;border-radius:40px;background:var(--bg);overflow:hidden;position:relative;display:flex;flex-direction:column;isolation:isolate}
+@media (max-width:820px){
+  body{padding:0;gap:0;display:block}
+  .notes{display:none}
+  .phone{width:100%;height:100dvh;border-radius:0;padding:0;position:static;box-shadow:none}
+  .screen{border-radius:0}
+  .status{display:none!important}
+}
+.status{height:46px;flex-shrink:0;display:flex;justify-content:space-between;align-items:center;padding:4px 30px 0;font-size:15px;font-weight:600}
+
+/* header */
+.top{padding:8px 16px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0}
+.club-pill{display:flex;align-items:center;gap:7px;padding:5px 10px 5px 5px;border-radius:99px;background:var(--surface);box-shadow:var(--shadow);min-width:0}
+.logo{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:11.5px;font-weight:800;color:#fff;background:var(--accent);flex-shrink:0}
+.club-pill .nm{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+.icon-btn{width:42px;height:42px;border-radius:50%;background:var(--surface);box-shadow:var(--shadow);display:grid;place-items:center;position:relative;flex-shrink:0}
+.dot{position:absolute;top:8px;right:9px;width:9px;height:9px;border-radius:50%;background:var(--warn);border:2px solid var(--surface)}
+.me-btn{width:42px;height:42px;border-radius:50%;background:linear-gradient(140deg,#E7B98A,#9A5B34);color:#fff;font-weight:800;font-size:14px;display:grid;place-items:center;box-shadow:var(--shadow);border:2px solid var(--surface)}
+
+.content{flex:1;overflow-y:auto;padding:0 16px 110px;scrollbar-width:none}
+.content::-webkit-scrollbar{display:none}
+.view{display:none;animation:fade .25s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+h2.ttl{font-size:30px;letter-spacing:-.025em;font-weight:800;margin:6px 4px 14px;display:flex;justify-content:space-between;align-items:center}
+.sec{display:flex;justify-content:space-between;align-items:baseline;margin:24px 4px 10px}
+.sec h3{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.sec a{font-size:13px;color:var(--accent);font-weight:700;cursor:pointer}
+.card{background:var(--surface);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.muted{color:var(--ink-3)}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.tag i{width:6px;height:6px;border-radius:50%;background:currentColor;display:block}
+
+/* home */
+.hello{margin:6px 4px 16px}
+.hello small{font-size:14px;color:var(--ink-3);font-weight:600}
+.hello h2{font-size:28px;letter-spacing:-.025em;font-weight:800}
+.notice{display:flex;gap:12px;align-items:center;padding:14px;border-radius:18px;background:var(--ink);color:var(--bg);margin-bottom:12px;cursor:pointer}
+.notice .ic{width:40px;height:40px;border-radius:12px;background:var(--ball);color:#16231B;display:grid;place-items:center;font-weight:800}
+.notice .t{font-weight:700;font-size:14.5px}
+.notice .s{font-size:12.5px;opacity:.7;margin-top:2px}
+.next{padding:16px;border-radius:22px;background:linear-gradient(140deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#000));color:#fff;position:relative;overflow:hidden;cursor:pointer}
+.next::after{content:"";position:absolute;right:-40px;bottom:-60px;width:160px;height:160px;border-radius:50%;border:2px solid rgba(255,255,255,.15);box-shadow:0 0 0 26px rgba(255,255,255,.04)}
+.next .k{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.75}
+.next .t{font-size:20px;font-weight:800;margin-top:6px;letter-spacing:-.01em}
+.next .s{font-size:13.5px;opacity:.85;margin-top:4px}
+.next .row-b{display:flex;gap:8px;margin-top:14px;position:relative;z-index:1}
+.pillbtn{padding:8px 13px;border-radius:99px;background:rgba(255,255,255,.16);font-size:12.5px;font-weight:700;color:#fff}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.q{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11.5px;font-weight:600;color:var(--ink-2);text-align:center;padding:12px 4px;border-radius:18px;background:var(--surface);box-shadow:var(--shadow)}
+.q svg{color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-radius:20px;box-shadow:var(--shadow)}
+.stat{text-align:center;padding:14px 4px;cursor:pointer;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font-size:18px;font-weight:800}
+.stat span{font-size:11px;color:var(--ink-3);font-weight:600}
+
+/* list rows */
+.row{display:flex;align-items:center;gap:13px;padding:14px 16px;border-bottom:1px solid var(--line);cursor:pointer;width:100%}
+.row:last-child{border-bottom:0}
+.row .ic{width:38px;height:38px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex-shrink:0;font-weight:800}
+.row .grow{flex:1;min-width:0}
+.row .t{font-weight:650;font-size:15px}
+.row .s{font-size:12.5px;color:var(--ink-3);margin-top:2px}
+.chev{color:var(--ink-3)}
+.date{width:46px;height:50px;border-radius:13px;background:var(--surface-2);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.date small{font-size:10px;font-weight:800;color:var(--warn);text-transform:uppercase;letter-spacing:.05em}
+.date b{font-size:19px;font-weight:800;line-height:1}
+
+/* segmented */
+.seg{display:flex;background:var(--surface);border-radius:14px;padding:4px;box-shadow:var(--shadow);margin-bottom:14px}
+.seg button{flex:1;padding:9px 6px;border-radius:10px;font-size:13.5px;font-weight:650;color:var(--ink-2);white-space:nowrap;text-align:center}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.sub{display:none}.sub.on{display:block;animation:fade .2s}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 12px;padding:2px 16px}
+.chip{padding:8px 13px;border-radius:99px;font-size:12.5px;font-weight:650;background:var(--surface);border:1px solid var(--line);white-space:nowrap;flex-shrink:0}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* court booking */
+.days{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 12px;padding:2px 16px}
+.day{flex-shrink:0;width:50px;padding:8px 0;border-radius:14px;background:var(--surface);text-align:center;box-shadow:var(--shadow)}
+.day small{display:block;font-size:11px;color:var(--ink-3);font-weight:650}
+.day b{font-size:17px;font-weight:800}
+.day.on{background:var(--accent);color:#fff}.day.on small{color:rgba(255,255,255,.75)}
+.legend{display:flex;gap:14px;font-size:11.5px;color:var(--ink-3);margin:0 4px 10px;font-weight:600}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:12px;height:12px;border-radius:4px;display:block}
+.grid-scroll{overflow-x:auto;scrollbar-width:thin}
+.court-row{display:flex;align-items:stretch;border-bottom:1px solid var(--line);min-width:max-content}
+.court-row:last-child{border-bottom:0}
+.court-name{position:sticky;left:0;z-index:2;background:var(--surface);width:84px;flex-shrink:0;padding:8px 10px;font-size:12.5px;font-weight:700;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--line)}
+.court-name small{font-size:10px;color:var(--ink-3);font-weight:600}
+.slots{display:flex;gap:4px;padding:6px}
+.slot{width:54px;height:42px;border-radius:10px;font-size:11px;font-weight:700;display:grid;place-items:center;flex-shrink:0;text-align:center}
+.slot.free{background:var(--accent-soft);color:var(--accent)}
+.slot.busy{background:var(--surface-2);color:var(--ink-3)}
+.slot.train{background:repeating-linear-gradient(135deg,var(--surface-2),var(--surface-2) 6px,var(--line) 6px,var(--line) 8px);color:var(--ink-2)}
+.slot.mine{background:var(--accent);color:#fff}
+.slot.ghost{opacity:.15;background:var(--surface-2)}
+.times{display:flex;gap:4px;padding:8px 6px 6px 90px;font-size:10.5px;color:var(--ink-3);font-weight:700;min-width:max-content;border-bottom:1px solid var(--line)}
+.times span{width:54px;flex-shrink:0;text-align:center}
+
+/* competition */
+.team-hero{border-radius:22px;padding:18px;background:var(--surface);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.team-hero .k{font-size:12px;color:var(--ink-3);font-weight:650}
+.team-hero .t{font-size:21px;font-weight:800;letter-spacing:-.01em;margin-top:2px}
+.team-hero .bigpos{position:absolute;right:16px;top:14px;text-align:center}
+.team-hero .bigpos b{font-size:40px;font-weight:800;line-height:1;color:var(--accent);letter-spacing:-.03em}
+.team-hero .bigpos small{display:block;font-size:11px;color:var(--ink-3);font-weight:700}
+.form{display:flex;gap:5px;margin-top:14px;align-items:center}
+.form span{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:11.5px;font-weight:800}
+.W{background:var(--win-soft);color:var(--win)}.V{background:var(--loss-soft);color:var(--loss)}.G{background:var(--draw-soft);color:var(--draw)}
+.champ{margin-top:14px;padding:10px 12px;border-radius:14px;background:var(--ball);color:#16231B;font-size:13px;font-weight:700;display:flex;gap:8px;align-items:center}
+
+table.stand{width:100%;border-collapse:collapse;font-size:13.5px}
+.stand th{font-size:11px;color:var(--ink-3);font-weight:700;text-align:center;padding:10px 4px;border-bottom:1px solid var(--line)}
+.stand th:nth-child(2){text-align:left}
+.stand td{padding:11px 4px;text-align:center;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.stand tr:last-child td{border-bottom:0}
+.stand td:first-child{width:34px;font-weight:800;position:relative}
+.stand td:nth-child(2){text-align:left;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.stand tr.mine td{background:var(--accent-soft);font-weight:800}
+.stand tr.mine td:nth-child(2){color:var(--accent)}
+.stand td.pts{font-weight:800}
+.stand .up::before,.stand .down::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:2px}
+.stand .up::before{background:var(--win)}.stand .down::before{background:var(--loss)}
+.stand-legend{display:flex;gap:14px;padding:10px 16px;font-size:11.5px;color:var(--ink-3);font-weight:600;border-top:1px solid var(--line)}
+.stand-legend i{display:inline-block;width:3px;height:11px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+
+.match{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);cursor:pointer;width:100%}
+.match:last-child{border-bottom:0}
+.match .res{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:12px;font-weight:800;flex-shrink:0}
+.match .grow{flex:1;min-width:0}
+.match .t{font-weight:650;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.match .s{font-size:12px;color:var(--ink-3);margin-top:2px}
+.score{font-weight:800;font-size:16px;font-variant-numeric:tabular-nums;padding:5px 10px;border-radius:10px;background:var(--surface-2);white-space:nowrap}
+.round-h{font-size:12px;font-weight:800;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;padding:12px 16px 6px;background:var(--surface-2)}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;cursor:pointer}
+.vs:last-child{border-bottom:0}
+.vs .h{text-align:right}.vs .mine{color:var(--accent);font-weight:800}
+
+/* tournaments */
+.trn{display:flex;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);cursor:pointer}
+.trn:last-child{border-bottom:0}
+.trn .medal{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:18px;flex-shrink:0;background:var(--surface-2)}
+.chart{padding:14px 16px 10px}
+.chart svg{width:100%;height:auto;overflow:visible}
+
+/* detail page (push) */
+.page{position:absolute;inset:0;background:var(--bg);z-index:30;transform:translateX(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
+.page.on{transform:none}
+.page .bar{display:flex;align-items:center;gap:10px;padding:54px 16px 10px;flex-shrink:0}
+@media (max-width:820px){.page .bar{padding-top:max(12px,env(safe-area-inset-top))}}
+.page .bar .ttl2{font-weight:700;font-size:15px;flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.page .body{flex:1;overflow-y:auto;padding:4px 16px 40px;scrollbar-width:none}
+.scoreboard{border-radius:24px;padding:18px;background:linear-gradient(150deg,#16231B,#0B120E);color:#fff;text-align:center}
+.scoreboard .meta{font-size:12.5px;opacity:.7}
+.scoreboard .teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-top:16px}
+.scoreboard .tm{font-size:13.5px;font-weight:700;line-height:1.3}
+.scoreboard .tm small{display:block;font-size:10.5px;opacity:.6;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.scoreboard .big{font-size:44px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;padding:0 6px}
+.scoreboard .nums{display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)}
+.scoreboard .nums b{display:block;font-size:16px}
+.scoreboard .nums span{font-size:11px;opacity:.6;font-weight:600}
+.rubber{padding:14px 16px;border-bottom:1px solid var(--line)}
+.rubber:last-child{border-bottom:0}
+.rubber .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.rubber .hd b{font-size:12px;font-weight:800;color:var(--ink-3);letter-spacing:.06em}
+.pair{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:4px 0}
+.pair .names{font-size:13.5px;line-height:1.45}
+.pair.won .names{font-weight:750}
+.pair.lost .names{color:var(--ink-3)}
+.sets{display:flex;gap:4px}
+.sets span{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-size:13px;font-weight:700;background:var(--surface-2);font-variant-numeric:tabular-nums}
+.pair.won .sets span.w{background:var(--accent);color:#fff}
+.rt{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:18px;padding:0 4px;border-radius:5px;font-size:10.5px;font-weight:800;background:var(--surface-2);color:var(--ink-2);margin-right:5px;vertical-align:1px}
+.divider{height:1px;background:var(--line);margin:4px 0}
+
+/* people */
+.person{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.person:last-child{border-bottom:0}
+.pa{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;font-size:14px;flex-shrink:0}
+.person .grow{flex:1;min-width:0}
+.person .t{font-weight:700;font-size:14.5px}
+.person .s{font-size:12px;color:var(--ink-3);margin-top:2px}
+.star{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--ink-3);border:1px solid var(--line)}
+.star.on{color:#E6A700;border-color:#F3D77A;background:#FFF7DB}
+.search{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);color:var(--ink-3);font-size:14.5px;margin-bottom:12px}
+.search input{border:0;outline:0;background:none;font:inherit;color:var(--ink);flex:1;min-width:0}
+.empty{padding:26px 20px;text-align:center;color:var(--ink-3);font-size:14px;line-height:1.5}
+.empty .ill{width:60px;height:60px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin:0 auto 12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 20px;border-radius:14px;font-weight:700;font-size:15px;background:var(--accent);color:#fff;width:100%;text-align:center}
+.btn.ghost{background:var(--surface-2);color:var(--ink)}
+.btn.sm{width:auto;padding:9px 14px;font-size:13px;border-radius:12px}
+.news{margin-bottom:12px;cursor:pointer}
+.news .img{height:110px;display:flex;align-items:flex-end;padding:14px;color:#fff;font-weight:800;font-size:22px;letter-spacing:-.02em}
+.news .b{padding:13px 16px}
+.news .t{font-weight:700;font-size:15px;line-height:1.35}
+.news .s{font-size:12.5px;color:var(--ink-3);margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ad{border-radius:18px;padding:14px 16px;background:linear-gradient(120deg,#D93A3A,#A81F2B);color:#fff}
+.ad small{font-size:10px;opacity:.75;text-transform:uppercase;letter-spacing:.1em;font-weight:700}
+.ad b{display:block;font-size:16px;font-weight:800;margin-top:4px}
+.service-sum{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;padding:14px 8px}
+.service-sum b{font-size:22px;font-weight:800;display:block}
+.service-sum span{font-size:11.5px;color:var(--ink-3);font-weight:600}
+.progress{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden;margin:0 16px 16px}
+.progress i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.info-map{height:110px;background:linear-gradient(90deg,transparent 48%,rgba(255,255,255,.6) 48% 52%,transparent 52%),linear-gradient(0deg,transparent 40%,rgba(255,255,255,.6) 40% 44%,transparent 44%),linear-gradient(135deg,#CFE3C8,#B8D4AE);position:relative}
+.pin{position:absolute;left:50%;top:42%;transform:translate(-50%,-100%) rotate(-45deg);width:30px;height:30px;border-radius:50% 50% 50% 0;background:var(--accent);box-shadow:0 4px 10px rgba(0,0,0,.25)}
+
+/* pass */
+.pass{border-radius:24px;padding:20px;color:#fff;background:radial-gradient(circle at 100% 0%,rgba(215,242,92,.35),transparent 50%),linear-gradient(150deg,#16231B,#0B120E);cursor:pointer}
+.pass .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;opacity:.6;font-weight:700}
+.pass .nm{font-size:22px;font-weight:800;margin-top:12px}
+.pass .num{font-size:15px;font-weight:700;letter-spacing:.12em;margin-top:2px;opacity:.85}
+.pass .qr{margin-top:14px;background:#fff;border-radius:14px;padding:10px;width:120px}
+.pass .r2{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.pass .clubs{display:flex;flex-direction:column;gap:5px;align-items:flex-end;font-size:12px;font-weight:600;text-align:right}
+.toggle{width:50px;height:30px;border-radius:99px;background:var(--line);position:relative;flex-shrink:0;transition:.2s}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:.2s}
+.toggle.on{background:var(--accent)}.toggle.on::after{left:23px}
+.rating-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+.rating-grid>div{padding:14px;border-right:1px solid var(--line)}
+.rating-grid>div:last-child{border-right:0}
+.rating-grid small{font-size:11px;color:var(--ink-3);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.rating-grid b{display:block;font-size:18px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}
+.rating-grid em{font-style:normal;font-size:11.5px;font-weight:700;color:var(--accent)}
+
+/* tabbar */
+.tabbar{position:absolute;left:12px;right:12px;bottom:14px;height:68px;border-radius:26px;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 10px 30px rgba(0,0,0,.12);border:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:6px;z-index:20}
+@media (max-width:820px){.tabbar{bottom:max(14px,env(safe-area-inset-bottom))}}
+.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:650;color:var(--ink-3);border-radius:20px;transition:.2s;text-align:center}
+.tab.on{color:var(--accent);background:var(--accent-soft)}
+
+/* sheet */
+.scrim{position:absolute;inset:0;background:rgba(5,10,7,.45);opacity:0;pointer-events:none;transition:.25s;z-index:40}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:28px 28px 0 0;padding:10px 20px 28px;transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);z-index:50;max-height:86%;overflow-y:auto}
+.sheet.on{transform:none}
+.grab{width:40px;height:5px;border-radius:99px;background:var(--line);margin:0 auto 14px}
+.sheet h4{font-size:20px;font-weight:800;letter-spacing:-.01em;margin-bottom:4px}
+.sheet .lead{font-size:13.5px;color:var(--ink-3);margin-bottom:16px}
+.club-opt{display:flex;align-items:center;gap:12px;padding:11px;border-radius:16px;border:1.5px solid var(--line);margin-bottom:8px;width:100%}
+.club-opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.club-opt .logo{width:40px;height:40px;font-size:13px}
+.club-opt .grow{flex:1}
+.club-opt .t{font-weight:700;font-size:15px;display:block}
+.club-opt .s{font-size:12px;color:var(--ink-3)}
+.check{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;color:#fff}
+.club-opt.on .check{background:var(--accent);border-color:var(--accent)}
+.kv{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px;gap:12px}
+.kv span:first-child{color:var(--ink-3);font-weight:500}
+.kv span:last-child{font-weight:700;text-align:right}
+.players{display:flex;gap:8px;margin:12px 0 16px}
+.players button{flex:1;padding:12px 0;border-radius:12px;border:1.5px solid var(--line);font-weight:700;text-align:center}
+.players button.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.toast{position:absolute;left:50%;top:58px;transform:translate(-50%,-30px);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;font-size:13.5px;font-weight:600;opacity:0;transition:.3s;z-index:60;white-space:nowrap;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<aside class="notes">
+  <h1>Tennisapp concept</h1>
+  <p>Een klikbaar concept van <a href="https://capmediastudio.nl" style="color:inherit">CAP Media Studio</a>. Hoe ziet een clubapp eruit als je lid bent van meerdere clubs, en je competitie, toernooien en baanreserveringen gewoon op één plek wilt?</p><p style="font-size:12.5px">Eigen ontwerpconcept, niet in opdracht van een bond of club. Clubs, teams en spelers zijn verzonnen.</p>
+  <h2>Vijf tabbladen, vijf vragen</h2>
+  <ul>
+    <li><b>Home</b>: wat moet ik nu weten? Eerstvolgende afspraak, laatste uitslag, nieuwe speelsterkte.</li>
+    <li><b>Reserveren</b>: wanneer is er een baan vrij?</li>
+    <li><b>Competitie</b>: hoe staat mijn team ervoor? Stand, programma, uitslagen per partij, opstelling. Plus toernooien en je speelsterkte-verloop.</li>
+    <li><b>Club</b>: wat speelt er op de club? Nieuws, agenda, diensten, info, ladder, clubteams.</li>
+    <li><b>Maatjes</b>: met wie kan ik spelen?</li>
+  </ul>
+  <h2>Altijd bovenin</h2>
+  <ul>
+    <li><b>Clubnaam</b>: tik om te wisselen tussen je drie clubs of alles samen te zien.</li>
+    <li><b>QR-icoon</b>: ledenpas in één tik.</li>
+    <li><b>Jouw foto</b>: profiel, privacy, instellingen.</li>
+  </ul>
+  <p style="margin-top:18px;font-size:13px">Probeer: Competitie → tik op een wedstrijd voor de uitslag per partij.</p>
+  <button class="tog" id="themeBtn">◐ Licht / donker wisselen</button>
+</aside>
+
+<div class="phone">
+<div class="screen" id="screen">
+  <div class="status"><span>13:45</span><span>●●● ◔ ▮</span></div>
+
+  <header class="top">
+    <button class="club-pill" id="clubBtn" aria-label="Wissel van club">
+      <span class="logo" id="clubLogo">TS</span>
+      <span class="nm" id="clubName">TV Topspin</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div style="display:flex;gap:8px">
+      <button class="icon-btn" aria-label="Meldingen" data-sheet="notif">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        <span class="dot"></span>
+      </button>
+      <button class="icon-btn" aria-label="Ledenpas" data-sheet="pass">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h7v-4"/></svg>
+      </button>
+      <button class="me-btn" aria-label="Mijn profiel" data-page="me">CP</button>
+    </div>
+  </header>
+
+  <main class="content" id="content">
+
+    <!-- HOME -->
+    <section class="view on" data-view="home">
+      <div class="hello"><small>Dinsdag 24 november</small><h2>Hoi Cheryl</h2></div>
+
+      <div class="notice" data-go="comp" data-subgo="rating">
+        <div class="ic">8</div>
+        <div style="flex:1"><div class="t">Je nieuwe speelsterkte is bekend</div><div class="s">Vanaf 1-1-2027: enkel 8, dubbel 8, padel 8</div></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+      </div>
+
+      <div class="next" id="homeNext"></div>
+
+      <div class="quick">
+        <button class="q" data-go="book"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16M3 12h18"/></svg>Baan boeken</button>
+        <button class="q" data-sheet="pass"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Ledenpas</button>
+        <button class="q" data-go="comp"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>Stand</button>
+        <button class="q" data-go="mates"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Maatje zoeken</button>
+      </div>
+
+      <div class="sec"><h3>Mijn competitie</h3><a data-go="comp">Competitie</a></div>
+      <div class="card" id="homeResult"></div>
+
+      <div class="sec"><h3>Binnenkort</h3><a data-go="club" data-subgo="agenda">Agenda</a></div>
+      <div class="card" id="homeAgenda"></div>
+
+      <div class="sec"><h3>Dit seizoen</h3></div>
+      <div class="stats">
+        <div class="stat" data-go="club" data-subgo="diensten"><b>0</b><span>Diensten</span></div>
+        <div class="stat" data-go="club" data-subgo="diensten"><b>0/0</b><span>Punten</span></div>
+        <div class="stat"><b>0m</b><span>Gespeeld</span></div>
+        <div class="stat" data-go="comp"><b>4</b><span>Competities</span></div>
+      </div>
+    </section>
+
+    <!-- RESERVEREN -->
+    <section class="view" data-view="book">
+      <h2 class="ttl">Baan reserveren</h2>
+      <div class="days" id="days"></div>
+      <div class="chips" id="courtFilters">
+        <button class="chip on" data-f="all">Alle banen</button>
+        <button class="chip" data-f="tennis">Tennis</button>
+        <button class="chip" data-f="padel">Padel</button>
+        <button class="chip" data-f="vrij">Alleen vrij</button>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>Vrij</span>
+        <span><i style="background:var(--surface-2);outline:1px solid var(--line)"></i>Bezet</span>
+        <span><i style="background:repeating-linear-gradient(135deg,var(--surface-2),var(--surface-2) 3px,var(--line) 3px,var(--line) 4px)"></i>Training</span>
+      </div>
+      <div class="card"><div class="grid-scroll" id="courtGrid"></div></div>
+      <p class="muted" style="font-size:12px;margin:10px 4px">Tik op een groen blok om direct te boeken.</p>
+      <div class="sec"><h3>Mijn reserveringen</h3></div>
+      <div class="card" id="myBookings"><div class="empty">Nog geen reserveringen.</div></div>
+    </section>
+
+    <!-- COMPETITIE -->
+    <section class="view" data-view="comp">
+      <h2 class="ttl">Competitie
+        <span style="display:flex;gap:8px">
+          <button class="icon-btn" aria-label="Favorieten" data-page="favs"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 12 5a5.5 5.5 0 0 0-10 3.5c0 2.3 1.5 4 3 5.5l7 7z"/></svg></button>
+          <button class="icon-btn" aria-label="Zoek spelers en teams" data-page="search"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+        </span>
+      </h2>
+      <div class="seg" data-seg="comp">
+        <button class="on" data-sub="teams">Mijn teams</button>
+        <button data-sub="tournaments">Toernooien</button>
+        <button data-sub="rating">Speelsterkte</button>
+      </div>
+
+      <div class="sub on" data-subview="teams">
+        <div class="chips" id="teamChips"></div>
+        <div id="teamBody"></div>
+      </div>
+
+      <div class="sub" data-subview="tournaments">
+        <div class="card">
+          <div class="rating-grid">
+            <div><small>Gespeeld</small><b>14</b></div>
+            <div><small>Gewonnen</small><b>9</b></div>
+            <div><small>Winst</small><b>64%</b></div>
+          </div>
+        </div>
+        <div class="sec"><h3>Toernooihistorie</h3><span class="muted" style="font-size:12px">Voorbeelddata</span></div>
+        <div class="card" id="trnList"></div>
+        <button class="btn ghost" style="margin-top:12px" data-toast="Toernooikalender in de buurt geopend">Toernooien in de buurt zoeken</button>
+      </div>
+
+      <div class="sub" data-subview="rating">
+        <div class="card" style="padding:16px;margin-bottom:12px;background:var(--ink);color:var(--bg)">
+          <div style="font-size:12px;font-weight:700;opacity:.7;text-transform:uppercase;letter-spacing:.08em">Nieuw vanaf 1 januari 2027</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px">
+            <div><div style="font-size:12px;opacity:.7">Enkel</div><div style="font-size:28px;font-weight:800">8</div></div>
+            <div><div style="font-size:12px;opacity:.7">Dubbel</div><div style="font-size:28px;font-weight:800">8</div></div>
+            <div><div style="font-size:12px;opacity:.7">Padel dubbel</div><div style="font-size:28px;font-weight:800">8</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="rating-grid">
+            <div><small>Enkel</small><b>8.8255</b><em>naar 8</em></div>
+            <div><small>Dubbel</small><b>8.0202</b><em>naar 8</em></div>
+            <div><small>Padel</small><b>8.1500</b><em>naar 8</em></div>
+          </div>
+          <div style="border-top:1px solid var(--line)">
+            <div class="chips" style="margin:12px 0 0;padding:0 16px" id="rtChips">
+              <button class="chip" data-rt="enkel">Enkel</button><button class="chip on" data-rt="dubbel">Dubbel</button><button class="chip" data-rt="padel">Padel</button>
+            </div>
+            <div class="chart" id="ratingChart"></div>
+          </div>
+        </div>
+        <p class="muted" style="font-size:12px;margin:10px 4px;line-height:1.5">Lager is sterker. De lijn laat je actuele rating per maand zien. Het verloop is voorbeelddata.</p>
+      </div>
+    </section>
+
+    <!-- CLUB -->
+    <section class="view" data-view="club">
+      <h2 class="ttl" id="clubTitle">TV Topspin</h2>
+      <div class="seg" data-seg="club">
+        <button class="on" data-sub="nieuws">Nieuws</button>
+        <button data-sub="agenda">Agenda</button>
+        <button data-sub="diensten">Diensten</button>
+        <button data-sub="info">Info</button>
+      </div>
+      <div class="sub on" data-subview="nieuws" id="newsList"></div>
+      <div class="sub" data-subview="agenda"><div class="card" id="clubAgenda"></div></div>
+      <div class="sub" data-subview="diensten">
+        <div class="card">
+          <div class="row" style="cursor:default"><div class="grow"><div class="t">Mijn diensten</div><div class="s">Huidige seizoen</div></div><span class="tag"><i></i>Op schema</span></div>
+          <div class="service-sum"><div><b>0</b><span>Ingepland</span></div><div><b>0</b><span>Gedraaid</span></div><div><b>0/0</b><span>Punten</span></div></div>
+          <div class="progress"><i style="width:0%"></i></div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <div class="empty"><div class="ill"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div>Er zijn nog geen diensten voor jou ingepland.<br>Je krijgt een melding zodra de club je inroostert.</div>
+        </div>
+      </div>
+      <div class="sub" data-subview="info">
+        <div class="card">
+          <div class="info-map"><div class="pin"></div></div>
+          <div style="padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center">
+            <div><div style="font-weight:700" id="infoName"></div><div class="muted" style="font-size:13px;margin-top:2px" id="infoAddr"></div></div>
+            <button class="btn sm">Route</button>
+          </div>
+          <div class="row"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span><div class="grow"><div class="t" id="infoMail"></div></div></div>
+          <div class="row"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg></span><div class="grow"><div class="t" id="infoWeb"></div></div></div>
+        </div>
+        <div class="sec"><h3>Op de club</h3></div>
+        <div class="card" id="clubLinks"></div>
+      </div>
+    </section>
+
+    <!-- MAATJES -->
+    <section class="view" data-view="mates">
+      <h2 class="ttl">Maatjes</h2>
+      <div class="seg" data-seg="mates">
+        <button class="on" data-sub="maatjes">Maatjes</button>
+        <button data-sub="groepen">Groepen</button>
+      </div>
+      <div class="sub on" data-subview="maatjes">
+        <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input placeholder="Zoek leden van je clubs" id="mateSearch"></label>
+        <div class="sec" style="margin-top:6px"><h3>Mijn maatjes</h3></div>
+        <div class="card" id="myMates"></div>
+        <div class="sec"><h3>Op jouw niveau</h3><span class="muted" style="font-size:12px">Dubbel 7–9</span></div>
+        <div class="card" id="suggest"></div>
+      </div>
+      <div class="sub" data-subview="groepen">
+        <div class="card">
+          <div class="empty"><div class="ill"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <b style="color:var(--ink);display:block;margin-bottom:6px">Nog geen chatgroepen</b>
+          Je club kan groepen maken per niveau, bijvoorbeeld vrouwen met speelsterkte 6 tot 8. In dezelfde groep kun je samen chatten om een tennismaatje te vinden.</div>
+          <div style="padding:0 16px 16px"><button class="btn" data-toast="Verzoek verstuurd naar de club">Vraag de club om een groep</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabbar">
+    <button class="tab on" data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+    <button class="tab" data-tab="book"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M8 14h3v3H8z"/></svg>Reserveren</button>
+    <button class="tab" data-tab="comp"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>Competitie</button>
+    <button class="tab" data-tab="club"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-7h6v7"/></svg>Club</button>
+    <button class="tab" data-tab="mates"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M15.5 20a4.5 4.5 0 0 1 6-4.2"/></svg>Maatjes</button>
+  </nav>
+
+  <div class="page" id="page">
+    <div class="bar">
+      <button class="icon-btn" id="pageBack" aria-label="Terug"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+      <div class="ttl2" id="pageTitle"></div>
+      <span style="width:42px"></span>
+    </div>
+    <div class="body" id="pageBody"></div>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
+  <div class="toast" id="toast"></div>
+</div>
+</div>
+
+<script>
+const CLUBS = {
+  all:{name:"Alle clubs",short:"3",city:"Alles van je 3 clubs samen",color:"#1F2A24"},
+  lee:{name:"TV Topspin",short:"TS",city:"Tennisvereniging Topspin",color:"#C2512A",mail:"info@tvtopspin.nl",web:"tvtopspin.nl",addr:"Adres van de club"},
+  atc:{name:"LTC Het Net",short:"HN",city:"Tennisdorp",color:"#1F7A4D",mail:"info@ltchetnet.nl",web:"ltchetnet.nl",addr:"Parklaan 12, 1234 AB Tennisdorp"},
+  fto:{name:"Padelclub Baseline",short:"PB",city:"Padelbanen en lessen",color:"#2F5FD0",mail:"info@padelbaseline.nl",web:"padelbaseline.nl",addr:"Adres van de club"}
+};
+const ALL_GRAD = "conic-gradient(#C2512A 0 33%,#1F7A4D 0 66%,#2F5FD0 0)";
+
+const EVENTS = [
+  {club:"atc",d:"28",m:"dec",t:"Oliebollenevent",time:"10:00–16:00",type:"Clubactiviteit"},
+  {club:"lee",d:"5",m:"jan",t:"Wintertraining dames",time:"19:30–21:00",type:"Training"},
+  {club:"atc",d:"9",m:"jan",t:"Nieuwjaarsreceptie",time:"15:00–17:00",type:"Clubactiviteit"},
+  {club:"fto",d:"14",m:"jan",t:"Padel-avond voor leden",time:"19:00–22:00",type:"Clubactiviteit"},
+  {club:"lee",d:"17",m:"jan",t:"Teamvergadering voorjaar",time:"20:00–21:00",type:"Team"},
+  {club:"atc",d:"26",m:"jan",t:"Algemene Ledenvergadering (ALV)",time:"19:00–22:00",type:"Vergadering"}
+];
+const NEWS = [
+  {club:"atc",t:"Nieuwsbrief november: veel nieuws",s:"11 nov",img:"Nieuwsbrief",bg:"linear-gradient(120deg,#2B8C6A,#1B5E8C)"},
+  {club:"atc",t:"Opgave competitie voorjaar 2027 senioren, deadline 23 december",s:"9 nov",img:"Competitie 2027",bg:"linear-gradient(120deg,#2E9E68,#1F7A4D)"},
+  {club:"lee",t:"Dames 1 kampioen in de najaarscompetitie!",s:"2 nov",img:"Kampioen 🏆",bg:"linear-gradient(120deg,#D96A3A,#9C3B1E)"},
+  {club:"fto",t:"Nieuwe padelbanen open vanaf december",s:"28 okt",img:"Padel",bg:"linear-gradient(120deg,#3C6FE0,#1E3C8C)"}
+];
+const PEOPLE = [
+  {n:"Anouk Visser",club:"lee",r:"Dubbel 8",c:"#7A5AF8",star:true},
+  {n:"Esra Yilmaz",club:"lee",r:"Dubbel 7",c:"#E2572B",star:true},
+  {n:"Femke Hendriks",club:"lee",r:"Dubbel 8",c:"#1B8DB5",star:false},
+  {n:"Mila de Boer",club:"lee",r:"Dubbel 7",c:"#C08A00",star:false},
+  {n:"Sanne de Vries",club:"atc",r:"Dubbel 8 · zoekt dubbelpartner",c:"#2E9E68",star:false},
+  {n:"Iris Meijer",club:"fto",r:"Padel 8 · speelt vaak padel",c:"#2F5FD0",star:false}
+];
+const COURTS = [
+  {n:"Padel 1",k:"padel",meta:"Buiten · LED"},{n:"Padel 2",k:"padel",meta:"Buiten · LED"},
+  {n:"Baan 2",k:"tennis",meta:"Gravel"},{n:"Baan 3",k:"tennis",meta:"Gravel"},{n:"Baan 4",k:"tennis",meta:"Gravel"},
+  {n:"Baan 5",k:"tennis",meta:"Kunstgras"},{n:"Baan 6",k:"tennis",meta:"Kunstgras"},{n:"Baan 7",k:"tennis",meta:"Kunstgras"},{n:"Baan 8",k:"tennis",meta:"Kunstgras"}
+];
+const TIMES = ["17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00"];
+
+/* ---------- competitie ---------- */
+const T = {L:"TV Topspin 1",V:"Het Net 1",M:"De Lob 1",B:"Smash \'85 2",Bo:"Volley 1",E:"Ace 4"};
+const ROUNDS = [
+  {n:1,date:"vr 11 sep",m:[["L","M",3,1],["B","E",4,0],["V","Bo",4,0]]},
+  {n:2,date:"vr 18 sep",m:[["M","V",3,1],["L","B",3,1],["Bo","E",3,1]]},
+  {n:3,date:"vr 25 sep",m:[["L","E",4,0],["V","B",3,1],["M","Bo",4,0]]},
+  {n:4,date:"vr 2 okt",m:[["V","L",2,2],["M","E",4,0],["B","Bo",3,1]]},
+  {n:5,date:"vr 9 okt",m:[["Bo","L",0,4],["E","V",0,4],["B","M",2,2]]}
+];
+const RUBBERS_R1 = [
+  {n:"DD1",h:[["Anouk Visser",8],["Mila de Boer",7]],a:[["Lisa Mulder",6],["Sophie Smit",7]],s:[[6,3],[6,1]],w:"h"},
+  {n:"DD2",h:[["Esra Yilmaz",7],["Femke Hendriks",8]],a:[["Eva Smit",9],["Julia Bos",9]],s:[[6,2],[6,4]],w:"h"},
+  {n:"DD3",h:[["Esra Yilmaz",7],["Mila de Boer",7]],a:[["Julia Bos",9],["Lisa Mulder",6]],s:[[6,0],[6,0]],w:"h"},
+  {n:"DD4",h:[["Femke Hendriks",8],["Anouk Visser",8]],a:[["Sophie Smit",7],["Eva Smit",9]],s:[[2,6],[6,3],[7,10]],w:"a"}
+];
+const TEAMS = [
+  {id:"lee1n",club:"lee",label:"Dames 1 · Najaar 2026",name:"TV Topspin 1",cls:"Dames Dubbel 17+ · vrijdagavond",div:"3e klasse · afdeling 52",season:"Najaarscompetitie 2026",period:"4 sep – 1 nov",done:true,data:true},
+  {id:"lee1v",club:"lee",label:"Dames 1 · Voorjaar 2026",name:"TV Topspin 1",cls:"Dames Dubbel 17+ · vrijdagavond",div:"3e klasse · poule 0070",season:"Voorjaarscompetitie 2026",pos:2,done:true},
+  {id:"lee5v",club:"lee",label:"Dames 5 · Voorjaar 2026",name:"TV Topspin 5",cls:"Dames Dubbel 17+ · zaterdag",div:"4e klasse · poule 0013",season:"Voorjaarscompetitie 2026",pos:7,done:true}
+];
+const TRN = [
+  {e:"🥇",t:"Winteropen Tennisdorp",s:"Dames dubbel 8 · jan 2026",r:"Winnaar",c:"var(--win)"},
+  {e:"🥈",t:"Padel Open Twente",s:"Dames dubbel P8 · mrt 2026",r:"Finale",c:"var(--accent)"},
+  {e:"🎾",t:"Zomertoernooi Hengelo",s:"Dames enkel 8 · jun 2026",r:"Halve finale",c:"var(--ink-2)"},
+  {e:"🎾",t:"Clubkampioenschappen Het Net",s:"Dames dubbel 7/8 · aug 2026",r:"Kwartfinale",c:"var(--ink-2)"}
+];
+const RATING = {
+  enkel:[8.95,8.93,8.94,8.90,8.88,8.86,8.87,8.85,8.84,8.83,8.83,8.8255],
+  dubbel:[8.35,8.30,8.28,8.25,8.20,8.18,8.12,8.10,8.07,8.05,8.03,8.0202],
+  padel:[8.40,8.38,8.35,8.30,8.28,8.25,8.22,8.20,8.18,8.17,8.16,8.1500]
+};
+
+function standings(){
+  const s = {}; Object.keys(T).forEach(k=>s[k]={k,gs:0,w:0,g:0,v:0,p:0});
+  ROUNDS.forEach(r=>r.m.forEach(([h,a,x,y])=>{
+    s[h].gs++; s[a].gs++; s[h].p+=x; s[a].p+=y;
+    if(x>y){s[h].w++;s[a].v++} else if(x<y){s[a].w++;s[h].v++} else {s[h].g++;s[a].g++}
+  }));
+  return Object.values(s).sort((a,b)=>b.p-a.p || b.w-a.w);
+}
+
+let club = "lee", courtFilter = "all", dayIdx = 2, team = "lee1n", compView = "mine", rt = "dubbel";
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const inClub = x => club === "all" || x.club === club;
+const chev = '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>';
+const clubTag = c => club==="all" ? `<span class="tag" style="background:${CLUBS[c].color}1f;color:${CLUBS[c].color}"><i></i>${CLUBS[c].name}</span>` : "";
+const logoBg = k => k==="all" ? ALL_GRAD : CLUBS[k].color;
+
+function myMatches(){
+  const out=[]; ROUNDS.forEach(r=>r.m.forEach(m=>{ if(m[0]==="L"||m[1]==="L") out.push({r,m}); })); return out;
+}
+function resultFor(m){ const home=m[0]==="L"; const me=home?m[2]:m[3], op=home?m[3]:m[2]; return me>op?"W":me<op?"V":"G"; }
+function matchRow({r,m}){
+  const res=resultFor(m), opp = m[0]==="L"?T[m[1]]:T[m[0]], where = m[0]==="L"?"Thuis":"Uit";
+  return `<button class="match" data-match="${r.n}-${m[0]}"><span class="res ${res}">${res}</span>
+    <span class="grow"><span class="t" style="display:block">${where} tegen ${opp}</span><span class="s">Ronde ${r.n} · ${r.date}</span></span>
+    <span class="score">${m[2]} – ${m[3]}</span></button>`;
+}
+
+/* ---------- renders ---------- */
+function renderHome(){
+  const ev = EVENTS.filter(inClub)[0];
+  $("#homeNext").innerHTML = ev ? `<div class="k">Eerstvolgende · ${CLUBS[ev.club].name}</div><div class="t">${ev.t}</div><div class="s">${ev.d} ${ev.m} · ${ev.time}</div>
+    <div class="row-b"><span class="pillbtn" data-ev="${EVENTS.indexOf(ev)}">Details</span><span class="pillbtn" data-toast="Toegevoegd aan je agenda">Zet in agenda</span></div>` : `<div class="t">Niets gepland</div>`;
+  const last = myMatches().slice(-1)[0];
+  $("#homeResult").innerHTML = `<button class="row" data-go="comp"><span class="ic" style="background:var(--ball);color:#16231B">1e</span><span class="grow"><span class="t" style="display:block">Kampioen! Dames 1 eindigt bovenaan</span><span class="s">Najaar 2026 · 3e klasse afd. 52</span></span>${chev}</button>` + matchRow(last);
+  const list = EVENTS.filter(inClub).slice(1,4);
+  $("#homeAgenda").innerHTML = list.length ? list.map(eventRow).join("") : `<div class="empty">Geen activiteiten gepland.</div>`;
+}
+function eventRow(e){
+  return `<button class="row" data-ev="${EVENTS.indexOf(e)}"><span class="date"><small>${e.m}</small><b>${e.d}</b></span>
+  <span class="grow"><span class="t" style="display:block">${e.t}</span><span class="s" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${e.time} ${clubTag(e.club)}</span></span>${chev}</button>`;
+}
+function renderTeam(){
+  $("#teamChips").innerHTML = TEAMS.map(t=>`<button class="chip ${t.id===team?"on":""}" data-team="${t.id}">${t.label}</button>`).join("");
+  const t = TEAMS.find(x=>x.id===team);
+  if(!t.data){
+    $("#teamBody").innerHTML = `<div class="team-hero"><div class="k">${t.season}</div><div class="t">${t.name}</div><div class="muted" style="font-size:13px;margin-top:4px">${t.cls}<br>${t.div}</div>
+      <div class="bigpos"><b>${t.pos}e</b><small>eindstand</small></div></div>
+      <div class="card" style="margin-top:12px"><div class="empty">In het echte ontwerp staan hier ook de stand, het programma en de uitslagen van dit seizoen.<br>Kies <b>Dames 1 · Najaar 2026</b> voor het uitgewerkte voorbeeld.</div></div>`;
+    return;
+  }
+  const st = standings(), mine = myMatches();
+  const form = mine.map(x=>`<span class="${resultFor(x.m)}">${resultFor(x.m)}</span>`).join("");
+  const pos = st.findIndex(s=>s.k==="L")+1;
+  $("#teamBody").innerHTML = `
+    <div class="team-hero">
+      <div class="k">${t.season} · ${t.period}</div>
+      <div class="t">${t.name}</div>
+      <div class="muted" style="font-size:13px;margin-top:4px">${t.cls}<br>${t.div}</div>
+      <div class="bigpos"><b>${pos}e</b><small>van 6</small></div>
+      <div class="form"><span class="muted" style="width:auto;font-size:12px;font-weight:700;margin-right:4px">Vorm</span>${form}</div>
+      <div class="champ">🏆 Kampioen! Jullie promoveren naar de 2e klasse.</div>
+    </div>
+    <div class="sec"><h3>Stand</h3><a data-page="poule">Hele poule</a></div>
+    <div class="card">
+      <table class="stand"><thead><tr><th>#</th><th>Team</th><th>GS</th><th>W</th><th>G</th><th>V</th><th>Pnt</th></tr></thead><tbody>
+      ${st.map((s,i)=>`<tr class="${s.k==="L"?"mine":""}"><td class="${i===0?"up":i>=4?"down":""}">${i+1}</td><td>${T[s.k]}</td><td>${s.gs}</td><td>${s.w}</td><td>${s.g}</td><td>${s.v}</td><td class="pts">${s.p}</td></tr>`).join("")}
+      </tbody></table>
+      <div class="stand-legend"><span><i style="background:var(--win)"></i>Promotie</span><span><i style="background:var(--loss)"></i>Degradatie</span><span>Pnt = gewonnen partijen</span></div>
+    </div>
+    <div class="sec"><h3>Programma en uitslagen</h3></div>
+    <div class="card">${mine.map(matchRow).join("")}</div>
+    <div class="sec"><h3>Team</h3><a data-toast="Teamopstelling gedeeld in de teamchat">Delen</a></div>
+    <div class="card">${["Anouk Visser","Femke Hendriks","Cheryl Prins","Esra Yilmaz","Mila de Boer"].map(n=>{
+      const p = PEOPLE.find(x=>x.n===n); const me = n==="Cheryl Prins";
+      return `<div class="person"><div class="pa" style="background:${me?"linear-gradient(140deg,#E7B98A,#9A5B34)":p.c}">${n.split(" ").map(s=>s[0]).join("")}</div><div class="grow"><div class="t">${n}${me?' <span class="tag">Jij</span>':""}</div><div class="s">${me?"Dubbel 8":p.r}</div></div></div>`;}).join("")}
+    </div>`;
+}
+function renderTrn(){
+  $("#trnList").innerHTML = TRN.map(t=>`<div class="trn"><div class="medal">${t.e}</div><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14.5px">${t.t}</div><div class="muted" style="font-size:12px;margin-top:2px">${t.s}</div></div><span style="font-size:12.5px;font-weight:800;color:${t.c}">${t.r}</span></div>`).join("");
+}
+function renderChart(){
+  const d = RATING[rt], W=320, H=130, pad=24, min=Math.min(...d)-.05, max=Math.max(...d)+.05;
+  const x=i=>pad+i*(W-pad*2)/(d.length-1), y=v=>10+(v-min)/(max-min)*(H-34);
+  const pts = d.map((v,i)=>`${x(i)},${y(v)}`).join(" ");
+  const months=["dec","jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov"];
+  $("#ratingChart").innerHTML = `<svg viewBox="0 0 ${W} ${H}">
+    <polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    ${d.map((v,i)=>i===d.length-1?`<circle cx="${x(i)}" cy="${y(v)}" r="5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/><text x="${x(i)-4}" y="${y(v)+20}" text-anchor="end" font-size="11" font-weight="800" fill="var(--ink)">${v.toFixed(4)}</text>`:"").join("")}
+    <text x="${x(0)}" y="${y(d[0])+18}" font-size="11" font-weight="700" fill="var(--ink-3)">${d[0].toFixed(2)}</text>
+    ${months.map((m,i)=>i%2===0||i===11?`<text x="${x(i)}" y="${H-2}" text-anchor="middle" font-size="10" font-weight="600" fill="var(--ink-3)">${m}</text>`:"").join("")}
+  </svg>`;
+}
+function renderNews(){
+  const list = NEWS.filter(inClub);
+  $("#newsList").innerHTML = (list.length ? list.map(n=>`<div class="card news"><div class="img" style="background:${n.bg}">${n.img}</div><div class="b"><div class="t">${n.t}</div><div class="s">${n.s} ${clubTag(n.club)}</div></div></div>`).join("") : `<div class="card"><div class="empty">Geen nieuws.</div></div>`) +
+    `<div class="ad"><small>Advertentie</small><b>10% ledenkorting in de clubshop</b></div>`;
+  const ev = EVENTS.filter(inClub);
+  $("#clubAgenda").innerHTML = ev.length ? ev.map(eventRow).join("") : `<div class="empty">Geen activiteiten gepland.</div>`;
+  $("#clubLinks").innerHTML = ["Clubteams","Ladder","Sponsors","Organisatie","Ledenlijst"].map(n=>`<button class="row" data-toast="${n} geopend"><span class="grow"><span class="t">${n}</span></span>${chev}</button>`).join("");
+}
+function renderDays(){
+  const names=["di","wo","do","vr","za","zo","ma"];
+  $("#days").innerHTML = Array.from({length:10},(_,i)=>{ const d=24+i, dd=d>30?d-30:d;
+    return `<button class="day ${i===dayIdx?"on":""}" data-day="${i}"><small>${i===0?"vand.":names[i%7]}</small><b>${dd}</b></button>`; }).join("");
+}
+function seeded(i,j){ const x=Math.sin((i+1)*99.1+(j+1)*7.3+dayIdx*3.7+club.length)*1e4; return x-Math.floor(x); }
+const booked = new Set();
+function renderCourts(){
+  const rows = COURTS.filter(c => courtFilter==="all"||courtFilter==="vrij"||c.k===courtFilter);
+  let html = `<div class="times">${TIMES.map(t=>`<span>${t}</span>`).join("")}</div>`;
+  rows.forEach(c=>{
+    const ci = COURTS.indexOf(c);
+    html += `<div class="court-row"><div class="court-name">${c.n}<small>${c.meta}</small></div><div class="slots">${TIMES.map((t,j)=>{
+      const key=`${dayIdx}|${c.n}|${t}`;
+      let st = booked.has(key)?"mine": (ci===0&&j>=1&&dayIdx===2)?"train": seeded(ci,j)<.38?"busy":"free";
+      if(courtFilter==="vrij" && st!=="free") return `<span class="slot ghost"></span>`;
+      return `<button class="slot ${st}" data-court="${c.n}" data-time="${t}" data-st="${st}">${{free:"Vrij",train:"Training",busy:"Bezet",mine:"Jij"}[st]}</button>`;
+    }).join("")}</div></div>`;
+  });
+  $("#courtGrid").innerHTML = html;
+  $("#myBookings").innerHTML = booked.size ? [...booked].map(k=>{const [d,c,t]=k.split("|");return `<div class="row"><span class="date"><small>nov</small><b>${24+ +d}</b></span><span class="grow"><span class="t" style="display:block">${c} · ${t}</span><span class="s">60 minuten · 2 spelers</span></span><button class="btn sm ghost" data-cancel="${k}">Annuleer</button></div>`}).join("") : `<div class="empty">Nog geen reserveringen.</div>`;
+}
+function renderMates(){
+  const q = ($("#mateSearch").value||"").toLowerCase();
+  const row = p=>`<div class="person"><div class="pa" style="background:${p.c}">${p.n.split(" ").map(s=>s[0]).slice(0,2).join("")}</div>
+    <div class="grow"><div class="t">${p.n}</div><div class="s">${p.r} · ${CLUBS[p.club].name}</div></div>
+    <button class="star ${p.star?"on":""}" data-star="${p.n}" aria-label="Maatje"><svg width="18" height="18" viewBox="0 0 24 24" fill="${p.star?"currentColor":"none"}" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg></button></div>`;
+  const mine = PEOPLE.filter(p=>p.star && p.n.toLowerCase().includes(q));
+  const sug = PEOPLE.filter(p=>!p.star && inClub(p) && p.n.toLowerCase().includes(q));
+  $("#myMates").innerHTML = mine.length? mine.map(row).join("") : `<div class="empty">Tik op de ster bij een lid om een maatje toe te voegen.</div>`;
+  $("#suggest").innerHTML = sug.length? sug.map(row).join("") : `<div class="empty">Geen suggesties bij deze club.</div>`;
+}
+function renderInfo(){
+  const ref = CLUBS[club==="all"?"lee":club];
+  $("#infoName").textContent=ref.name; $("#infoAddr").textContent=ref.addr; $("#infoMail").textContent=ref.mail; $("#infoWeb").textContent=ref.web;
+}
+function setClub(k){
+  club = k; const c = CLUBS[k];
+  document.documentElement.style.setProperty("--accent", k==="all" ? "#1F7A4D" : c.color);
+  $("#clubLogo").textContent = c.short; $("#clubLogo").style.background = logoBg(k);
+  $("#clubName").textContent = c.name;
+  $("#clubTitle").textContent = k==="all" ? "Al mijn clubs" : c.name;
+  renderAll();
+}
+function renderAll(){ renderHome(); renderTeam(); renderTrn(); renderChart(); renderNews(); renderDays(); renderCourts(); renderMates(); renderInfo(); }
+
+/* ---------- navigation ---------- */
+function go(tab, sub){
+  $$(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===tab));
+  $$(".view").forEach(v=>v.classList.toggle("on",v.dataset.view===tab));
+  if(sub) setSub(tab, sub);
+  $("#content").scrollTop = 0; closePage();
+}
+function setSub(tab, sub){
+  const view = $(`.view[data-view="${tab}"]`);
+  view.querySelectorAll(".seg button").forEach(b=>b.classList.toggle("on",b.dataset.sub===sub));
+  view.querySelectorAll(".sub").forEach(s=>s.classList.toggle("on",s.dataset.subview===sub));
+}
+function openSheet(html){ $("#sheetBody").innerHTML = html; $("#sheet").classList.add("on"); $("#scrim").classList.add("on"); }
+function closeSheet(){ $("#sheet").classList.remove("on"); $("#scrim").classList.remove("on"); }
+function openPage(title, html){ $("#pageTitle").textContent=title; $("#pageBody").innerHTML=html; $("#pageBody").scrollTop=0; $("#page").classList.add("on"); }
+function closePage(){ $("#page").classList.remove("on"); }
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("on"),2200); }
+
+function matchPage(id){
+  const [rn,h] = id.split("-"); const r = ROUNDS[+rn-1]; const m = r.m.find(x=>x[0]===h);
+  const hasDetail = +rn===1;
+  const sets = hasDetail ? "7 – 2" : "—", games = hasDetail ? "44 – 20" : "—";
+  let html = `<div class="scoreboard"><div class="meta">Ronde ${r.n} · ${r.date} 2026 · aanvang 18:00</div>
+    <div class="teams"><div class="tm"><small>Thuis</small>${T[m[0]]}</div><div class="big">${m[2]}–${m[3]}</div><div class="tm"><small>Uit</small>${T[m[1]]}</div></div>
+    <div class="nums"><div><b>${m[2]} – ${m[3]}</b><span>Partijen</span></div><div><b>${sets}</b><span>Sets</span></div><div><b>${games}</b><span>Games</span></div></div></div>`;
+  if(hasDetail){
+    html += `<div class="sec"><h3>Partijen</h3><span class="muted" style="font-size:12px">Cijfer = speelsterkte</span></div><div class="card">` + RUBBERS_R1.map(rb=>{
+      const side=(pl,w,idx)=>`<div class="pair ${w?"won":"lost"}"><div class="names">${pl.map(p=>`<span class="rt">${p[1]}</span>${p[0]}`).join("<br>")}</div>
+        <div class="sets">${rb.s.map(s=>{const mine=s[idx], oth=s[1-idx];return `<span class="${mine>oth?"w":""}">${mine}</span>`}).join("")}</div></div>`;
+      return `<div class="rubber"><div class="hd"><b>${rb.n}</b><button class="tag" data-toast="Onderling resultaat geopend">H2H</button></div>${side(rb.h,rb.w==="h",0)}<div class="divider"></div>${side(rb.a,rb.w==="a",1)}</div>`;
+    }).join("") + `</div>`;
+  } else {
+    html += `<div class="card" style="margin-top:12px"><div class="empty">De uitslagen per partij staan hier zodra ze zijn ingevoerd.<br>Bekijk ronde 1 voor het uitgewerkte voorbeeld.</div></div>`;
+  }
+  html += `<div style="display:flex;gap:8px;margin-top:14px"><button class="btn ghost" data-toast="Teamopstelling geopend">Teamopstelling</button><button class="btn ghost" data-toast="Uitslag gedeeld">Delen</button></div>`;
+  openPage(`${T[m[0]]} – ${T[m[1]]}`, html);
+}
+function poulePage(){
+  openPage("Afdeling 52 · alle wedstrijden", `<p class="muted" style="font-size:13px;margin:0 4px 12px">6 teams · 15 wedstrijden · 4 sep – 1 nov</p><div class="card">` +
+    ROUNDS.map(r=>`<div class="round-h">Ronde ${r.n} · ${r.date}</div>` + r.m.map(m=>`<div class="vs" ${m.includes("L")?`data-match="${r.n}-${m[0]}"`:""}><span class="h ${m[0]==="L"?"mine":""}">${T[m[0]]}</span><span class="score">${m[2]} – ${m[3]}</span><span class="${m[1]==="L"?"mine":""}">${T[m[1]]}</span></div>`).join("")).join("") + `</div>`);
+}
+function mePage(){
+  openPage("Mijn profiel", `
+    <div class="pass" data-sheet="pass">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span class="lbl">Digitale ledenpas</span><span class="tag" style="background:var(--ball);color:#16231B">Actief</span></div>
+      <div class="r2"><div><div class="nm">Cheryl Prins</div><div class="lbl" style="margin-top:8px">Bondsnummer</div><div class="num">1234 ••••</div></div>
+      <div class="clubs">${["lee","fto","atc"].map(k=>`<span>${CLUBS[k].name} <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${CLUBS[k].color}"></span></span>`).join("")}</div></div>
+    </div>
+    <div class="sec"><h3>Speelsterkte</h3><a data-go="comp" data-subgo="rating">Verloop</a></div>
+    <div class="card"><div class="rating-grid"><div><small>Enkel</small><b>8.8255</b></div><div><small>Dubbel</small><b>8.0202</b></div><div><small>Padel</small><b>8.1500</b></div></div></div>
+    <div class="sec"><h3>Wie ziet wat</h3><a data-toast="Profiel bewerken">Bewerk</a></div>
+    <div class="card">
+      <div class="row" style="cursor:default"><div class="grow"><div class="t">Pasfoto</div><div class="s">Zichtbaar voor alle clubleden</div></div><button class="toggle on" aria-label="Pasfoto zichtbaar"></button></div>
+      <div class="row" style="cursor:default"><div class="grow"><div class="t">Mobiel</div><div class="s">06 •••• ••••</div></div><button class="toggle on" aria-label="Mobiel zichtbaar"></button></div>
+      <div class="row" style="cursor:default"><div class="grow"><div class="t">Contact e-mail</div><div class="s">••••@gmail.com</div></div><button class="toggle on" aria-label="E-mail zichtbaar"></button></div>
+    </div>
+    <div class="sec"><h3>Mijn clubs</h3></div>
+    <div class="card">${["lee","fto","atc"].map(k=>`<button class="row" data-pick="${k}"><span class="logo" style="background:${CLUBS[k].color}">${CLUBS[k].short}</span><span class="grow"><span class="t" style="display:block">${CLUBS[k].name}</span><span class="s">${CLUBS[k].city}</span></span>${chev}</button>`).join("")}</div>
+    <div class="sec"><h3>Account</h3></div>
+    <div class="card">
+      ${["Wachtwoord wijzigen","App-instellingen","Clubshop","Over deze app"].map(n=>`<button class="row" data-toast="${n}"><span class="grow"><span class="t">${n}</span></span>${chev}</button>`).join("")}
+      <button class="row"><span class="grow"><span class="t" style="color:var(--warn)">Uitloggen</span></span></button>
+    </div>`);
+}
+const PAGES = {
+  me: mePage, poule: poulePage,
+  favs(){ openPage("Mijn favorieten", `<div class="card">${["De Lob 1","Het Net 1"].map(n=>`<div class="person"><div class="pa" style="background:var(--accent)">♥</div><div class="grow"><div class="t">${n}</div><div class="s">Team · najaar 2026</div></div></div>`).join("")}<div class="person"><div class="pa" style="background:#7A5AF8">CE</div><div class="grow"><div class="t">Anouk Visser</div><div class="s">Speler · dubbel 8</div></div></div></div>`); },
+  search(){ openPage("Zoek spelers en teams", `<label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input placeholder="Naam, team of bondsnummer"></label><div class="card"><div class="empty">Zoek in heel Nederland naar spelers, teams en clubs.</div></div>`); }
+};
+
+function qr(){ let s='<svg viewBox="0 0 21 21" width="100" height="100" shape-rendering="crispEdges">';
+  const finder=(x,y)=>{for(const [ox,oy] of [[0,0],[14,0],[0,14]]){const a=x-ox,b=y-oy;if(a>=0&&a<7&&b>=0&&b<7)return (a===0||a===6||b===0||b===6||(a>1&&a<5&&b>1&&b<5))?1:0;}return -1;};
+  for(let y=0;y<21;y++)for(let x=0;x<21;x++){ const f=finder(x,y); const on = f>=0?f:((Math.sin(x*12.9898+y*78.233)*43758.5453)%1+1)%1>.5;
+    if(on) s+=`<rect x="${x}" y="${y}" width="1" height="1" fill="#0F1A14"/>`; }
+  return s+'</svg>'; }
+
+const SHEETS = {
+  club(){ return `<h4>Kies een club</h4><p class="lead">Je bent lid van 3 clubs. "Alle clubs" laat alles samen zien.</p>` +
+    ["all","lee","atc","fto"].map(k=>`<button class="club-opt ${club===k?"on":""}" data-pick="${k}"><span class="logo" style="background:${logoBg(k)}">${CLUBS[k].short}</span><span class="grow"><span class="t">${CLUBS[k].name}</span><span class="s">${CLUBS[k].city}</span></span><span class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg></span></button>`).join(""); },
+  pass(){ return `<h4>Ledenpas</h4><p class="lead">Laat deze code scannen bij de ingang of de kantine.</p>
+    <div class="pass" style="cursor:default"><div style="display:flex;justify-content:space-between"><span class="lbl">Ledenpas</span><span class="tag" style="background:var(--ball);color:#16231B">Geldig 2026</span></div>
+    <div class="r2"><div><div class="nm">Cheryl Prins</div><div class="num">1234 ••••</div><div class="qr">${qr()}</div></div><div class="clubs">${["lee","fto","atc"].map(k=>`<span>${CLUBS[k].name}</span>`).join("")}</div></div></div>
+    <button class="btn" style="margin-top:14px" data-toast="Toegevoegd aan Wallet">Zet in Apple Wallet</button>`; },
+  notif(){ return `<h4>Meldingen</h4><p class="lead">Van al je clubs en de tennisbond, op één plek.</p>
+    <div class="card" style="box-shadow:none;border:1px solid var(--line)">
+    <button class="row" data-go="comp" data-subgo="rating"><span class="grow"><span class="t" style="display:block">Nieuwe speelsterkte per 1-1-2027</span><span class="s">Tennisbond · vandaag</span></span></button>
+    <button class="row" data-go="comp"><span class="grow"><span class="t" style="display:block">Dames 1 is kampioen 🏆</span><span class="s">TV Topspin · 2 nov</span></span></button>
+    <button class="row" data-go="club" data-subgo="nieuws"><span class="grow"><span class="t" style="display:block">Deadline competitie-opgave 23 december</span><span class="s">LTC Het Net · 9 nov</span></span></button></div>`; }
+};
+
+document.addEventListener("click", e=>{
+  const t = e.target.closest("[data-tab],[data-go],[data-sub],[data-sheet],[data-page],[data-pick],[data-day],[data-f],.slot,[data-star],[data-ev],[data-team],[data-match],[data-rt],[data-toast],[data-book],[data-np],[data-cancel],#clubBtn,#scrim,#pageBack,.toggle");
+  if(!t) return;
+  const d = t.dataset;
+  if(t.id==="clubBtn") return openSheet(SHEETS.club());
+  if(t.id==="scrim") return closeSheet();
+  if(t.id==="pageBack") return closePage();
+  if(t.classList.contains("toggle")) return t.classList.toggle("on");
+  if(d.tab) return go(d.tab);
+  if(d.go){ closeSheet(); return go(d.go, d.subgo); }
+  if(d.sub){ return setSub(t.closest(".view").dataset.view, d.sub); }
+  if(d.sheet) return openSheet(SHEETS[d.sheet]());
+  if(d.page) return PAGES[d.page]();
+  if(d.pick){ setClub(d.pick); closeSheet(); closePage(); return toast(`Je bekijkt nu ${CLUBS[d.pick].name}`); }
+  if(d.day){ dayIdx=+d.day; renderDays(); return renderCourts(); }
+  if(d.f){ courtFilter=d.f; $$("#courtFilters .chip").forEach(c=>c.classList.toggle("on",c===t)); return renderCourts(); }
+  if(d.team){ team=d.team; return renderTeam(); }
+  if(d.match){ return matchPage(d.match); }
+  if(d.rt){ rt=d.rt; $$("#rtChips .chip").forEach(c=>c.classList.toggle("on",c===t)); return renderChart(); }
+  if(d.star){ const p=PEOPLE.find(x=>x.n===d.star); p.star=!p.star; renderMates(); return toast(p.star?`${p.n} is nu je maatje`:`${p.n} is geen maatje meer`); }
+  if(d.np!==undefined && t.closest(".players")){ $$(".players button").forEach(b=>b.classList.toggle("on",b===t)); return; }
+  if(d.book){ closeSheet(); booked.add(d.book); renderCourts(); return toast("Baan geboekt"); }
+  if(d.cancel){ booked.delete(d.cancel); renderCourts(); return toast("Reservering geannuleerd"); }
+  if(d.ev){ const ev=EVENTS[+d.ev]; return openSheet(`<h4>${ev.t}</h4><p class="lead">${CLUBS[ev.club].name}</p>
+      <div class="kv"><span>Datum</span><span>${ev.d} ${ev.m}</span></div><div class="kv"><span>Tijd</span><span>${ev.time}</span></div><div class="kv"><span>Soort</span><span>${ev.type}</span></div>
+      <div style="display:flex;gap:8px;margin-top:18px"><button class="btn ghost" data-toast="Toegevoegd aan je agenda">Zet in agenda</button><button class="btn" data-toast="Je staat op de lijst">Ik kom</button></div>`); }
+  if(d.toast){ closeSheet(); return toast(d.toast); }
+  if(t.classList.contains("slot")){
+    const {court,time,st}=d;
+    if(st==="free") return openSheet(`<h4>${court} om ${time}</h4><p class="lead">${$(".day.on b").textContent} november · 60 minuten</p>
+      <div class="kv"><span>Baan</span><span>${COURTS.find(c=>c.n===court).meta}</span></div><div class="kv"><span>Prijs</span><span>n.v.t.</span></div>
+      <div style="font-weight:700;margin-top:16px">Aantal spelers</div>
+      <div class="players"><button data-np>1</button><button class="on" data-np>2</button><button data-np>3</button><button data-np>4</button></div>
+      <button class="btn" data-book="${dayIdx}|${court}|${time}">Boek deze baan</button>`);
+    if(st==="train") return openSheet(`<h4>Training</h4><p class="lead">${court} · LED · buiten · kunstgras</p>
+      <div class="kv"><span>Datum</span><span>Donderdag 26 november</span></div><div class="kv"><span>Tijd</span><span>18:00 – 21:20</span></div>
+      <div class="kv"><span>Spelers</span><span>1–4</span></div><div class="kv"><span>Prijs</span><span>n.v.t.</span></div>
+      <div class="kv"><span>Beschrijving</span><span>Groepstraining</span></div>`);
+    if(st==="mine") return openSheet(`<h4>Jouw reservering</h4><p class="lead">${court} · ${time}</p><button class="btn ghost" data-cancel="${dayIdx}|${court}|${time}">Annuleer reservering</button>`);
+    return openSheet(`<h4>${court} is bezet</h4><p class="lead">${time} · gereserveerd door een clublid</p><button class="btn ghost" data-toast="We laten het weten als de baan vrijkomt">Laat weten als dit vrijkomt</button>`);
+  }
+});
+document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ closeSheet(); closePage(); }});
+$("#mateSearch").addEventListener("input", renderMates);
+$("#themeBtn").addEventListener("click", ()=>{
+  const r=document.documentElement, dark = r.dataset.theme ? r.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  r.dataset.theme = dark ? "light" : "dark";
+});
+setClub("lee");
+</script>
+</body>
+</html>

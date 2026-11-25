@@ -83,7 +83,10 @@ export async function getPortfolio(): Promise<PortfolioItem[]> {
   const supabase = createPublicClient();
   if (!supabase) return demoPortfolio;
   const { data } = await supabase.from("portfolio_items").select("*").eq("published", true).order("sort").order("created_at", { ascending: false });
-  return data?.length ? (data as PortfolioItem[]) : demoPortfolio;
+  const items = (data ?? []) as PortfolioItem[];
+  // Zolang er nog geen eigen foto's of video's staan, vullen de voorbeeldfoto's het beeldwerk aan.
+  const hasVisualWork = items.some((p) => p.category !== "apps" && p.category !== "games");
+  return hasVisualWork ? items : [...demoPortfolio, ...items];
 }
 
 export async function getSetting<T = string>(key: string, fallback: T): Promise<T> {
@@ -96,7 +99,9 @@ export async function getSetting<T = string>(key: string, fallback: T): Promise<
 
 export async function getHero() {
   const [hero, portfolio] = await Promise.all([getSetting("hero_image", ""), getPortfolio()]);
-  const featured = portfolio.find((p) => p.featured && p.category !== "video") ?? portfolio.find((p) => p.category !== "video");
+  // De hero is altijd een foto: geen video, app of game.
+  const isPhoto = (p: PortfolioItem) => p.category === "sport" || p.category === "lifestyle";
+  const featured = portfolio.find((p) => p.featured && isPhoto(p)) ?? portfolio.find(isPhoto);
   return { src: hero || featured?.image_url || demoPortfolio[0]!.image_url, alt: featured?.alt ?? "Filmische sportfoto door CAP Media Studio" };
 }
 
