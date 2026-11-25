@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Reveal } from "@/components/site/reveal";
 import { Accent, SectionHead } from "@/components/site/section";
+import { Viewfinder } from "@/components/site/viewfinder";
 import { Arrow, LinkButton } from "@/components/ui/button";
 import { getSetting, getTexts } from "@/lib/content";
 import { md } from "@/lib/markdown";
@@ -109,6 +110,7 @@ export default async function OverMijPage() {
                     sizes={w.span === 6 ? "(min-width: 768px) 90vw, 72vw" : w.span === 4 ? "(min-width: 768px) 60vw, 72vw" : "(min-width: 768px) 30vw, 72vw"}
                     className="object-cover grayscale transition duration-700 group-hover:scale-[1.02] group-hover:grayscale-0"
                   />
+                  <Viewfinder />
                 </div>
                 <div className="mt-3 flex justify-between font-mono text-[10px] tracking-[0.04em] text-mist uppercase">
                   <span>{String(i + 1).padStart(2, "0")} / {w.caption}</span>

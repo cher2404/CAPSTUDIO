@@ -164,12 +164,20 @@ export default async function HomePage() {
           <p className="font-mono text-[10px] tracking-[0.08em] text-mist uppercase md:col-span-3">Wat ik doe</p>
           <ul className="md:col-span-9">
             {disciplines.map((d, i) => (
-              <li key={i} className="group grid gap-3 border-t border-ink-600 py-7 md:grid-cols-9 md:gap-6 md:py-9">
-                <h2 className="text-5xl transition-colors duration-500 group-hover:text-ember-soft md:col-span-4 md:text-6xl">
-                  {d.title}
-                  {d.tag && <sup className="ml-2 align-super font-mono text-[10px] font-normal tracking-[0.08em] text-ember-soft uppercase">{d.tag}</sup>}
-                </h2>
-                <p className="max-w-md leading-relaxed text-mist md:col-span-5 md:pt-2">{d.text}</p>
+              <li key={i} className="border-t border-ink-600">
+                <Link href="/diensten" className="group relative grid gap-3 py-7 md:grid-cols-9 md:gap-6 md:py-9">
+                  <h2 className="text-5xl transition-colors duration-500 group-hover:text-ember-soft md:col-span-4 md:text-6xl">
+                    {d.title}
+                    {d.tag && <sup className="ml-2 align-super font-mono text-[10px] font-normal tracking-[0.08em] text-ember-soft uppercase">{d.tag}</sup>}
+                  </h2>
+                  <p className="max-w-md leading-relaxed text-mist transition-colors duration-500 group-hover:text-bone-dim md:col-span-4 md:pt-2">{d.text}</p>
+                  <span
+                    aria-hidden
+                    className="hidden justify-end pt-2 font-display text-3xl text-ember-soft opacity-0 transition-all duration-500 ease-[var(--ease-film)] group-hover:translate-x-0 group-hover:opacity-100 md:col-span-1 md:flex md:-translate-x-3"
+                  >
+                    →
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>

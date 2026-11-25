@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useScrollProgress } from "./use-scroll-progress";
+import { Viewfinder } from "./viewfinder";
 
 type Frame = { id: string; src: string; alt: string; width: number; height: number; title: string | null };
 
@@ -43,12 +44,20 @@ export function FilmRoll({ frames, title, label }: { frames: Frame[]; title: Rea
             className="relative block h-[42svh] overflow-hidden bg-ink-850 md:h-[52svh]"
             style={{ aspectRatio: `${f.width} / ${f.height}` }}
           >
-            <Image src={f.src} alt={f.alt} fill sizes="(min-width: 768px) 50vw, 80vw" className="object-cover" />
+            <Image
+              src={f.src}
+              alt={f.alt}
+              fill
+              sizes="(min-width: 768px) 50vw, 80vw"
+              className="object-cover transition duration-[1.4s] ease-[var(--ease-film)] group-hover:scale-[1.03]"
+            />
+            <Viewfinder />
           </span>
-          <span className="mt-2 flex justify-between gap-6 font-mono text-[10px] tracking-[0.08em] text-mist uppercase">
+          <span className="mt-2 flex justify-between gap-6 font-mono text-[10px] tracking-[0.08em] text-mist uppercase transition-colors duration-500 group-hover:text-bone">
             <span>
               {String(i + 1).padStart(2, "0")}A ▸ {f.title ?? ""}
             </span>
+            <span className="opacity-0 transition-opacity duration-500 group-hover:opacity-100">Portfolio ↗</span>
           </span>
         </Link>
       ))}

@@ -55,9 +55,12 @@ export function SiteHeader({ availability }: { availability?: string }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={cn("relative text-sm transition-colors hover:text-bone", active ? "text-bone" : "text-mist")}
+                className={cn("group/nav relative text-sm transition-colors hover:text-bone", active ? "text-bone" : "text-mist")}
               >
                 {item.label}
+                {!active && (
+                  <span className="absolute inset-x-0 -bottom-1 h-px origin-left scale-x-0 bg-bone/60 transition-transform duration-500 ease-[var(--ease-film)] group-hover/nav:scale-x-100" />
+                )}
                 <span
                   className={cn(
                     "absolute -bottom-1.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-ember transition-opacity",

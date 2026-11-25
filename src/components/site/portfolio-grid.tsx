@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
+import { Viewfinder } from "./viewfinder";
 import { WorkIndex } from "./work-index";
 import { portfolioCategories, portfolioCategoryLabel } from "@/lib/categories";
 import type { PortfolioCategory, PortfolioItem } from "@/lib/types";
@@ -116,6 +117,7 @@ export function PortfolioGrid({ items }: { items: PortfolioItem[] }) {
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 className="object-cover transition duration-[1.4s] ease-[var(--ease-film)] group-hover:scale-[1.03]"
               />
+              <Viewfinder />
               <div className="absolute inset-0 flex items-end bg-gradient-to-t from-ink-950/70 via-transparent to-transparent p-4 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                 <span className="flex w-full justify-between font-mono text-[10px] tracking-[0.04em] text-bone uppercase">
                   <span>
