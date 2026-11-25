@@ -14,9 +14,11 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: { bodySizeLimit: "10mb" },
   },
-  // capmediastudio.com en www verwijzen permanent door naar https://capmediastudio.nl
+  // capmediastudio.com verwijst permanent door naar https://capmediastudio.nl.
+  // De keuze tussen www en zonder www maak je in Vercel (Settings → Domains), niet hier:
+  // anders sturen Vercel en de site elkaar in een rondje door.
   async redirects() {
-    return ["capmediastudio.com", "www.capmediastudio.com", "www.capmediastudio.nl"].map((host) => ({
+    return ["capmediastudio.com", "www.capmediastudio.com"].map((host) => ({
       source: "/:path*",
       has: [{ type: "host" as const, value: host }],
       destination: "https://capmediastudio.nl/:path*",
