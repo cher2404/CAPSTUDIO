@@ -42,7 +42,6 @@ export function SiteHeader({ availability }: { availability?: string }) {
           {availability && (
             <span className="hidden items-center gap-2 text-xs text-mist lg:flex">
               <span className="relative flex size-1.5">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-moss opacity-60" />
                 <span className="relative inline-flex size-1.5 rounded-full bg-moss" />
               </span>
               {availability}

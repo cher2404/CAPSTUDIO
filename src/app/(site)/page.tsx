@@ -1,10 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Exposure, FilmEdge } from "@/components/site/film";
+import { FilmRoll } from "@/components/site/film-roll";
 import { GreaseMark } from "@/components/site/grease-mark";
+import { HeroImage } from "@/components/site/hero-image";
 import { LiveClock } from "@/components/site/live-clock";
 import { Reveal } from "@/components/site/reveal";
 import { Accent } from "@/components/site/section";
+import { Steps } from "@/components/site/steps";
 import { WorkIndex } from "@/components/site/work-index";
 import { getHero, getPortfolio, getTexts } from "@/lib/content";
 import type { PortfolioCategory, PortfolioItem } from "@/lib/types";
@@ -58,6 +61,14 @@ export default async function HomePage() {
   const frames = stills.slice(0, 6);
   const work = stills.slice(0, 6).map((p) => ({ ...p, year: p.created_at ? String(new Date(p.created_at).getFullYear()) : "" }));
 
+  const roll = stills
+    .filter((p) => p.category === "sport" || p.category === "lifestyle")
+    .slice(0, 8)
+    .map((p) => ({ id: p.id, src: p.image_url, alt: p.alt ?? "", width: p.width, height: p.height, title: p.title }));
+  const steps = ([1, 2, 3, 4] as const)
+    .map((n) => ({ title: t[`home.step_${n}_title`], text: t[`home.step_${n}_text`] }))
+    .filter((s) => s.title.trim());
+
   const disciplines = ([1, 2, 3, 4] as const)
     .map((n) => ({ title: t[`home.block_${n}_title`], text: t[`home.block_${n}_text`], tag: t[`home.block_${n}_tag`] }))
     .filter((d) => d.title.trim());
@@ -80,7 +91,7 @@ export default async function HomePage() {
 
       {/* Hero: het scherm als één frame op de film */}
       <section className="relative flex h-[100svh] min-h-[620px] flex-col overflow-hidden">
-        <Image src={hero.src} alt={hero.alt} fill priority quality={75} sizes="100vw" className="animate-slow-zoom object-cover" />
+        <HeroImage src={hero.src} alt={hero.alt} />
         <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/30 to-ink-950/50" />
 
         <div className="container-x relative mt-22 md:mt-24">
@@ -95,7 +106,7 @@ export default async function HomePage() {
 
         <div className="container-x relative mt-auto pb-10 md:pb-14">
           <p className="mb-5 font-mono text-[10px] tracking-[0.08em] text-ember-soft uppercase">Frame 12A — {site.name}</p>
-          <h1 className="max-w-[13ch] animate-fade-up text-[3.2rem] leading-[0.9] sm:text-7xl md:text-8xl lg:text-[9rem]">
+          <h1 className="max-w-[13ch] text-[3.2rem] leading-[0.9] sm:text-7xl md:text-8xl lg:text-[9rem]">
             <Accent text={t["home.hero_title"]} />
           </h1>
           <div className="mt-8 flex flex-col gap-6 md:mt-10 md:flex-row md:items-end md:justify-between">
@@ -138,6 +149,15 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
+      {/* Filmrol: schuift alleen mee met scrollen */}
+      {roll.length > 2 && (
+        <FilmRoll
+          frames={roll}
+          title={<Accent text={t["home.roll_title"]} />}
+          label={`${roll.length} frames — scroll`}
+        />
+      )}
+
       {/* Disciplines als index */}
       <section className="container-x pt-28 md:pt-40">
         <div className="grid gap-6 md:grid-cols-12">
@@ -159,7 +179,7 @@ export default async function HomePage() {
       {/* Werk */}
       {work.length > 0 && (
         <section className="container-x pt-28 md:pt-40">
-          <div className="mb-8 flex items-end justify-between gap-6 md:mb-12">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 md:mb-12">
             <h2 className="text-5xl md:text-7xl">
               <Accent text={t["home.work_title"]} />
             </h2>
@@ -182,6 +202,11 @@ export default async function HomePage() {
             <p className="mt-8 font-mono text-[10px] tracking-[0.08em] text-mist uppercase">— Cheryl, {site.name}</p>
           </blockquote>
         </figure>
+        <div className="mt-16 grid md:mt-24 md:grid-cols-12">
+          <div className="md:col-span-9 md:col-start-4">
+            <Steps steps={steps} />
+          </div>
+        </div>
       </section>
 
       {/* Afsluiter: één grote link */}

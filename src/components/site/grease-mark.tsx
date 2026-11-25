@@ -7,7 +7,6 @@ export function GreaseMark({ className }: { className?: string }) {
         stroke="currentColor"
         strokeWidth="3.2"
         strokeLinecap="round"
-        className="[stroke-dasharray:640] [stroke-dashoffset:640] animate-[draw_1.4s_0.8s_var(--ease-film)_forwards]"
       />
     </svg>
   );
