@@ -55,8 +55,8 @@ export default async function OverMijPage() {
           </Reveal>
 
           {t["over.story"].trim() && (
-            <Reveal delay={120} className="prose-cap rule-t mt-10 pt-8">
-              <div dangerouslySetInnerHTML={{ __html: md(t["over.story"]) }} />
+            <Reveal delay={120} className="rule-t mt-10 pt-8">
+              <div className="prose-cap" dangerouslySetInnerHTML={{ __html: md(t["over.story"]) }} />
             </Reveal>
           )}
 
@@ -87,6 +87,48 @@ export default async function OverMijPage() {
           </Reveal>
         </div>
       </section>
+
+      <section className="mt-24 md:mt-36">
+        <Reveal>
+          <SectionHead index="02" label={t["over.gallery_title"]} />
+        </Reveal>
+        <Reveal className="mt-8 grid gap-6 md:grid-cols-12">
+          <p className="font-display text-2xl leading-snug font-medium tracking-[-0.03em] text-bone md:col-span-6 md:text-[2rem]">
+            <Accent text={t["over.gallery_intro"]} />
+          </p>
+        </Reveal>
+        <Reveal className="-mx-5 mt-10 md:mx-0">
+          <ul className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-4 md:grid md:grid-cols-6 md:gap-4 md:overflow-visible md:px-0 md:pb-0">
+            {wanderings.map((w, i) => (
+              <li key={w.src} className={`group w-[72vw] shrink-0 snap-start sm:w-[44vw] md:w-auto ${w.span === 6 ? "md:col-span-6" : w.span === 4 ? "md:col-span-4" : "md:col-span-2"}`}>
+                <div className={`relative overflow-hidden bg-ink-850 ${w.span === 6 ? "aspect-[4/3] md:aspect-[3/1]" : w.span === 4 ? "aspect-[4/3] md:aspect-[2/1]" : "aspect-[4/3] md:aspect-[4/5]"}`}>
+                  <Image
+                    src={w.src}
+                    alt={w.alt}
+                    fill
+                    sizes={w.span === 6 ? "(min-width: 768px) 90vw, 72vw" : w.span === 4 ? "(min-width: 768px) 60vw, 72vw" : "(min-width: 768px) 30vw, 72vw"}
+                    className="object-cover grayscale transition duration-700 group-hover:scale-[1.02] group-hover:grayscale-0"
+                  />
+                </div>
+                <div className="mt-3 flex justify-between font-mono text-[10px] tracking-[0.04em] text-mist uppercase">
+                  <span>{String(i + 1).padStart(2, "0")} / {w.caption}</span>
+                  <span>{w.year}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </section>
     </div>
   );
 }
+
+/** Eigen vrij werk (span = kolommen op desktop, samen per rij 6), buiten opdrachten om. Bestanden staan in public/over-mij. */
+const wanderings = [
+  { src: "/over-mij/keulen-ramen.jpg", alt: "Glas-in-loodramen in de Dom van Keulen", caption: "Dom van Keulen", year: "2018", span: 4 },
+  { src: "/over-mij/waterlelie.jpg", alt: "Close-up van het blad van een reuzenwaterlelie", caption: "Waterlelie", year: "2017", span: 2 },
+  { src: "/over-mij/trein.jpg", alt: "Gele trein op een perron, gezien door een onscherp raam", caption: "Perron", year: "2018", span: 2 },
+  { src: "/over-mij/gevels.jpg", alt: "Rij historische bakstenen gevels tegen een blauwe lucht", caption: "Gevels", year: "2017", span: 2 },
+  { src: "/over-mij/muurschildering.jpg", alt: "Verweerde muurschildering van een engel en een duiveltje", caption: "Muurschildering", year: "2018", span: 2 },
+  { src: "/over-mij/keulen-schip.jpg", alt: "Gotische pilaren en gewelven in de Dom van Keulen", caption: "Dom van Keulen", year: "2018", span: 6 },
+];

@@ -286,7 +286,7 @@ export async function adminSignAgreement(form: FormData) {
     agreement_id: id,
     user_id: user.id,
     signer_role: "admin",
-    signer_name: profile?.full_name || "Cheryl Aldessa Prijs",
+    signer_name: profile?.full_name || "Cheryl Aldessa Prins",
     signer_email: profile?.email,
     ip_address: h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null,
     user_agent: h.get("user-agent")?.slice(0, 500) ?? null,

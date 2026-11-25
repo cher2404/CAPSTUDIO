@@ -1,6 +1,6 @@
 # CAP Media Studio – plan van aanpak
 
-Website + klantportal voor **CAP Media Studio** (Cheryl Aldessa Prijs): een creatieve studio voor foto en video (met een specialisatie in sport en lifestyle), websites en apps, en games. Domein: capmediastudio.nl (capmediastudio.com verwijst door).
+Website + klantportal voor **CAP Media Studio** (Cheryl Aldessa Prins): een creatieve studio voor foto en video (met een specialisatie in sport en lifestyle), websites en apps, en games. Domein: capmediastudio.nl (capmediastudio.com verwijst door).
 
 ## Stack
 

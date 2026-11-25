@@ -136,9 +136,21 @@ export const textDefs = {
   "over.story": {
     page: "Over mij",
     label: "Uitgebreid verhaal (markdown, leeg = verborgen)",
-    default: "",
+    default: [
+      "Het begon met een telefoon in mijn hand, op reis. In Londen keek ik meer naar hoe het licht over de gebouwen viel dan naar de route die ik moest lopen. Een paar jaar later kwam er een spiegelreflexcamera bij, en sindsdien gaat die overal mee.",
+      "In de Dom van Keulen bleef ik staan tot de zon precies door het glas-in-lood viel. Op een perron fotografeerde ik een trein door een beslagen raam, omdat de onscherpte meer zei dan een scherpe foto. Zo leerde ik kijken: naar licht, naar lijnen, naar details waar een ander langsloopt.",
+      "Die blik neem ik nu mee naar mensen en merken. Een sporter in een donkere gym, een ondernemer op haar eigen plek, een familie op een dag die ze niet willen vergeten. Ik zoek het moment waarop het echt wordt, niet geposeerd.",
+      "En omdat ik ook websites en apps bouw, houdt het voor mij niet op bij de foto. Ik denk mee over waar je beeld terechtkomt en wat het daar moet doen. Zelf sta ik in mijn vrije tijd graag op de tennisbaan, dus ik weet hoe het voelt om te presteren, en hoe je dat vangt zonder dat het in de weg zit.",
+    ].join("\n\n"),
     multiline: true,
     markdown: true,
+  },
+  "over.gallery_title": { page: "Over mij", label: "Kop fotostrook", default: "Buiten opdrachten" },
+  "over.gallery_intro": {
+    page: "Over mij",
+    label: "Tekst bij fotostrook",
+    default: "Als niemand me boekt, fotografeer ik vooral steden, licht en kleine dingen. Hier leerde ik kijken.",
+    multiline: true,
   },
 
   // Contact

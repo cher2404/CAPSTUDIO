@@ -4,7 +4,7 @@
 export const site = {
   name: "CAP Media Studio",
   tagline: "foto · video · apps · games",
-  owner: "Cheryl Aldessa Prijs",
+  owner: "Cheryl Aldessa Prins",
   description:
     "CAP Media Studio is een creatieve studio voor foto, video, websites, apps en games. Met een donkere, filmische look die opvalt. Gevestigd in Nederland.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://capmediastudio.nl",

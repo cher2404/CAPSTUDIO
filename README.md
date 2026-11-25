@@ -1,6 +1,6 @@
 # CAP Media Studio
 
-Website en klantportaal voor **CAP Media Studio** ([capmediastudio.nl](https://capmediastudio.nl)), de creatieve studio van Cheryl Aldessa Prijs: foto en video, websites en apps, en games.
+Website en klantportaal voor **CAP Media Studio** ([capmediastudio.nl](https://capmediastudio.nl)), de creatieve studio van Cheryl Aldessa Prins: foto en video, websites en apps, en games.
 
 Next.js 16 (App Router) · TypeScript · Tailwind v4 · Supabase (auth, database, storage, RLS) · Resend · Vercel
 
@@ -34,7 +34,7 @@ dashboard · afspraken (zelf boeken, verzetten en annuleren tot 24 uur vooraf, b
 Log één keer in op `/login` met het adres uit `ADMIN_EMAIL`. Maak jezelf daarna admin in de SQL-editor:
 
 ```sql
-update public.profiles set role = 'admin', full_name = 'Cheryl Aldessa Prijs'
+update public.profiles set role = 'admin', full_name = 'Cheryl Aldessa Prins'
 where email = 'hallo@capmediastudio.nl';
 ```
 
