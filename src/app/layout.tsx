@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: site.description,
   applicationName: site.name,
   authors: [{ name: site.owner }],
-  keywords: ["creatieve studio", "fotograaf", "videomaker", "sportfotografie", "lifestyle fotografie", "website laten maken", "app laten maken", "webapp", "games", "Nederland"],
+  keywords: ["mediastudio", "website laten maken", "app laten maken", "webapp", "klantportaal", "minigame", "games", "fotograaf", "videomaker", "Nederland"],
   openGraph: {
     type: "website",
     locale: site.locale,

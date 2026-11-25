@@ -11,7 +11,7 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Diensten en tarieven",
-  description: "Fotoshoots, video, websites, apps en games. Bekijk de diensten en tarieven van CAP Media Studio.",
+  description: "Websites, apps, games, fotoshoots en video. Bekijk de diensten en tarieven van CAP Media Studio.",
   alternates: { canonical: "/diensten" },
 };
 

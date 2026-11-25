@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Rally · een minigame van CAP Media Studio</title>
+<meta name="description" content="Rally: houd de bal in het spel en raak de zoekers. Een minigame van CAP Media Studio.">
+<meta name="theme-color" content="#0b0c0b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,500;0,700;1,500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0b0c0b; --line:#2a2c29; --bone:#eee9e0; --mist:#8b8d88; --ember:#c9976b; --ball:#d7f25c; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { height:100%; background:var(--bg); color:var(--bone); font-family:"Inter Tight",system-ui,sans-serif; overflow:hidden; -webkit-tap-highlight-color:transparent; }
+  .wrap { height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom)); gap:10px; }
+  .bar { width:var(--w); display:flex; justify-content:space-between; align-items:baseline; font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--mist); }
+  .bar a { color:var(--mist); text-decoration:none; }
+  .bar a:hover { color:var(--bone); }
+  .stage { position:relative; width:var(--w); height:var(--h); }
+  canvas { position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:none; cursor:none; }
+  .overlay { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:14px; padding:24px; background:rgba(11,12,11,.72); }
+  .overlay[hidden] { display:none; }
+  .overlay h1 { font-size:clamp(48px,14vw,88px); line-height:.9; letter-spacing:-.05em; font-weight:700; }
+  .overlay h1 em { font-weight:500; color:var(--ember); }
+  .overlay p { color:#bdb9b1; max-width:30ch; line-height:1.5; font-size:15px; }
+  .overlay .score { font-size:clamp(56px,18vw,104px); font-weight:700; letter-spacing:-.05em; line-height:1; }
+  .label { font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ember); }
+  button { font:inherit; font-weight:500; background:var(--bone); color:var(--bg); border:0; padding:13px 22px; cursor:pointer; letter-spacing:-.01em; }
+  button:hover { background:var(--ember); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar"><a href="/">← CAP Media Studio</a><span>Rally · Lab</span></div>
+  <div class="stage">
+    <canvas id="c" aria-label="Rally, een tennisspelletje"></canvas>
+    <div class="overlay" id="start">
+      <span class="label">Minigame</span>
+      <h1>Ral<em>ly</em></h1>
+      <p>Houd de bal in het spel met je racket. Raak een zoeker voor drie punten extra.</p>
+      <button id="go">Serveer</button>
+      <span class="label" style="color:var(--mist)">Muis, vinger of pijltjes</span>
+    </div>
+    <div class="overlay" id="over" hidden>
+      <span class="label">Uit</span>
+      <div class="score" id="final">0</div>
+      <p id="msg">Goede rally.</p>
+      <button id="again">Nog een keer</button>
+    </div>
+  </div>
+  <div class="bar"><span id="score">Score 0</span><span id="best">Record 0</span></div>
+</div>
+<script>
+(() => {
+  const canvas = document.getElementById("c"), ctx = canvas.getContext("2d");
+  const $ = (id) => document.getElementById(id);
+  const css = getComputedStyle(document.documentElement);
+  const C = { bone: "#eee9e0", mist: "#8b8d88", ember: "#c9976b", ball: "#d7f25c", line: "#2a2c29" };
+
+  // Speelveld in vaste eenheden; het canvas schaalt mee.
+  const W = 360, H = 600;
+  let scale = 1;
+  function layout() {
+    const maxH = window.innerHeight - 90, maxW = window.innerWidth - 24;
+    const h = Math.min(maxH, maxW * (H / W), 820), w = h * (W / H);
+    document.documentElement.style.setProperty("--w", w + "px");
+    document.documentElement.style.setProperty("--h", h + "px");
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    scale = (w * dpr) / W;
+  }
+  window.addEventListener("resize", layout); layout();
+
+  let best = 0;
+  try { best = Number(localStorage.getItem("rally-best")) || 0; } catch (e) {}
+  $("best").textContent = "Record " + best;
+
+  const racket = { x: W / 2, w: 78, h: 10, y: H - 46, target: W / 2 };
+  const ball = { x: W / 2, y: H - 80, r: 7, vx: 0, vy: 0, served: false };
+  let targets = [], score = 0, hits = 0, state = "start", flashes = [], last = 0, keys = {};
+
+  function newTarget() {
+    const s = 34;
+    for (let i = 0; i < 20; i++) {
+      const t = { x: 26 + Math.random() * (W - 52 - s), y: 70 + Math.random() * (H * 0.42), s, born: performance.now() };
+      if (!targets.some((o) => Math.abs(o.x - t.x) < s + 10 && Math.abs(o.y - t.y) < s + 10)) return t;
+    }
+    return { x: W / 2 - s / 2, y: 120, s, born: performance.now() };
+  }
+
+  function reset() {
+    score = 0; hits = 0; flashes = [];
+    racket.x = racket.target = W / 2;
+    ball.x = W / 2; ball.y = racket.y - 20; ball.vx = 0; ball.vy = 0; ball.served = false;
+    targets = [newTarget(), newTarget()];
+    $("score").textContent = "Score 0";
+  }
+
+  function serve() {
+    if (ball.served) return;
+    const a = (-Math.PI / 2) + (Math.random() * 0.6 - 0.3);
+    const sp = 300;
+    ball.vx = Math.cos(a) * sp; ball.vy = Math.sin(a) * sp; ball.served = true;
+  }
+
+  function start() { reset(); state = "play"; $("start").hidden = true; $("over").hidden = true; setTimeout(serve, 350); }
+  $("go").onclick = start; $("again").onclick = start;
+
+  function end() {
+    state = "over";
+    if (score > best) { best = score; try { localStorage.setItem("rally-best", String(best)); } catch (e) {} }
+    $("best").textContent = "Record " + best;
+    $("final").textContent = score;
+    $("msg").textContent = score === 0 ? "Net mis. Nog eentje?" : score >= best && score > 0 ? "Nieuw record." : score > 20 ? "Mooie rally." : "Goede rally.";
+    $("over").hidden = false;
+  }
+
+  // Besturing: muis, vinger, toetsen.
+  function pointer(e) {
+    const r = canvas.getBoundingClientRect();
+    const x = ((e.touches ? e.touches[0].clientX : e.clientX) - r.left) / r.width * W;
+    racket.target = Math.max(racket.w / 2, Math.min(W - racket.w / 2, x));
+  }
+  canvas.addEventListener("pointermove", pointer);
+  canvas.addEventListener("pointerdown", (e) => { pointer(e); if (state === "play") serve(); });
+  window.addEventListener("keydown", (e) => {
+    keys[e.key] = true;
+    if (e.key === " " || e.key === "Enter") { e.preventDefault(); if (state === "play") serve(); else start(); }
+  });
+  window.addEventListener("keyup", (e) => { keys[e.key] = false; });
+  document.addEventListener("visibilitychange", () => { last = 0; });
+
+  function update(dt) {
+    if (keys.ArrowLeft || keys.a) racket.target -= 420 * dt;
+    if (keys.ArrowRight || keys.d) racket.target += 420 * dt;
+    racket.target = Math.max(racket.w / 2, Math.min(W - racket.w / 2, racket.target));
+    racket.x += (racket.target - racket.x) * Math.min(1, dt * 22);
+
+    if (!ball.served) { ball.x = racket.x; ball.y = racket.y - 18; return; }
+
+    ball.x += ball.vx * dt; ball.y += ball.vy * dt;
+    if (ball.x < ball.r) { ball.x = ball.r; ball.vx = Math.abs(ball.vx); }
+    if (ball.x > W - ball.r) { ball.x = W - ball.r; ball.vx = -Math.abs(ball.vx); }
+    if (ball.y < ball.r + 24) { ball.y = ball.r + 24; ball.vy = Math.abs(ball.vy); }
+
+    // Racket
+    const top = racket.y - racket.h / 2;
+    if (ball.vy > 0 && ball.y + ball.r >= top && ball.y + ball.r <= top + 18 && Math.abs(ball.x - racket.x) <= racket.w / 2 + ball.r) {
+      hits++; score++;
+      const off = (ball.x - racket.x) / (racket.w / 2);
+      const sp = Math.min(640, Math.hypot(ball.vx, ball.vy) * 1.035);
+      const a = -Math.PI / 2 + off * 1.05;
+      ball.vx = Math.cos(a) * sp; ball.vy = Math.sin(a) * sp; ball.y = top - ball.r;
+      flashes.push({ x: ball.x, y: top - 10, text: "+1", t: 0 });
+      if (hits % 8 === 0 && targets.length < 3) targets.push(newTarget());
+    }
+
+    // Zoekers
+    for (let i = targets.length - 1; i >= 0; i--) {
+      const t = targets[i];
+      const cx = Math.max(t.x, Math.min(ball.x, t.x + t.s)), cy = Math.max(t.y, Math.min(ball.y, t.y + t.s));
+      if (Math.hypot(ball.x - cx, ball.y - cy) < ball.r) {
+        score += 3;
+        flashes.push({ x: t.x + t.s / 2, y: t.y + t.s / 2, text: "Shot! +3", t: 0, ring: t });
+        targets.splice(i, 1);
+        targets.push(newTarget());
+      }
+    }
+
+    if (ball.y - ball.r > H) end();
+    $("score").textContent = "Score " + score;
+    flashes.forEach((f) => (f.t += dt)); flashes = flashes.filter((f) => f.t < 0.9);
+  }
+
+  function corners(x, y, s, len, color, width) {
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.beginPath();
+    ctx.moveTo(x, y + len); ctx.lineTo(x, y); ctx.lineTo(x + len, y);
+    ctx.moveTo(x + s - len, y); ctx.lineTo(x + s, y); ctx.lineTo(x + s, y + len);
+    ctx.moveTo(x, y + s - len); ctx.lineTo(x, y + s); ctx.lineTo(x + len, y + s);
+    ctx.moveTo(x + s - len, y + s); ctx.lineTo(x + s, y + s); ctx.lineTo(x + s, y + s - len);
+    ctx.stroke();
+  }
+
+  function draw(now) {
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+    ctx.fillStyle = "#0b0c0b"; ctx.fillRect(0, 0, W, H);
+    // Baanlijnen
+    ctx.strokeStyle = C.line; ctx.lineWidth = 1;
+    ctx.strokeRect(14.5, 24.5, W - 29, H - 38);
+    ctx.beginPath(); ctx.moveTo(W / 2 + 0.5, 24); ctx.lineTo(W / 2 + 0.5, H * 0.55); ctx.moveTo(14, H * 0.55 + 0.5); ctx.lineTo(W - 14, H * 0.55 + 0.5); ctx.stroke();
+    ctx.fillStyle = C.mist; ctx.font = "500 9px 'JetBrains Mono', monospace"; ctx.textAlign = "left";
+    ctx.fillText("CAP 400 ▸ RALLY", 18, 16);
+    ctx.textAlign = "right"; ctx.fillText("F/2.8 · 1/1000", W - 18, 16);
+
+    // Zoekers
+    targets.forEach((t) => {
+      const age = Math.min(1, (now - t.born) / 300);
+      ctx.globalAlpha = age;
+      corners(t.x, t.y, t.s, 9, C.bone, 1.5);
+      ctx.fillStyle = C.ember; ctx.beginPath(); ctx.arc(t.x + t.s / 2, t.y + t.s / 2, 1.6, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+
+    // Racket
+    ctx.fillStyle = C.ember;
+    ctx.fillRect(racket.x - racket.w / 2, racket.y - racket.h / 2, racket.w, racket.h);
+    ctx.fillStyle = "#6e5038"; ctx.fillRect(racket.x - 4, racket.y + racket.h / 2, 8, 16);
+
+    // Bal
+    ctx.fillStyle = C.ball; ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "rgba(11,12,11,.45)"; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(ball.x - ball.r * 0.9, ball.y, ball.r * 0.9, -0.9, 0.9); ctx.stroke();
+
+    // Flitsen
+    flashes.forEach((f) => {
+      const p = f.t / 0.9;
+      ctx.globalAlpha = 1 - p;
+      if (f.ring) corners(f.ring.x - p * 10, f.ring.y - p * 10, f.ring.s + p * 20, 10, C.ember, 2);
+      ctx.fillStyle = f.ring ? C.ember : C.bone; ctx.textAlign = "center";
+      ctx.font = (f.ring ? "700 15px" : "500 11px") + " 'Inter Tight', sans-serif";
+      ctx.fillText(f.text, f.x, f.y - p * 18);
+      ctx.globalAlpha = 1;
+    });
+
+    if (state === "play" && !ball.served) {
+      ctx.fillStyle = C.mist; ctx.textAlign = "center"; ctx.font = "500 10px 'JetBrains Mono', monospace";
+      ctx.fillText("TIK OF SPATIE OM TE SERVEREN", W / 2, racket.y - 40);
+    }
+  }
+
+  function loop(now) {
+    const dt = last ? Math.min(0.033, (now - last) / 1000) : 0; last = now;
+    if (state === "play") update(dt);
+    draw(now);
+    requestAnimationFrame(loop);
+  }
+  reset();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

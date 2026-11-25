@@ -9,7 +9,7 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Portfolio",
-  description: "Werk van CAP Media Studio: filmische foto's en video's, websites, apps en games.",
+  description: "Werk van CAP Media Studio: websites, apps, games, foto en video.",
   alternates: { canonical: "/portfolio" },
 };
 

@@ -46,6 +46,10 @@ export function SiteFooter({ availability }: { availability?: string }) {
               <Link href="/login" className="block text-bone-dim hover:text-bone">
                 Klantportaal
               </Link>
+              {/* Losse HTML-pagina, dus een gewone link in plaats van next/link. */}
+              <a href="/werk/rally" className="block text-bone-dim hover:text-bone">
+                Speel Rally <span className="text-ember-soft">●</span>
+              </a>
             </div>
             <div className="space-y-2.5">
               <Link href="/privacy" className="block text-mist hover:text-bone">

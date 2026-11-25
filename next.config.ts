@@ -25,7 +25,10 @@ const nextConfig: NextConfig = {
   },
   // Klikbare ontwerpconcepten staan als losse HTML-pagina in public/werk.
   async rewrites() {
-    return [{ source: "/werk/tennisapp", destination: "/werk/tennisapp/index.html" }];
+    return [
+      { source: "/werk/tennisapp", destination: "/werk/tennisapp/index.html" },
+      { source: "/werk/rally", destination: "/werk/rally/index.html" },
+    ];
   },
   async headers() {
     return [

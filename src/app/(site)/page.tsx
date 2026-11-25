@@ -58,8 +58,11 @@ function Statement({ text, portfolio }: { text: string; portfolio: PortfolioItem
 export default async function HomePage() {
   const [hero, portfolio, t] = await Promise.all([getHero(), getPortfolio(), getTexts()]);
   const stills = portfolio.filter((p) => p.image_url);
-  const frames = stills.slice(0, 6);
-  const work = stills.slice(0, 6).map((p) => ({ ...p, year: p.created_at ? String(new Date(p.created_at).getFullYear()) : "" }));
+  // Digitaal werk eerst: apps, websites en games krijgen voorrang in de selectie.
+  const isDigital = (p: PortfolioItem) => p.category === "apps" || p.category === "games";
+  const digitalFirst = [...stills.filter(isDigital), ...stills.filter((p) => !isDigital(p))];
+  const frames = [...stills.filter(isDigital).slice(0, 2), ...stills.filter((p) => !isDigital(p))].slice(0, 6);
+  const work = digitalFirst.slice(0, 6).map((p) => ({ ...p, year: p.created_at ? String(new Date(p.created_at).getFullYear()) : "" }));
 
   const roll = stills
     .filter((p) => p.category === "sport" || p.category === "lifestyle")
@@ -149,15 +152,6 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      {/* Filmrol: schuift alleen mee met scrollen */}
-      {roll.length > 2 && (
-        <FilmRoll
-          frames={roll}
-          title={<Accent text={t["home.roll_title"]} />}
-          label={`${roll.length} frames — scroll`}
-        />
-      )}
-
       {/* Disciplines als index */}
       <section className="container-x pt-28 md:pt-40">
         <div className="grid gap-6 md:grid-cols-12">
@@ -197,6 +191,15 @@ export default async function HomePage() {
           </div>
           <WorkIndex items={work} />
         </section>
+      )}
+
+      {/* Filmrol: schuift alleen mee met scrollen */}
+      {roll.length > 2 && (
+        <FilmRoll
+          frames={roll}
+          title={<Accent text={t["home.roll_title"]} />}
+          label={`${roll.length} frames — scroll`}
+        />
       )}
 
       {/* Werkwijze */}

@@ -12,7 +12,7 @@ export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Over mij",
-  description: `Maak kennis met ${site.owner}: fotograaf, videomaker en developer achter ${site.name}.`,
+  description: `Maak kennis met ${site.owner}: maker van websites, apps en games, en fotograaf en videomaker, achter ${site.name}.`,
   alternates: { canonical: "/over-mij" },
 };
 
@@ -46,7 +46,7 @@ export default async function OverMijPage() {
           </div>
           <div className="mt-3 flex justify-between font-mono text-[10px] tracking-[0.04em] text-mist uppercase">
             <span>{site.owner}</span>
-            <span>Foto · Video · Apps</span>
+            <span>Web · Apps · Games · Beeld</span>
           </div>
         </Reveal>
 
@@ -65,10 +65,10 @@ export default async function OverMijPage() {
             <SectionHead index="01" label="Disciplines" />
             <dl className="mt-2">
               {[
-                ["Foto", "Sport, lifestyle en merken"],
-                ["Video", "Reels en clips"],
-                ["Apps", "Websites en webapps"],
+                ["Websites", "Snel, vindbaar en eigen"],
+                ["Apps", "Webapps en portalen"],
                 ["Games", "Interactief en speels"],
+                ["Beeld", "Foto en video"],
               ].map(([title, desc]) => (
                 <div key={title} className="rule-b flex items-baseline justify-between py-4">
                   <dt className="font-display text-3xl font-medium tracking-[-0.04em] text-bone">{title}</dt>
