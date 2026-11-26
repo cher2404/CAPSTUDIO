@@ -303,6 +303,51 @@ table.stand{width:100%;border-collapse:collapse;font-size:13.5px}
 .players button.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 .toast{position:absolute;left:50%;top:58px;transform:translate(-50%,-30px);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;font-size:13.5px;font-weight:600;opacity:0;transition:.3s;z-index:60;white-space:nowrap;pointer-events:none}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- Rustiger: vlak, dunne lijnen, kleur alleen waar het iets betekent ---------- */
+:root{--shadow:none}
+.card,.team-hero,.stats{box-shadow:none;border:1px solid var(--line);border-radius:16px}
+.seg,.search,.day,.q{box-shadow:none}
+.top{padding-top:4px}
+.club-pill{background:transparent;box-shadow:none;padding:4px 6px 4px 0}
+.icon-btn{background:transparent;box-shadow:none;width:38px;height:38px}
+.icon-btn .dot{border-color:var(--bg)}
+.me-btn{box-shadow:none;border:0;width:34px;height:34px;font-size:12px}
+h2.ttl{font-size:27px;margin:4px 4px 16px}
+.hello h2{font-size:26px}
+.sec{margin:28px 4px 10px}
+.sec h3{font-size:16px}
+.notice{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.notice .ic{width:30px;height:30px;border-radius:9px;font-size:14px}
+.notice .t{font-size:14px}
+.notice .s{opacity:1;color:var(--ink-3)}
+.next{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;margin-top:0}
+.next::after{display:none}
+.next .k{color:var(--accent);opacity:1}
+.next .t{font-size:18px}
+.next .s{opacity:1;color:var(--ink-3)}
+.pillbtn{background:var(--surface-2);color:var(--ink);font-weight:600}
+.quick{background:var(--surface);border:1px solid var(--line);border-radius:16px;gap:0;padding:4px 0}
+.q{background:transparent;border-radius:0;padding:10px 4px;border-right:1px solid var(--line)}
+.q:last-child{border-right:0}
+.seg{background:var(--surface-2);border:0}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(15,26,20,.08)}
+.chip{background:transparent}
+.chip.on{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.day{border:1px solid var(--line)}
+.day.on{border-color:var(--accent)}
+.slot.free{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 40%,transparent)}
+.slot.busy{background:var(--surface-2);color:transparent}
+.slot.train{background:var(--surface-2);color:var(--ink-3);font-weight:600}
+.champ{background:transparent;padding:0;margin-top:12px;color:var(--ink-2);font-weight:600}
+.form span{width:22px;height:22px;border-radius:6px;font-size:10.5px}
+.ad{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+.ad small{color:var(--ink-3);opacity:1}
+.news .img{height:92px;font-size:20px}
+.tabbar{box-shadow:0 6px 20px rgba(15,26,20,.07)}
+.tab.on{background:transparent;color:var(--accent)}
+.tab.on::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--accent);margin-top:1px}
+.pass{border-radius:18px}
 </style>
 </head>
 <body>
@@ -377,13 +422,6 @@ table.stand{width:100%;border-collapse:collapse;font-size:13.5px}
       <div class="sec"><h3>Binnenkort</h3><a data-go="club" data-subgo="agenda">Agenda</a></div>
       <div class="card" id="homeAgenda"></div>
 
-      <div class="sec"><h3>Dit seizoen</h3></div>
-      <div class="stats">
-        <div class="stat" data-go="club" data-subgo="diensten"><b>0</b><span>Diensten</span></div>
-        <div class="stat" data-go="club" data-subgo="diensten"><b>0/0</b><span>Punten</span></div>
-        <div class="stat"><b>0m</b><span>Gespeeld</span></div>
-        <div class="stat" data-go="comp"><b>4</b><span>Competities</span></div>
-      </div>
     </section>
 
     <!-- RESERVEREN -->
@@ -397,9 +435,9 @@ table.stand{width:100%;border-collapse:collapse;font-size:13.5px}
         <button class="chip" data-f="vrij">Alleen vrij</button>
       </div>
       <div class="legend">
-        <span><i style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>Vrij</span>
-        <span><i style="background:var(--surface-2);outline:1px solid var(--line)"></i>Bezet</span>
-        <span><i style="background:repeating-linear-gradient(135deg,var(--surface-2),var(--surface-2) 3px,var(--line) 3px,var(--line) 4px)"></i>Training</span>
+        <span><i style="background:transparent;box-shadow:inset 0 0 0 1px var(--accent)"></i>Vrij</span>
+        <span><i style="background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)"></i>Bezet</span>
+        <span><i style="background:var(--surface-2)"></i>Training</span>
       </div>
       <div class="card"><div class="grid-scroll" id="courtGrid"></div></div>
       <p class="muted" style="font-size:12px;margin:10px 4px">Tik op een groen blok om direct te boeken.</p>
@@ -812,6 +850,13 @@ function mePage(){
       <div style="display:flex;justify-content:space-between;align-items:center"><span class="lbl">Digitale ledenpas</span><span class="tag" style="background:var(--ball);color:#16231B">Actief</span></div>
       <div class="r2"><div><div class="nm">Cheryl Prins</div><div class="lbl" style="margin-top:8px">Bondsnummer</div><div class="num">1234 ••••</div></div>
       <div class="clubs">${["lee","fto","atc"].map(k=>`<span>${CLUBS[k].name} <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${CLUBS[k].color}"></span></span>`).join("")}</div></div>
+    </div>
+    <div class="sec"><h3>Dit seizoen</h3></div>
+    <div class="stats">
+      <div class="stat" data-go="club" data-subgo="diensten"><b>0</b><span>Diensten</span></div>
+      <div class="stat" data-go="club" data-subgo="diensten"><b>0/0</b><span>Punten</span></div>
+      <div class="stat"><b>0m</b><span>Gespeeld</span></div>
+      <div class="stat" data-go="comp"><b>4</b><span>Competities</span></div>
     </div>
     <div class="sec"><h3>Speelsterkte</h3><a data-go="comp" data-subgo="rating">Verloop</a></div>
     <div class="card"><div class="rating-grid"><div><small>Enkel</small><b>8.8255</b></div><div><small>Dubbel</small><b>8.0202</b></div><div><small>Padel</small><b>8.1500</b></div></div></div>
